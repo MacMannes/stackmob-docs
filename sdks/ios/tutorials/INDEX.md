@@ -1,3 +1,4 @@
+* <a href="/stackmob-ios-sdk/configure">Configure the StackMob iOS SDK</a>
 * <a href="/stackmob-ios-sdk/create-object-tutorial">Create an Object</a>
 * <a href="/stackmob-ios-sdk/read-object-tutorial">Read an Object</a>
 * <a href="/stackmob-ios-sdk/read-object-into-table-view">Read an Object into Table View</a>
