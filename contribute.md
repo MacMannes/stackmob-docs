@@ -4,8 +4,6 @@ We encourage you to contribute to StackMob Docs!  Whether it's an edit, a small 
 
 # Fork, Edit, Pull Request
 
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/contribute.gif" alt=""/>
-
 1.  Fork the StackMob Docs repository
 2.  Find the file
     SDK tutorials are under the path /sdks/[platform]/tutorials
@@ -14,4 +12,6 @@ We encourage you to contribute to StackMob Docs!  Whether it's an edit, a small 
 4.  Submit a Pull Request!
 
 Submitting a pull request will let us know that you have a change.  We'll review it and get it merged into our StackMob Docs repo.
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/contribute.gif" alt=""/>
 
