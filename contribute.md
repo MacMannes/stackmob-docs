@@ -1,6 +1,8 @@
 # Contributing to StackMob Docs
 
-We encourage you to contribute to StackMob Docs!  Whether it's an edit, a small code fix, or even a completely new tutorial, you can contribute.
+We encourage you to contribute to StackMob Docs!  Whether it's an edit, a small code fix, or even a completely new tutorial, we're happy to have you involved!
+
+As developers, we joined StackMob to help other developers, and we thank you for giving back too.
 
 # How to Contribute
 
