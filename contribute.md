@@ -1,0 +1,17 @@
+# Contributing to StackMob Docs
+
+We encourage you to contribute to StackMob Docs!  Whether it's an edit, a small code fix, or even a completely new tutorial, you can contribute.
+
+# Fork, Edit, Pull Request
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/contribute.gif" alt=""/>
+
+1.  Fork the StackMob Docs repository
+2.  Find the file
+    SDK tutorials are under the path /sdks/[platform]/tutorials
+    JS SDK and REST API docs are under the path /sdks[platform]/api-doc.md  (iOS and Android are generated from the source)
+3.  Edit within the GitHub UI or push your fix to your repo
+4.  Submit a Pull Request!
+
+Submitting a pull request will let us know that you have a change.  We'll review it and get it merged into our StackMob Docs repo.
+
