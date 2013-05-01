@@ -6,8 +6,8 @@ We encourage you to contribute to StackMob Docs!  Whether it's an edit, a small 
 
 1.  Fork the StackMob Docs repository
 2.  Find the file
-    SDK tutorials are under the path /sdks/[platform]/tutorials
-    JS SDK and REST API docs are under the path /sdks[platform]/api-doc.md  (iOS and Android are generated from the source)
+      * SDK tutorials are under the path /sdks/[platform]/tutorials
+      * JS SDK and REST API docs are under the path /sdks[platform]/api-doc.md  (iOS and Android are generated from the source)
 3.  Edit within the GitHub UI or push your fix to your repo
 4.  Submit a Pull Request!
 
