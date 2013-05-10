@@ -153,7 +153,7 @@ Developers also have the option of setting different merge policies for inserts,
 
 <h3>Setting a Custom Merge Policy</h3>
 
-You can conduct your own merge strategies by defiing and setting a block rather than choosing a predefined policy. You are given a dictionary representation of the client and server objects, as well as the date of the last time the object was read from the server. The block must return "client" or "server", represented by the `SMMergeObjectKey` typedef:
+You can conduct your own merge strategies by defining and setting a block rather than choosing a predefined policy. You are given a dictionary representation of the client and server objects, as well as the date of the last time the object was read from the server. The block must return "client" or "server", represented by the `SMMergeObjectKey` typedef:
 
 ```obj-c
 typedef enum {
@@ -181,7 +181,7 @@ self.coreDataStore.defaultSMMergePolicy = ^(NSDictionary *clientObject, NSDictio
 
 <h3>Successful Sync Callback</h3>
 
-Developers have the option of defining a callback that is executed whenever a sync completes.
+Developers have the option of defining a callback that is executed whenever a sync completes. This is the perfect time to save the in-memory context and reload objects from the cache to pick up on any new changes
 
 It is passed all objects that were successfully synced with the server in accordance with the merge policy. Set the callback like so:
 
@@ -228,4 +228,15 @@ The structure of the dictionary passed to the callback is exactly like the error
 ```
 
 When an error occurs while syncing an object, it remains marked as "dirty" i.e. not synced. To mark an object as synced and optionally purge it from the cache as well, pass the dictionary entry to the `SMCoreDataStore markObjectAsSynced:purgeFromCache:` method. To mark multiple entries with one call use `markArrayOfObjectsAsSynced:purgeFromCache:`.
+
+<h2>Additional Utility Properties/Methods</h2>
+
+The following are utility properties/methods to assist in your offline sync implementation:
+
+* syncInProgress (SMCoreDataStore) - Boolean property which returns YES while a sync with the server is taking place.  Otherwise NO.
+* isDirtyObject: (SMCoreDataStore) - Takes the managed object ID of an object and returns YES if the object has not yet been synced to the server.  Otherwise returns NO.
+* stringContainsURL: (SMBinaryDataConversion) - Returns whether the value of a string attribute contains an s3 url or raw data.  This is for string attributes which map to a binary field on StackMob.  The value would be raw data if the object was saved offline and hasn't yet been synced with the server.
+* dataForString: (SMBinaryDataConversion) - If the value of a string attribute is raw data (because the object has not yet been synced with the server), call this method to translate it back to data.
+
+
 
