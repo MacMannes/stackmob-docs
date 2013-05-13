@@ -12,7 +12,9 @@ For example, suppose you are building a To-Do application which has the option t
 
 <h2>Updating your Data Model</h2>
 
-In order for the offline sync system to work properly, you must edit your data model to include attributes that link to the auto-generated date fields on StackMob.  The easiest way to do this is the following:
+In order for the offline sync system to work properly, you must edit your data model to include attributes that link to the auto-generated date fields on StackMob.
+
+The easiest way to do this is the following:
 
 <ol>
 
@@ -38,11 +40,13 @@ In order for the offline sync system to work properly, you must edit your data m
 
 </ol>
 
-Lightweight migration should take care of merging your new model with your old database.  If you run into the "Cannot Find Source Store" error, remove the application from the device/simulator (this removes the local database) and try running the application again.
+If you choose the Parent Entity route, be sure to remove any existing attributes that map to `createddate` or `lastmoddate`, as to avoid duplicates.
+
+Lightweight migration should take care of merging your new model with your old database.  If you run into the "Cannot Find Source Store" error, remove the application from the device/simulator (this removes the local database and cache mapping table files) and try running the application again.
+
+<b>Important:</b> If your application currently uses the cache and you are upgrading to v2.0.0+, the internal cache mapping table will be inconsistent with the new version. You should either remove the application from the device or call the <code>SMCoreDataStore</code> <code><i>resetCache</i></code> method once. Improved migration functionality is in development.
 
 Now you're ready to use offline sync.
-
-**Important:** If you choose the Parent Entity route, be sure to remove any existing attributes that map to `createddate` or `lastmoddate`, as to avoid duplicates.
 
 <h2>Turning On/Off the Cache</h2>
 
