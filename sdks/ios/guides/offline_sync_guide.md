@@ -101,7 +101,7 @@ At any time you can purge the cache manually of:
 * A group of objects by providing the name of their entity.
 * All objects in the cache.
 
-Check out the <a href="" target="_blank">Manually Purging the Cache</a> section of the `SMCoreDataStore` Class Reference for all the methods.
+Check out the **Manually Purging the Cache** section of the <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html" target="_blank">SMCoreDataStore Class Reference</a> for all the methods.
 
 <h2>Writing to the Cache</h2>
 
