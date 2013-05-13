@@ -254,10 +254,11 @@ When an error occurs while syncing an object, it remains marked as "dirty" i.e. 
 
 The following are utility properties/methods to assist in your offline sync implementation:
 
-* syncInProgress (SMCoreDataStore) - Boolean property which returns YES while a sync with the server is taking place.  Otherwise NO.
-* isDirtyObject: (SMCoreDataStore) - Takes the managed object ID of an object and returns YES if the object has not yet been synced to the server.  Otherwise returns NO.
-* stringContainsURL: (SMBinaryDataConversion) - Returns whether the value of a string attribute contains an s3 url or raw data.  This is for string attributes which map to a binary field on StackMob.  The value would be raw data if the object was saved offline and hasn't yet been synced with the server.
-* dataForString: (SMBinaryDataConversion) - If the value of a string attribute is raw data (because the object has not yet been synced with the server), call this method to translate it back to data.
+* <b><i>syncInProgress</i> (SMCoreDataStore)</b> - Boolean property which returns YES while a sync with the server is taking place.  Otherwise NO.
+* <b><i>isDirtyObject:</i> (SMCoreDataStore)</b> - Takes the managed object ID of an object and returns YES if the object has not yet been synced to the server.  Otherwise returns NO.
+* <b><i>sendLocalTimestamps</i> (SMCoreDataStore)</b> - Boolean indicating whether to send the `createddate` and `lastmoddate` keys and values in a request payload (during sync only). 
+* <b><i>stringContainsURL:</i> (SMBinaryDataConversion)</b> - Returns whether the value of a string attribute contains an s3 url or raw data.  This is for string attributes which map to a binary field on StackMob.  The value would be raw data if the object was saved offline and hasn't yet been synced with the server.
+* <b><i>dataForString:</i> (SMBinaryDataConversion)</b> - If the value of a string attribute is raw data (because the object has not yet been synced with the server), call this method to translate it back to data.
 
 
 
