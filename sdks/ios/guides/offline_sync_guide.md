@@ -218,8 +218,9 @@ It is passed all objects that were successfully synced with the server in accord
 
 The objects passed will be of type `SMSyncedObject`, a class with two properties:
 
-1. objectID - This will be the managed object ID of the synced object, or if the object was deleted it will be the primary key in `NSString` form.
-2. actionTaken - An `SMSyncAction`, defined as:
+<ol>
+    <li>objectID - This will be the managed object ID of the synced object, or if the object was deleted it will be the primary key in `NSString` form.</li>
+    <li>actionTaken - An `SMSyncAction`, defined as:</li>
 
 ```obj-c
 typedef enum {
@@ -229,6 +230,8 @@ typedef enum {
     SMSyncActionUpdatedCache = 3,
 } SMSyncAction;
 ```
+
+</ol>
 
 <h3>Handling Merge Errors</h3>
 
