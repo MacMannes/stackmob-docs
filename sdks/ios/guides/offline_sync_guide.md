@@ -16,7 +16,7 @@ In order for the offline sync system to work properly, you must edit your data m
 
 1. Make a new version of your managed object model by highlighting your data model file and choosing <b>Editor -> Add Model Version...</b>.
 
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/modelversion.png" />
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/addmodelversion.png" />
 
 2. In the new model version, define a new entity named StackMob.
 3. Add 2 attributes, `createddate` and `lastmoddate`, both of type `Date`.
