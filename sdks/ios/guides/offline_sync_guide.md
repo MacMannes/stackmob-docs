@@ -14,25 +14,29 @@ For example, suppose you are building a To-Do application which has the option t
 
 In order for the offline sync system to work properly, you must edit your data model to include attributes that link to the auto-generated date fields on StackMob.  The easiest way to do this is the following:
 
-1. Make a new version of your managed object model by highlighting your data model file and choosing <b>Editor -> Add Model Version...</b>.
+<ol>
+
+<li>Make a new version of your managed object model by highlighting your data model file and choosing <b>Editor -> Add Model Version...</b>.</li>
 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/addmodelversion.png" />
 
-2. In the new model version, define a new entity named StackMob.
-3. Add 2 attributes, `createddate` and `lastmoddate`, both of type `Date`.
+<li>In the new model version, define a new entity named StackMob.</li>
+<li>Add 2 attributes, <code>createddate</code> and <code>lastmoddate</code>, both of type <code>Date</code>.</li>
 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/stackmobentity.png" />
 
-4. In the **Data Model Inspector**, check **Abstract Entity**.
+<li>In the <b>Data Model Inspector</b>, check <b>Abstract Entity</b>.</li>
 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/absractentity.png" />
 
-5. In the **Data Model Inspector** of every other entity in your model, choose **StackMob** as the **Parent Entity**.
+<li>In the <b>Data Model Inspector</b> of every other entity in your model, choose <b>StackMob</b> as the <b>Parent Entity</b>.</li>
 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/parententity.png" />
 
-6. Highlight your data model file and in the **File Inspector**, under **Versioned Core Data Model -> Current**, select your new version.
-7. Finally, clean and build your Xcode project.
+<li>Highlight your data model file and in the <b>File Inspector</b>, under <b>Versioned Core Data Model -> Current</b>, select your new version.</li>
+<li>Finally, clean and build your Xcode project.</li>
+
+</ol>
 
 Lightweight migration should take care of merging your new model with your old database.  If you run into the "Cannot Find Source Store" error, remove the application from the device/simulator (this removes the local database) and try running the application again.
 
