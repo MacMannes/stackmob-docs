@@ -15,7 +15,6 @@ For example, suppose you are building a To-Do application which has the option t
 In order for the offline sync system to work properly, you must edit your data model to include attributes that link to the auto-generated date fields on StackMob.
 
 The easiest way to do this is the following:
-<div class="indent">
 
 <p>1. Make a new version of your managed object model by highlighting your data model file and choosing <b>Editor -> Add Model Version...</b>.</p>
 
@@ -36,8 +35,6 @@ The easiest way to do this is the following:
 
 <p>6. Highlight your data model file and in the <b>File Inspector</b>, under <b>Versioned Core Data Model -> Current</b>, select your new version.</p>
 <p>7. Finally, clean and build your Xcode project.</p>
-
-</div>
 
 If you choose the Parent Entity route, be sure to remove any existing attributes that map to `createddate` or `lastmoddate`, as to avoid duplicates.
 
