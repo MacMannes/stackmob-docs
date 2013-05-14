@@ -73,8 +73,8 @@ Here's an example of the deploy page.  Select what API version you want to deplo
 
 Deploying to Multiple API Versions is as easy as deploying via the [Deploy page](https://dashboard.stackmob.com/deploy) and selecting a different version number.  That's it!  On your mobile app, you would change your StackMob configuration to the appropriate version number.
 
-* [Configure your iOS APP API Version](https://dashboard.stackmob.com/sdks/ios/config)
-* [Configure your Android App API Version](https://dashboard.stackmob.com/sdks/android/config)
+* [Configure your iOS APP API Version](https://dashboard.stackmob.com/stackmob-ios-sdk/configure)
+* [Configure your Android App API Version](https://developer.stackmob.com/stackmob-android-sdk/configure)
 
 Simply select API Version 2, 3, 4, and so on when deploying to run more concurrent APIs.
 

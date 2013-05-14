@@ -1,33 +1,41 @@
-<h3>Objectives</h3>
+# Add Related Objects
+
+# Overview
+
+## Objectives
+
 Add related objects to an object
 
-<h3>Experience Level</h3>
+## Experience Level
+
 Beginner
 
-<h3>Estimated Time to Complete</h3>
+## Estimated Time to Complete
+
 ~5 minutes
 
-<h3>Prerequisites</h3>
+## Prerequisites
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * <a href="https://www.stackmob.com/devcenter/docs/Schema-Relationships#a-adding_a_one_to_many_relationship" target="_blank">Define a relationship in your schema</a>
 
 * Create a user (either using <a href="https://dashboard.stackmob.com/data/browser" target="_blank">Object Browser</a> or do <a href="https://developer.stackmob.com/tutorials/js/Create-a-User-Object" target="_blank">create tutorial</a>)
 
-<h1>Let's get started!</h1>
+**Let's get started!**
 
-<h2>Related API</h2>
+# Related API
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-save" target="_blank">save</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-save" target="_blank">save</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-appendandsave" target="_blank">appendAndSave</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-appendandsave" target="_blank">appendAndSave</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-addrelationship" target="_blank">addRelationship</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-addrelationship" target="_blank">addRelationship</a>
 
 Relationships give you the ability to "join" objects together and return the data about the related objects in a single call. In the below examples, we are giving a `User` things to do by giving him a one-to-many relationship of `Todo` items.
 
-<h2>Add a related object</h2>
+## Add a related object
+
 Let's assume you have a `User` with a one-to-many relationship with `Todo`, represented as a field called `chores`. We'll assign some more chores for user Marty.
 
 The `Todo` items will be created in the `Todo` table and their IDs will be appended to the relationship array on Marty, updating the Marty user records in the `User` table.

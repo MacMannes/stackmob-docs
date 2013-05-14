@@ -9,7 +9,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * There is a `Todo` object which `todo_id` is `todo1` (either using <a href="https://dashboard.stackmob.com/data/browser" target="_blank">Object Browser</a> or do <a href="https://developer.stackmob.com/tutorials/js/Create-an-Object" target="_blank">create tutorial</a>)
 
@@ -17,9 +17,9 @@ Beginner
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-save" target="_blank">save</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-save" target="_blank">save</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-set" target="_blank">set</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-set" target="_blank">set</a>
 
 <h2>Update a Todo Object</h2>
 

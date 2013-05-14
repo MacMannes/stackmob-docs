@@ -10,7 +10,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* An app <a href="https://dashboard.stackmob.com/sdks/android/config">set up for StackMob</a>
+* An app <a href="https://developer.stackmob.com/stackmob-android-sdk/configure">set up for StackMob</a>
 
 * <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-Binary-Field-to-Schemas">Add a Binary Field to your schema and add your S3 credentials to the StackMob Dashboard</a>
 

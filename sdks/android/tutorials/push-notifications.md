@@ -12,7 +12,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* An app <a href="https://dashboard.stackmob.com/sdks/android/config">set up for StackMob</a>
+* An app <a href="https://developer.stackmob.com/stackmob-android-sdk/configure">set up for StackMob</a>
 
 * A [Google Cloud Messaging Account](https://developer.stackmob.com/tutorials/android/Push-Notifications)
 
@@ -43,7 +43,7 @@ Now that you have an API Key, let's test sending & receiving push notifications.
 
 <h3>App Setup</h3>
 
-If you're using the <a href="https://github.com/stackmob/stackmob-android-examples">Android Starter Project</a>, GCM Push is already set up for you. Just set up your [StackMob credentials](https://dashboard.stackmob.com/sdks/android/config, and add your sender id to the top of <a href="https://github.com/stackmob/stackmob-android-examples/blob/master/PushDemo/src/com/stackmob/pushdemo/PushDemoActivity.java" target="_blank">`PushDemoActivity.java`</a>
+If you're using the <a href="https://github.com/stackmob/stackmob-android-examples">Android Starter Project</a>, GCM Push is already set up for you. Just set up your [StackMob credentials](https://developer.stackmob.com/stackmob-android-sdk/configure, and add your sender id to the top of <a href="https://github.com/stackmob/stackmob-android-examples/blob/master/PushDemo/src/com/stackmob/pushdemo/PushDemoActivity.java" target="_blank">`PushDemoActivity.java`</a>
 
 ```java
 	public static String SENDER_ID = "YOUR_SENDER_ID_HERE";

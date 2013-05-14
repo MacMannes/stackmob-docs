@@ -56,4 +56,4 @@ Look for `cordova.xml` or `PhoneGap.xml` in the `/res/xml` folder.  Add the foll
 
 # Making API Calls
 
-After you've setup the above, use the JS SDK as you normally would!  So, get started by reading the <a href="https://developer.stackmob.com/tutorials/js" target="_blank">JS SDK Tutorial</a> and the <a href="https://developer.stackmob.com/sdks/js/api" target="_blank">Javascript SDK API</a>!
+After you've setup the above, use the JS SDK as you normally would!  So, get started by reading the <a href="https://developer.stackmob.com/tutorials/js" target="_blank">JS SDK Tutorial</a> and the <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs" target="_blank">Javascript SDK API</a>!

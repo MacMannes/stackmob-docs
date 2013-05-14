@@ -9,13 +9,13 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 <h1>Let's get started!</h1>
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-destroy" target="_blank">destroy</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-destroy" target="_blank">destroy</a>
 
 <h2>Delete an Object</h2>
 

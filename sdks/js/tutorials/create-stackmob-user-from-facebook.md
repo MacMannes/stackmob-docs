@@ -13,15 +13,15 @@ Beginner
 
 * <a href="https://developer.stackmob.com/tutorials/js/Setting-Up-Facebook" target="_blank">Correct initialization of Facebook SDK</a>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 <h1>Let's get started!</h1>
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-create" target="_blank">create</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-create" target="_blank">create</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-createuserwithfacebook" target="_blank">createUserWithFacebook</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-createuserwithfacebook" target="_blank">createUserWithFacebook</a>
 
 <h2>Create User with Facebook</h2>
 

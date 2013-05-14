@@ -13,7 +13,7 @@ Beginner
 
 * <a href="https://developer.stackmob.com/tutorials/js/Setting-Up-Facebook" target="_blank">Correct initialization of Facebook SDK</a>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * A StackMob `User` to link (add using <a href="https://dashboard.stackmob.com/data/browser" target="_blank">Object Browser</a> or do <a href="https://developer.stackmob.com/tutorials/js/Create-a-User-Object" target="_blank">create a User object tutorial</a>)
 
@@ -21,13 +21,13 @@ Beginner
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-create" target="_blank">create</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-create" target="_blank">create</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-login" target="_blank">login</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-login" target="_blank">login</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-linkuserwithfacebook" target="_blank">linkUserWithFacebook</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-linkuserwithfacebook" target="_blank">linkUserWithFacebook</a>
 
-* EXTRA: <a href="https://developer.stackmob.com/sdks/js/api#a-tojson" target="_blank">toJSON</a>
+* EXTRA: <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-tojson" target="_blank">toJSON</a>
 
 <h2>Link User with Facebook</h2>
 

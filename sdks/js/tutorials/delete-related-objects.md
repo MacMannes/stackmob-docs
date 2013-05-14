@@ -9,7 +9,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * <a href="https://www.stackmob.com/devcenter/docs/Schema-Relationships#a-adding_a_one_to_many_relationship" target="_blank">Define a relationship in your schema</a>
 
@@ -21,7 +21,7 @@ Beginner
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-deleteandsave" target="_blank">deleteAndSave</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-deleteandsave" target="_blank">deleteAndSave</a>
 
 <h2>Delete Related Objects</h2>
 
