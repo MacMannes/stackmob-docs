@@ -41,7 +41,8 @@ StackMob.init({
 
 Notice how we included `jQuery`.  You can also use `Sencha Ext` or `Zepto.js` instead.  Just include the Sencha or Zepto library in place of jQuery.
 
-# Defining your Objects
+# Objects
+
 
 In the following examples, let's pretend you're creating a simple todo-list app, where you have an object type called `Todo`.
 
@@ -90,7 +91,79 @@ We'll define your `Todo` class by extending from `StackMob.Model`.  `StackMob.Mo
 
 The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a schema named `todo`.
 
-# Creating and Fetching Objects from the Datastore
+## Setting Fields
+
+
+If you need to modify your object locally (without saving it to the server), you can use `get` and `set`.
+
+### set(..)
+
+You can use the `set(..)` method to pass in or change your local JSON.  You can call `set` multiple times.
+
+```javascript
+<script type="text/javascript">
+  var user = new StackMob.User();
+  user.set({ username: 'Chuck Norris', password: 'myfists'});
+  user.set({
+    string: 'abcde',
+    int: 10,
+    float: 2.5,
+    boolean: true,
+    arraystring: ['a','b','c'],
+    arrayint: [1,2,3],
+    arrayfloat: [1.5,2.5,3.5],
+    arraybool: [true, false, true]
+  });
+  user.create();
+</script>
+```
+
+### get(..)
+
+You can use `get(..)` to get the value of your object's field:
+
+```javascript
+<script type="text/javascript">
+  var user = new StackMob.User({ username: 'Chuck Norris' });
+  user.fetch({
+    success: function(model) {
+      console.debug(model.get('weapon')); //"NunChucks"
+    }
+  });
+
+</script>
+```
+
+<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can practically use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
+
+### toJSON()
+
+You can also display the JSON representation of your model by calling the `toJSON()` method.
+
+```javascript
+<script type="text/javascript">
+  var user = new StackMob.User({ username: 'Chuck Norris' });
+  //fetches the user "Chuck Norris" asynchronously
+  user.fetch({
+    success: function(model) {
+      //After StackMob returns "Chuck Norris", print out the result as JSON
+      console.debug(model.toJSON());
+      /*
+       {
+        username: 'Chuck Norris',
+        weaponofchoice: ...,
+        weaknesses: [...],
+        strengths: [...],
+        createddate: ...,
+        lastmoddate: ...
+       }
+       */
+    }
+  });
+</script>
+```
+
+# Datastore
 
 Let's use the JS SDK to persist objects to the datastore and retrieve them.
 
@@ -247,79 +320,6 @@ user.destroy({
 That's it!
 
 
-# Getting and Setting Fields
-
-If you need to modify your object locally (without saving it to the server), you can use `get` and `set`.
-
-## set(..)
-
-You can use the `set(..)` method to pass in or change your local JSON.  You can call `set` multiple times.
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User();
-  user.set({ username: 'Chuck Norris', password: 'myfists'});
-  user.set({
-    string: 'abcde',
-    int: 10,
-    float: 2.5,
-    boolean: true,
-    arraystring: ['a','b','c'],
-    arrayint: [1,2,3],
-    arrayfloat: [1.5,2.5,3.5],
-    arraybool: [true, false, true]
-  });
-  user.create();
-</script>
-```
-
-## get(..)
-
-You can use `get(..)` to get the value of your object's field:
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User({ username: 'Chuck Norris' });
-  user.fetch({
-    success: function(model) {
-      console.debug(model.get('weapon')); //"NunChucks"
-    }
-  });
-
-</script>
-```
-
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can practically use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
-
-## toJSON()
-
-You can also display the JSON representation of your model by calling the `toJSON()` method.
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User({ username: 'Chuck Norris' });
-  //fetches the user "Chuck Norris" asynchronously
-  user.fetch({
-    success: function(model) {
-      //After StackMob returns "Chuck Norris", print out the result as JSON
-      console.debug(model.toJSON());
-      /*
-       {
-        username: 'Chuck Norris',
-        weaponofchoice: ...,
-        weaknesses: [...],
-        strengths: [...],
-        createddate: ...,
-        lastmoddate: ...
-       }
-       */
-    }
-  });
-</script>
-```
-
-# Querying and Manipulating Arrays
-
 ## Appending to an array
 
 If you have arrays, you can append and delete from arrays pretty easily without having to update the whole object.  This helps prevent concurrency issues when people are appending to the same array/object.  Use `appendAndSave(fieldName, values, options)`
@@ -395,14 +395,12 @@ Now let's delete from an array without having to update the entire object.
 As with `appendAndSave`, concurrency issues are handled appropriately.
 
 
-# Object Collections and Collection Queries
+# Object Collections
 
 You'll likely be dealing with more than one object at a time though.  That's where `StackMob.Collection` comes in.  A `Collection` of objects gives you some convenient ways to manage and query for several objects at once.
 
 
 <p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
-
-## Defining your Collection
 
 Let's define an object that will represent a **list** of your `Todo` objects.
 
@@ -549,7 +547,7 @@ You can request certain objects to be returned from StackMob by using `StackMob.
 ```
 
 
-# Managing Relationships
+# Relationships
 
 Relationships give you the ability to "join" objects together and return the data about the related objects in a single call.  In the below examples, were giving a `user` things to do by giving him a one-to-many relationship of `todo` items.
 
@@ -660,7 +658,7 @@ If `Todo` had related objects, you can keep expanding deeper with `fetchExpanded
 
 You can delete related objects in a single API call - without having to update the entire object.  This is also "thread safe" in that if multiple users delete related relationships from the object, StackMob will correctly handle each request and process them appropriately.
 
-### Soft Delete
+## Soft Delete
 
 You can remove a relationship from an object (but keep the related object in the database) with a soft delete by passing the third parameter below as `false`.
 
@@ -736,7 +734,7 @@ But you may want to delete a relationship **and** remove the actual related obje
 ```
 
 
-# Authenticate Users
+# User Authentication
 
 StackMob also gives you a way to authenticate your users.  The JS SDK now uses OAuth 2.0 to login. It uses your `user` schema to perform login.
 
