@@ -12,7 +12,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* An app <a href="https://dashboard.stackmob.com/sdks/android/config">set up for StackMob</a>
+* An app <a href="https://developer.stackmob.com/stackmob-android-sdk/configure">set up for StackMob</a>
 
 * <a href="https://developer.stackmob.com/tutorials/android/Save-an-Object">Create an object to reload</a>
 

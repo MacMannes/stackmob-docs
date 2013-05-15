@@ -4,7 +4,7 @@
 
 # Introduction
 
-Coming from Parse to StackMob via JavaScript is incredibly easy in that both JavaScript SDKs are based off of <a href="http://backbonejs.org" target="_blank">Backbonejs.org</a>.  You can browse <a href="https://developer.stackmob.com/sdks/js/api" target="_blank">StackMob's JS API Docs</a> and <a href="http://developer.stackmob.com/tutorials/js" target="_blank">StackMob JS Tutorials</a> for more detailed information, but for now, let's get down into a quick look as to how easily you can move to StackMob.
+Coming from Parse to StackMob via JavaScript is incredibly easy in that both JavaScript SDKs are based off of <a href="http://backbonejs.org" target="_blank">Backbonejs.org</a>.  You can browse <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs" target="_blank">StackMob's JS API Docs</a> and <a href="http://developer.stackmob.com/tutorials/js" target="_blank">StackMob JS Tutorials</a> for more detailed information, but for now, let's get down into a quick look as to how easily you can move to StackMob.
 
 # Declaring custom classes
 

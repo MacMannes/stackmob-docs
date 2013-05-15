@@ -9,7 +9,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 * <a href="https://developer.stackmob.com/tutorials/customcode/Build-and-Upload-Custom-Code-Example" target="_blank">Build and Upload Custom Code Example</a>  
 
 For a more in-depth look into Custom Code, you may want to check out a detailed introduction here:
@@ -17,7 +17,7 @@ For a more in-depth look into Custom Code, you may want to check out a detailed 
 
 <h2>Related API Documentation</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-customcode" target="_blank">StackMob.customcode</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-customcode" target="_blank">StackMob.customcode</a>
 
 <h1>Let's get started!</h1>
 
@@ -29,7 +29,7 @@ We've created a separate tutorial called <a href="https://developer.stackmob.com
 <h2>Call a method</h2>
 
 Now that you have the example custom code uploaded to StackMob and running, let's call it from Javascript.  Assuming you have
- <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">configured the JS SDK on your page already</a>, you can call 
+ <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">configured the JS SDK on your page already</a>, you can call 
  custom code methods like this:
 
 ```javascript

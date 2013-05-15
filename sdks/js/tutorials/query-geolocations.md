@@ -9,7 +9,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-GeoPoint-Field-to-Schemas" target="_blank">You have a schema that has a GeoPoint field</a>
 
@@ -17,11 +17,11 @@ Beginner
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.geopoint" target="_blank">StackMob.GeoPoint</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-stackmob.geopoint" target="_blank">StackMob.GeoPoint</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-tojson" target="_blank">toJSON</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-tojson" target="_blank">toJSON</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection.query_with_stackmob.geopoint" target="_blank">GeoPoint Query</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-stackmob.collection.query_with_stackmob.geopoint" target="_blank">GeoPoint Query</a>
 
 <h2>Create a GeoPoint Object</h2>
 
@@ -51,4 +51,4 @@ placesContainer.query(q, {
 });
 ```
 
-There are other GeoPoint queries that you can use and they are documented <a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection.query_with_stackmob.geopoint" target="_blank">here</a>
+There are other GeoPoint queries that you can use and they are documented <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-stackmob.collection.query_with_stackmob.geopoint" target="_blank">here</a>

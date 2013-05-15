@@ -9,17 +9,17 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 <h1>Let's get started!</h1>
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-query_-_stackmob.collection" target="_blank">query</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-query_-_stackmob.collection" target="_blank">query</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-count_-_stackmob.collection" target="_blank">count</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-count_-_stackmob.collection" target="_blank">count</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection.query" target="_blank">List of Available Queries</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-stackmob.collection.query" target="_blank">List of Available Queries</a>
 
 <h2>Read a Specific Object</h2>
 

@@ -9,7 +9,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * There is a `User` object with `Bill Watterson` as its `username` and some valid email address in its `email` field (the field name can be anything as long as you correctly point the Forgot Password Email Field to the field containing email address)
 
@@ -21,7 +21,7 @@ Beginner
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-forgotpassword" target="_blank">forgotPassword</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-forgotpassword" target="_blank">forgotPassword</a>
 
 <h2>Send an Email for Password Recovery</h2>
 

@@ -13,7 +13,7 @@ Beginner
 
 * <a href="https://developer.stackmob.com/tutorials/js/Setting-Up-Facebook" target="_blank">Correct initialization of Facebook SDK</a>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * A StackMob `User` that has been created through <a href="https://developer.stackmob.com/tutorials/js/Create-User-with-Facebook" target="_blank">createUserWithFacebook</a> or <a href="https://developer.stackmob.com/tutorials/js/Link-User-with-Facebook" target="_blank">linkUserWithFacebook</a>
 
@@ -21,7 +21,7 @@ Beginner
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-loginwithfacebooktoken" target="_blank">loginWithFacebookToken</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-loginwithfacebooktoken" target="_blank">loginWithFacebookToken</a>
 
 <h2>Login User with Facebook Token</h2>
 

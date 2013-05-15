@@ -1,16 +1,19 @@
+# Advanced Queries
+
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/advanced-query.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+## Objective
 
 Create a complex query your data and display results in a table view.
 
-<h3>Experience Level</h3>
+## Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+## Estimated time to complete
+
 ~5 minutes
 
-<h3>Prerequisites</h3>
+## Prerequisites
 
 * XCode 4.x and greater
 
@@ -20,20 +23,20 @@ Beginner
 
 * [Download StackMob Read into Table View App](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read-into-table.zip)
 
-<h3>Jump to:</h3>
+## Jump to:
 
 * <a href="#and">AND Compound NSPredicate</a>
 * <a href="#additional_methods">Additional Predicates</a>
 * <a href="#or">OR Compound NSPredicate</a>
 * <a href="#smpredicate">SMPredicate</a>
 
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h1>Let's get started!</h1>
+**Let's get started!**
 
-<h2>Open the StackMob Read to TableView</h2>
+# Open the StackMob Read to TableView
 
 We’ll use the project from the Read to TableView Tutorial where we read all objects and display them in a table view.  It has StackMob imported, Core Data and a fetchRequest setup to display data in the table view.  This allows you to focus on the objective of this tutorial.
 
@@ -41,7 +44,7 @@ For more information on what's inside of the Read into Table View app, see <a hr
 
 Unzip the StackMob Read into Table View App and open **read-into-table.xcodeproj**.
 
-<h2>Add your Public Key</h2>
+# Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -55,7 +58,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 
-<h2>Modify our Todo Entity</h2> 
+# Modify our Todo Entity
 We are going to modify our Todo Entity to add a new attribute.  Click on **mydatamodel.xcdatamodeld**, select the **Todo** Entity and click the plus sign to add a new attribute.
 Give the new attribute the name **count** with a data type of **Integer16**
 
@@ -65,7 +68,8 @@ Give the new attribute the name **count** with a data type of **Integer16**
 <br><br>
 
 
-<h2>Open ListViewController.m and add code to create an object.</h2> 
+# Open ListViewController.m and add code to create an object
+
 Let's add some code to our ViewDidLoad method to create a new object that has both a title and a count.  Make sure to **import StackMob** at the top of the file.
 
 
@@ -101,7 +105,8 @@ Add the following **highlighted** code to your ListViewController.m file:
 ```
 
 <a name="and"></a>
-<h2>Add an AND Compound NSPredicate to the fetchedResultsController in ListViewController.m</h2> 
+
+# Add an AND Compound NSPredicate to the fetchedResultsController in ListViewController.m
 
 The NSPredicate class is used to define logical conditions used to constrain a search  for a fetch.  You can pass an array of NSPredicates to NSCompoundPredicate to create a predicate in the form "predicate1" AND "predicate2".
 
@@ -149,12 +154,14 @@ Add the following **highlighted** code to your ListViewController.m file:
 }
 ```
 
-<h2>Build and Run!</h2>
+# Build and Run!
 
 Run your project.  You should only see results that match the query with a title of Hello World and a count greater than 2.
 
 <a name="additional_methods"></a>
-<h2>Additional Predicates</h2>
+
+## Additional Predicates
+
 Below are more examples of Comparison Predicates we support.
 
 
@@ -197,7 +204,8 @@ Below are more examples of Comparison Predicates we support.
 ```
 
 <a name="or"></a>
-<h2>OR Compound Predicate</h2>
+
+## OR Compound Predicate
 
 Multiple predicates can be OR'ed together to create a fetch request with conditions "A" OR "B" OR "C".  Here's an example:
 
@@ -289,7 +297,8 @@ Here is a final, more complex example:
 ```
 
 <a name="smpredicate"></a>
-<h2>SMPredicate</h2>
+
+# SMPredicate 
 
 SMPredicate is a special subclass of NSPredicate that allows the querying of Geo Points.
 

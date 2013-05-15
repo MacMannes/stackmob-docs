@@ -9,7 +9,7 @@ Beginner
 
 <h3>Prerequisites</h3>
 
-* <a href="https://dashboard.stackmob.com/sdks/js/config" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/configure" target="_blank">Running the StackMob Python Web Server with your initialized JS SDK</a>
 
 * There is a `User` object with `username: 'test'` and `password: 'test'`
 
@@ -17,15 +17,15 @@ Beginner
 
 <h2>Related API</h2>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-login" target="_blank">login</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-login" target="_blank">login</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-isloggedin_-_stackmob" target="_blank">isLoggedIn</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-isloggedin_-_stackmob" target="_blank">isLoggedIn</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-isuserloggedin" target="_blank">isUserLoggedIn</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-isuserloggedin" target="_blank">isUserLoggedIn</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-getloggedinuser" target="_blank">getLoggedInUser</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-getloggedinuser" target="_blank">getLoggedInUser</a>
 
-* <a href="https://developer.stackmob.com/sdks/js/api#a-logout" target="_blank">logout</a>
+* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-logout" target="_blank">logout</a>
 
 <h2>Login With an Existing User</h2>
 
