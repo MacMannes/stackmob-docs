@@ -5,10 +5,12 @@ StackMob's Javascript SDK enables your application to take advantage of StackMob
 
 The <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs">StackMob JavaScript SDK API Docs</a> are also available for reference.
 
+
 # Setup
 
-Setup the JS SDK by including the latest <abbr title="StackMob JavaScript SDK">JS SDK</abbr>.  Check the <a href="https://developer.stackmob.com/stackmob-js-sdk">StackMob JS SDK page</a> for the latest.
+## Initializing the JS SDK
 
+Setup the JS SDK by including the latest <abbr title="StackMob JavaScript SDK">JS SDK</abbr>.  Check the <a href="https://developer.stackmob.com/stackmob-js-sdk">StackMob JS SDK page</a> for the latest.
 
 [SCREENSHOT OF DASHBOARD AND KEYS?]
 
@@ -45,17 +47,14 @@ StackMob.init({
 
 Notice how we included `jQuery`.  You can also use `Sencha Ext` or `Zepto.js` instead.  Just include the Sencha or Zepto library in place of jQuery.
 
-# Objects
 
+## Defining a Model
 
 Let's say you're creating a simple todo-list app, where you have an object type called `Todo`.  Even before we get to the backend, datastore, and all that good stuff, let's define our object types.
 
-We'll define your `Todo` class by extending from `StackMob.Model`.  `StackMob.Model` will give your object its save/fetch abilities (and much more).
+Define your `Todo` class by extending from `StackMob.Model`.  Doing this will give your object its save/fetch abilities (and much more).
 
-<p class="alert">A <code>StackMob.Model</code> is built upon Backbone.js's <code>Model</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Model" target="_blank">methods of a Backbone.js Model</a>.</p>
-
-
-## Defining your Model
+<p class="alert">A <code>StackMob.Model</code> is built upon Backbone.js's <code>Model</code> and therefore has all <a href="http://documentcloud.github.com/backbone/#Model" target="_blank">methods of a Backbone.js Model</a>.</p>
 
 ```js,15-17
 <!DOCTYPE html>
@@ -84,7 +83,7 @@ We'll define your `Todo` class by extending from `StackMob.Model`.  `StackMob.Mo
 
 
 <script type="text/javascript">
-  //your code goes here
+  // Your code goes here
 </script>
 
 </body>
@@ -93,27 +92,12 @@ We'll define your `Todo` class by extending from `StackMob.Model`.  `StackMob.Mo
 
 The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a schema named `todo` on the server side. *We'll get to the server side further down this guide!*
 
-## Defining your Collection
 
-To work with an array of your objects, define your `Collection`.
-
-```js,5-7
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
-
-  var Todos = StackMob.Collection.extend({
-    model: Todo
-  });
-```
-
-<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
-
-## set(..)
+### set(..)
 
 If you need to modify your object locally (without saving it to the server), you can use `get` and `set`.
 
-You can use the `set(..)` method to pass in or change your local JSON.  You can call `set` multiple times.
+You can use the `set(..)` method to pass in or change your local object.  You can call `set` multiple times.
 
 ```javascript
 <script type="text/javascript">
@@ -133,9 +117,10 @@ You can use the `set(..)` method to pass in or change your local JSON.  You can 
 </script>
 ```
 
-## get(..)
 
-You can use `get(..)` to get the value of your object's field:
+### get(..)
+
+You can use `get(..)` to get a field's value on your object:
 
 ```javascript
 <script type="text/javascript">
@@ -145,9 +130,10 @@ You can use `get(..)` to get the value of your object's field:
 </script>
 ```
 
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can practically use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
+<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
 
-## toJSON()
+
+### toJSON()
 
 You can also display the JSON representation of your model by calling the `toJSON()` method.
 
@@ -175,10 +161,27 @@ You can also display the JSON representation of your model by calling the `toJSO
 ```
 
 
+## Defining Collections
+
+To work with an array of your objects, define your `Collection`.
+
+```js,5-7
+  var Todo = StackMob.Model.extend({
+    schemaName: 'todo'
+  });
+
+  var Todos = StackMob.Collection.extend({
+    model: Todo
+  });
+```
+
+<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
+
 
 # Datastore
 
 Let's use the JS SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
+
 
 ## Creating Objects
 
@@ -224,6 +227,7 @@ This tells StackMob to save your object in the `todo` schema.
   If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a `create` call. (This only occurs in the development environment.)
 </p>
 
+
 ## Asynchronous Calls
 
 Notice that there are `success` and `error` callback functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
@@ -245,6 +249,7 @@ todo.create({
   error: function(model, result, options) {}
 });
 ```
+
 
 ## Reading Objects
 
@@ -303,6 +308,7 @@ todo.save({
 });
 ```
 
+
 ## Deleting Objects
 
 Let's now delete your object.
@@ -315,8 +321,6 @@ user.destroy({
   error: function(model, result, options) {}
 });
 ```
-
-<span/>
 
 
 ## Arrays
@@ -344,7 +348,8 @@ var todo = new Todo({ todo_id: '12345' });
 todo.appendAndSave('subtasks', ['do C']);
 ```
 
-If you have multiple users appending to the same array concurrently, StackMob makes sure that each append is respected (and not overwritten as you would run into if you did a `save` on the object).  
+If you have multiple users appending to the same array concurrently, StackMob makes sure that each append is respected (and not overwritten as you would run into if you did a `save` on the object).
+
 
 ## Deleting from an array
 
@@ -356,6 +361,7 @@ todo.deleteAndSave('subtasks', ['rinse and repeat']);
 ```
 
 As with `appendAndSave`, concurrency issues are handled appropriately.
+
 
 # Queries
 
@@ -374,6 +380,7 @@ todos.query(q, {
 });   
 ```
 
+
 ## Comparison
 
 Query by greater than, greater than or equal too, less than...
@@ -389,6 +396,7 @@ q.lte('lastmoddate', twoDaysAgo); //last modified less than or equal to 2 days a
 var todos = new Todos();
 todos.query(q, ...);
 ```
+
 
 ## Relationship and Arrays
 
@@ -412,6 +420,7 @@ q.mustBeOneOf('friends', ['john']);
 todos.query(q);
 ```
 
+
 ## Pagination
 
 Return "page 2" of results, assuming 5 per page.
@@ -424,6 +433,7 @@ q.setRange(5,9);
 
 todos.query(q);
 ```
+
 
 ## Select Fields
 
@@ -457,6 +467,7 @@ Associate two separate objects together in a relationship.
 Let's give a `user` object several `todo` items.
 
 [DOC ON RELATIONSHIPS/SCREENSHOTS]
+
 
 ## Adding Related Objects
 
@@ -553,6 +564,7 @@ var q = new StackMob.Collection.Query();
 q.setExpand(3);
 ```
 
+
 ### Selecting Related Fields
 
 You can limited the fields returned for related objects.
@@ -584,6 +596,7 @@ todos.query(q, ...)
   Select fields to improve performance by reducing the payload that gets sent back.  Particularly useful when you have cyclical references.  <b>StackMob always returns the primary key</b>, even when not specified.
 </p>
 
+
 ## Decoupling Related Objects
 
 You can decouple the relationship between two objects.  Remove chore `1` from the `Marty`'s list.  The todo object `1` remains in the datastore.
@@ -592,6 +605,7 @@ You can decouple the relationship between two objects.  Remove chore `1` from th
 var user = new StackMob.User({ username: 'Marty' });
 user.deleteAndSave('chores', ['1'], StackMob.SOFT_DELETE, { success: ..., error: ... }); 
 ```
+
 
 ### Delete Related Objects
 
@@ -605,9 +619,11 @@ user.deleteAndSave('chores', ['1'], StackMob.HARD_DELETE, { success: ..., error:
 
 Todo object `1` is removed from the datastore completely.
 
+
 # User Authentication
 
 StackMob also gives you a way to authenticate your users.  The JS SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.
+
 
 ## Creating a User
 
@@ -625,6 +641,7 @@ user.create({
 
 <p class="alert"><code>username</code> is the default primary key for <code>StackMob.User</code> objects.  <code>password</code> is a special field that gets encrypted on the server.</p>
 
+
 ## Fetching a User
 
 Fetching a user is simple.  Like other objects, just provide the primary key.
@@ -637,6 +654,7 @@ user.fetch({
   success: function(model, result, options) {}
 });
 ```
+
 
 ## Declaring your own User Object type
 
@@ -655,6 +673,7 @@ var c = new Customer({
 });
 c.create(); //saves to "customer"
 ```
+
 
 ## Login
 
@@ -687,6 +706,7 @@ user.login(true, {
   StackMob's uses OAuth 2.0 authentication, the industry standard.  When logging in, users are issued an accessToken that will be used to sign their requests to identify them.
 </p>
 
+
 ## Logout
 
 Logging out is easy.
@@ -695,6 +715,7 @@ Logging out is easy.
 var user = new StackMob.User();  //no username necessary, since only 1 user is logged in on the device at a time
 user.logout();  
 ```
+
 
 ## Checking Login Status
 
@@ -722,6 +743,7 @@ user.isLoggedIn({
 
 <p class="alert">For optimization, the methods only check the server if we've locally determined that your access token is expired.  It does so in case you were issued refresh tokens that would reopen your user session.  Otherwise, "yes" is called immediately if local tokens exist.</p>
 
+
 ## Get Logged In User
 
 Get the logged in user.  This is asynchronous, as it may check the server.
@@ -734,6 +756,7 @@ StackMob.getLoggedInUser({
 });
 ```
 
+
 ## Change Password
 
 
@@ -745,13 +768,18 @@ StackMob.getLoggedInUser({
 
 # Files
 
+
 # Geolocation
+
 
 # Facebook
 
+
 # Twitter
 
+
 # Cross Domain AJAX
+
 
 # Deploy
 
