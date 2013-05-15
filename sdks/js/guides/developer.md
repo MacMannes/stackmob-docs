@@ -57,9 +57,6 @@ We'll define your `Todo` class by extending from `StackMob.Model`.  `StackMob.Mo
 
 ## Defining your Model
 
-<span/>
-
-
 ```js,15-17
 <!DOCTYPE html>
 <html>
