@@ -1,12 +1,16 @@
-# StackMob Javascript SDK Developer Guide
+Developer Guide
+======================================================
 
 StackMob's Javascript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
 
 The <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs">StackMob JavaScript SDK API Docs</a> are also available for reference.
 
-# SDK Setup
+# Setup
 
 Setup the JS SDK by including the latest <abbr title="StackMob JavaScript SDK">JS SDK</abbr>.  Check the <a href="https://developer.stackmob.com/stackmob-js-sdk">StackMob JS SDK page</a> for the latest.
+
+
+[SCREENSHOT OF DASHBOARD AND KEYS?]
 
 <a href="https://dashboard.stackmob.com/settings">Find your public key on your app dashboard</a> and initialize the <abbr title="StackMob JavaScript SDK">JS SDK</abbr>.
 
@@ -44,13 +48,14 @@ Notice how we included `jQuery`.  You can also use `Sencha Ext` or `Zepto.js` in
 # Objects
 
 
-In the following examples, let's pretend you're creating a simple todo-list app, where you have an object type called `Todo`.
-
-## Define your example Todo Class
+Let's say you're creating a simple todo-list app, where you have an object type called `Todo`.  Even before we get to the backend, datastore, and all that good stuff, let's define our object types.
 
 We'll define your `Todo` class by extending from `StackMob.Model`.  `StackMob.Model` will give your object its save/fetch abilities (and much more).
 
 <p class="alert">A <code>StackMob.Model</code> is built upon Backbone.js's <code>Model</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Model" target="_blank">methods of a Backbone.js Model</a>.</p>
+
+
+## Defining your Model
 
 <span/>
 
@@ -89,14 +94,27 @@ We'll define your `Todo` class by extending from `StackMob.Model`.  `StackMob.Mo
 </html>
 ```
 
-The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a schema named `todo`.
+The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a schema named `todo` on the server side. *We'll get to the server side further down this guide!*
 
-## Setting Fields
+## Defining your Collection
 
+To work with an array of your objects, define your `Collection`.
+
+```js,5-7
+  var Todo = StackMob.Model.extend({
+    schemaName: 'todo'
+  });
+
+  var Todos = StackMob.Collection.extend({
+    model: Todo
+  });
+```
+
+<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
+
+## set(..)
 
 If you need to modify your object locally (without saving it to the server), you can use `get` and `set`.
-
-### set(..)
 
 You can use the `set(..)` method to pass in or change your local JSON.  You can call `set` multiple times.
 
@@ -118,25 +136,21 @@ You can use the `set(..)` method to pass in or change your local JSON.  You can 
 </script>
 ```
 
-### get(..)
+## get(..)
 
 You can use `get(..)` to get the value of your object's field:
 
 ```javascript
 <script type="text/javascript">
-  var user = new StackMob.User({ username: 'Chuck Norris' });
-  user.fetch({
-    success: function(model) {
-      console.debug(model.get('weapon')); //"NunChucks"
-    }
-  });
+  var todo = new Todo({ action: 'Take out the garbage!' });
+  todo.get('action'); //Take out the garbage!
 
 </script>
 ```
 
 <p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can practically use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
 
-### toJSON()
+## toJSON()
 
 You can also display the JSON representation of your model by calling the `toJSON()` method.
 
@@ -163,55 +177,37 @@ You can also display the JSON representation of your model by calling the `toJSO
 </script>
 ```
 
+
+
 # Datastore
 
-Let's use the JS SDK to persist objects to the datastore and retrieve them.
+Let's use the JS SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
 
 ## Creating Objects
 
-Let's now create an instance of your `todo` object.
+Save an instance of your `todo` object to the server.
 
 ```javascript
-<!DOCTYPE html>
-<html>
-<head>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-x.y.z-bundled-min.js"></script>
-
 <script type="text/javascript">
-/* <![CDATA[ */
-  StackMob.init({
-    publicKey: "YOUR PUBLIC KEY",
-    apiVersion: 0
-  });
-
-  //Define your Todo class once on the page.
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
-
-/* ]]> */
-</script>
-
-</head>
-<body>
-
-
-<script type="text/javascript">
-  var todo = new Todo({ action: 'Go back and save Marty!', when: 'back to the future!', priority: 'high' });
+  var todo = new Todo({ action: 'Go back and save Marty!', when: 'back to the future!', priority: 1, done: false });
   todo.create({
     success: function(model, result, options) { console.debug(model.toJSON()); },
     error: function(model, error, options) {}
   });
 </script>
-
-</body>
-</html>
 ```
 
-You've now created your own `Todo` class and saved a `Todo` object!  
+That's it!  That fires off an AJAX call to StackMob which saves your object.  StackMob will **automatically create your schema** for you if it doesn't already exist.  
 
-StackMob will automatically create your schema for you if it doesn't already exist.  StackMob will also generate several fields on your object as well:
+Here's how it'll look on the server:
+
+[SCREENSHOT OF DATA BROWSER]
+
+And 
+
+[SCREENSHOT OF SCHEMA LIST]
+
+StackMob automatically generates some fields for you too.
 
 * `todo_id` (the primary key) - primary keys will have the format of `[schemaName]_id`
 * `createddate` - the created date in milliseconds
@@ -219,13 +215,19 @@ StackMob will automatically create your schema for you if it doesn't already exi
 * `sm_owner` - who created the object (we'll get into this later!)
 
 
-Notice in `line 19`, you've defined the `schemaName: todo`.  This tells StackMob to save your object in the `todo` schema.  Making the call above, you'll see on your <a href="https://dashboard.stackmob.com/schemas/" target="_blank">StackMob schemas list</a> that StackMob will have created your `todo` schema for you automatically. 
+If you recall from earlier, you defined your `Todo` object to bind to the `todo` schema:
+
+```scala
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+```
+
+This tells StackMob to save your object in the `todo` schema.
 
 <p class="alert">
-  If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a `create` call. This only occurs in the development environment.
+  If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a `create` call. (This only occurs in the development environment.)
 </p>
 
-## Callback Functions: Success and Error
+## Asynchronous Calls
 
 Notice that there are `success` and `error` callback functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
 
@@ -233,8 +235,8 @@ For example, let's try getting the JSON representation of an object after we've 
 
 ```js
 var todo = new Todo({ ... });
-todo.create();
-todo.toJSON(); //this may not work because "create" may still be sending/processing the AJAX request!
+todo.create(); //an AJAX call is fired to StackMob
+todo.toJSON(); //this may not work because "create" may still be waiting for AJAX request!
 ```
 
 Your code should be inside the success/error callbacks.
@@ -249,7 +251,7 @@ todo.create({
 
 ## Reading Objects
 
-To fetch your `todo` object, just specify the primary key and run `fetch`.
+To fetch your `todo` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.
 
 ```js
 var todo = new Todo({ todo_id: '1234' });
@@ -277,18 +279,18 @@ todo.fetch({
 
 ## Updating Objects
 
-You can edit existing objects easily.  Let's update `todo` object `1234` with a new field: `finished` and let's mark it as `true`.
+You can edit existing objects easily.  Let's update `todo` object `1234` with a new field: `done` and let's mark it as `true`.
 
 ```javascript
 var todo = new Todo({ todo_id: '1234' });
-todo.save({ finished: true }, {
+todo.save({ done: true }, {
   success: function(model, result, options) { console.debug(model.toJSON()); }
   error: function(model, result, options) {}
 });
 ```
 
 <p class="alert">
-  If you save a field that previously didn't exist, StackMob will add that to your schema automatically (only in the development environment).
+  If you save a <b>field</b> that previously didn't exist, StackMob will add that to your schema automatically (only in the development environment).
 </p>
 
 You can also set fields and save things later.
@@ -306,7 +308,7 @@ todo.save({
 
 ## Deleting Objects
 
-Let's now delete objects.
+Let's now delete your object.
 
 
 ```javascript
@@ -317,426 +319,298 @@ user.destroy({
 });
 ```
 
-That's it!
+<span/>
 
 
-## Appending to an array
+## Arrays
 
-If you have arrays, you can append and delete from arrays pretty easily without having to update the whole object.  This helps prevent concurrency issues when people are appending to the same array/object.  Use `appendAndSave(fieldName, values, options)`
+You can save arrays.
 
-```javascript
-<script type="text/javascript">
-  var todo = new Todo({ todo_id: '12345' });
-  todo.fetch();
-  
-  /*
-    Resulting in:
-   	{
-   		todo_id: '12345',
-  		title: 'Laundry',
-  		subtasks: ['buy detergent', 'buy fabric softener', 'fold clothes'] //array of strings
-  	}
-   */
-  
-  .....
-  
-  todo.appendAndSave('subtasks', ['hang clothes', 'rinse and repeat']);
-  
-  ....
-  
-  /*
-    Has this result saved on the server-side:
-    {
-   		todo_id: '12345',
-  		title: 'Laundry',
-  		subtasks: ['buy detergent', 'buy fabric softener', 'fold clothes', 'hang clothes', 'rinse and repeat'] 
-  	}
-   */
-</script>
+```js,3
+var todo = new Todo();
+todo.save({
+  subtasks: ['do A', 'do B']
+}, {
+  success: ...
+  error: ...
+});
 ```
 
-If you have multiple users appending to the same array concurrently, StackMob makes sure that each append is respected (and not overwritten as you would run into if you did a straight-up `save` on the object).  
+Arrays are special in that if you have two users saving to the same array at the same time, they could overwrite each others changes.
+
+e.g. John saves `['do A', 'do B']` and Jill saves `['do C']`.  Whoever calls `save` last will "win".
+
+But sometimes you want to append to an array.  StackMob provides ways of *appending* to arrays so that the end result will be `['do A', 'do B', 'do C']`, even if multiple users are operating on that field.
+
+```javascript
+var todo = new Todo({ todo_id: '12345' });
+todo.appendAndSave('subtasks', ['do C']);
+```
+
+If you have multiple users appending to the same array concurrently, StackMob makes sure that each append is respected (and not overwritten as you would run into if you did a `save` on the object).  
 
 ## Deleting from an array
 
-Now let's delete from an array without having to update the entire object.
+Now let's safely delete from an array.
 
 ```javascript
-<script type="text/javascript">
-  var todo = new Todo({ todo_id: '12345' });
-  todo.fetch();
-  
-  /*
-    Results in:
-   	{
-   		todo_id: '12345',
-  		action: 'Do Laundry',
-  		subtasks: ['buy detergent', 'buy fabric softener', 'fold clothes', 'hang clothes', 'rinse and repeat'] //array of strings
-  	}
-   */
-  
-  .....
-  
-  todo.deleteAndSave('subtasks', ['rinse and repeat']);
-  
-  ....
-  
-  /*
-    Has this result saved on the server-side:
-    {
-   		todo_id: '12345',
-  		action: 'Do Laundry',
-  		subtasks:  ['buy detergent', 'buy fabric softener', 'fold clothes', 'hang clothes']
-  	}
-   */
-</script>
+var todo = new Todo({ todo_id: '12345' });
+todo.deleteAndSave('subtasks', ['rinse and repeat']);
 ```
 
 As with `appendAndSave`, concurrency issues are handled appropriately.
 
+# Queries
 
-# Object Collections
-
-You'll likely be dealing with more than one object at a time though.  That's where `StackMob.Collection` comes in.  A `Collection` of objects gives you some convenient ways to manage and query for several objects at once.
-
-
-<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
-
-Let's define an object that will represent a **list** of your `Todo` objects.
+To query objects by field parameters, paginate, sort by, and more, use `StackMob.Collection.Query` in conjunction with your `Collection`.  In our case, that'll be `Todos`.  Let's get the first 5 `high` priority todo items, ordered by `createddate`.
 
 ```javascript
+var q = new StackMob.Collection.Query();
+q.equals('priority', 'high').orderAsc('createddate').notEquals('done', true); //you can chain query parameters
+q.setRange(0,4); //or add them individually
 
-<!DOCTYPE html>
-<html>
-<head>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-x.y.z-bundled-min.js"></script>
-
-<script type="text/javascript">
-/* <![CDATA[ */
-  StackMob.init({
-    publicKey: "YOUR PUBLIC KEY",
-    apiVersion: 0
-  });
-
-  //Define your Todo class once on the page.
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
-
-  var Todos = StackMob.Collection.extend({
-    model: Todo
-  });
-
-/* ]]> */
-</script>
-
-</head>
-<body>
-
-
-<script type="text/javascript">
-  ...
-</script>
-
-</body>
-</html>
-
+var todos = new Todos();
+todos.query(q, {
+  success: function(collection) {
+    console.debug(collection.toJSON());
+  }
+});   
 ```
 
-Extending from `StackMob.Collection` gives your list some important methods that help you query for multiple `Todo` items on StackMob.  Let's use that `Todos` collection to get all `Todo` objects saved on StackMob:
+## Comparison
 
-```javascript
-<!DOCTYPE html>
-<html>
-<head>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-x.y.z-bundled-min.js"></script>
+Query by greater than, greater than or equal too, less than...
 
-<script type="text/javascript">
-/* <![CDATA[ */
-  StackMob.init({
-    publicKey: "YOUR PUBLIC KEY",
-    apiVersion: 0
-  });
+```js
+var fiveDaysAgo = (new Date()).getTime() - (5 * 24 * 60 * 60 * 1000);
+var twoDaysAgo = (new Date()).getTime() - (2 * 24 * 60 * 60 * 1000)
 
-  //Define your Todo class once on the page.
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
+var q = new StackMob.Collection.Query();
+q.gt('createddate', fiveDaysAgo); //created date greater than 5 days ago
+q.lte('lastmoddate', twoDaysAgo); //last modified less than or equal to 2 days ago
 
-  var Todos = StackMob.Collection.extend({
-    model: Todo
-  });
-
-/* ]]> */
-</script>
-
-</head>
-<body>
-
-
-<script type="text/javascript">
-  var todos = new Todos();
-  todos.fetch({
-    success: function(collection) {
-      //after we've gotten all the Todo items from StackMob, let's see what we have!
-      console.debug(todos.toJSON());
-    }
-  });
-</script>
-
-</body>
-</html>
+var todos = new Todos();
+todos.query(q, ...);
 ```
 
-## Fetch Filtered Objects with StackMob.Collection.Query
+## Relationship and Arrays
 
-You can request certain objects to be returned from StackMob by using `StackMob.Collection.Query`.  `StackMob.Collection.Query` gives you a way to specify what you're looking for.  Use it in conjunction with `StackMob.Collection`'s `query(..)` method.
+Query for any `todo` object with a `subtask` of `do C`.
 
-```javascript
-<!DOCTYPE html>
-<html>
-<head>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-x.y.z-bundled-min.js"></script>
-
-<script type="text/javascript">
-/* <![CDATA[ */
-  StackMob.init({
-    publicKey: "YOUR PUBLIC KEY",
-    apiVersion: 0
-  });
-
-  //Define your Todo class once on the page.
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
-
-  var Todos = StackMob.Collection.extend({
-    model: Todo
-  });
-
-/* ]]> */
-</script>
-
-</head>
-<body>
-
-
-<script type="text/javascript">
-  var smQuery = new StackMob.Collection.Query();
-  //get all Todo items of high priority, order by createddate in ascending order.
-  //Get the first 5 results.
-  smQuery.equals('priority', 'high').orderAsc('createddate'); //you can chain query parameters
-  smQuery.setRange(0,4); //or add them individually
-
-
-  var todos = new Todos();
-  //use StackMob.Collection's "query" method to get your results from StackMob
-  todos.query(smQuery, {
-    success: function(collection) {
-      //print out the todos after the query returns from StackMob
-      console.debug(todos.toJSON());
-    }
-  });
-</script>
-
-</body>
-</html>
+```js
+var q = new StackMob.Collection.Query();
+q.mustBeOneOf('subtasks', ['do C']);
+var todos = new Todos();
+todos.query(q, ...);
 ```
+
+Relationships are lists of primary keys, so it works on relationships as well (more info below).
+
+```js
+var q = new StackMob.Collection.Query();
+q.mustBeOneOf('friends', ['john']);
+
+...
+
+todos.query(q);
+```
+
+## Pagination
+
+Return "page 2" of results, assuming 5 per page.
+
+```js
+var q = new StackMob.Collection.Query();
+q.setRange(5,9);
+
+...
+
+todos.query(q);
+```
+
+## Select Fields
+
+Only return back a subset of fields, reducing the payload.
+
+```js
+var q = new StackMob.Collection.Query();
+q.select('subtasks');
+
+...
+
+todos.query(q);
+```
+
+This will return a smaller `todo` JSON from the server:
+
+```js
+{
+  todo_id: '1234',
+  subtasks: ['do A', 'do B']
+}
+```
+
+StackMob always returns the primary key, but no other fields are returned.
 
 
 # Relationships
 
-Relationships give you the ability to "join" objects together and return the data about the related objects in a single call.  In the below examples, were giving a `user` things to do by giving him a one-to-many relationship of `todo` items.
+Associate two separate objects together in a relationship.
 
-Let's assume you've <a href="https://www.stackmob.com/devcenter/docs/Schema-Relationships">added some relationships</a> to your object.  
+Let's give a `user` object several `todo` items.
 
-
+[DOC ON RELATIONSHIPS/SCREENSHOTS]
 
 ## Adding Related Objects
 
 You can create objects and add them to a related parent object in one swoop.
 
-Let's assume you have a `User` with a one-to-many relationship with `Todo`, represented as a field called `chores`.  Let's assign some more chores for `Marty`. 
-
-The `Todo` items will be created in the `todo` table *and* their IDs will be appended to the relationship array on `Marty`, updating the `Marty` user records in the `user` table - all in one call.
+Let's assign some more chores for `Marty`. 
 
 ```javascript
-<script type="text/javascript">
-	var chore1 = new Todo({ action: 'Save Doc!' });
-	var chore2 = new Todo({ action: 'Save Mom and Dad!' });
+var chore1 = new Todo({ action: 'Save Doc!' });
+var chore2 = new Todo({ action: 'Save Mom and Dad!' });
+var chore3 = new Todo({ action: 'Have Biff wash my car.' });
 
-  var user = new StackMob.User({ username: 'Marty' });
-  user.addRelationship('chores', [chore1, chore2], { ..success... });
-  
-  ...
-  
-  user.fetch();
-  
-  /*
-   Results in:
-   {
-     username: 'Marty',
-     chores: [ 
-     		'ID for some existing todo that Marty already has', 
-     		'ID for Save Doc!', 
-     		'ID for Save Mom and Dad!' ], //We've appended ID for "Save Doc and ID for "Save Mom and Dad""     
-     'createddate': ...,
-     'lastmoddate': ...
-   }
-   
-   Meanwhile, the instances of the Todo objects are saved in the "todo" table.
-   */
-  
+var user = new StackMob.User({ username: 'Marty' });
+user.addRelationship('chores', [chore1, chore2, chore3], { ..success... });
+```
+
+In a single call, the chores will be created against the `todo` schema, and the `user` will be updated as well.  What `Marty`'s JSON looks like:
+
+```js
+{
+ username: 'Marty',
+ chores: [ 
+    '1', 
+    '2', 
+    '3' ], //these are "todo_ids" of the chores 
+ 'createddate': ...,
+ 'lastmoddate': ...
+}
+```
+
+Meanwhile querying `todo` will return
+
+```js
+var todos = new Todos();
+todos.fetch();
+
+...
+
+
+[
+  { todo_id: '1', action: 'Save Doc!'},
+  { todo_id: '2', action: 'Save Mom and Dad!'},
+  { todo_id: '3', action: 'Have Biff wash my car.!'},
+]
+```
+
+<p class="alert">
+  StackMob handles relationships by reference.  StackMob does not embed JSON within JSON.  There's only one instance of it in the datastore, making your data more easily editable and flexible.
+</p>
+
+
+## Fetching Related Objects (Join)
+
+Though StackMob keeps related objects by ID, you can get the full JSON for related objects from the server easily with `fetchExpanded`.
+
+```js,2
+var user = new StackMob.User({ username: 'Marty' });
+user.fetchExpanded(1);
+
+//user.toJSON()
+{
+ username: 'Marty',
+ chores: [
+  {
+    todo_id: '1',
+    action: 'Save Doc!',
+    createddate: ...,
+    lastmoddate: ... 
+  },
+  {
+    todo_id: '2',
+    action: 'Save Mom and Dad!',
+    createddate: ...,
+    lastmoddate: ... 
+  },
+  {
+    todo_id: '3',
+    action: 'Have Biff wash my car.',
+    createddate: ...,
+    lastmoddate: ... 
+  }
+ ], 
+ 'createddate': ...,
+ 'lastmoddate': ...
+}
+```
+
+Related objects can have related objects themselves, so you can call `fetchExpanded(2)` or `fetchExpanded(3)` as well to expand deeper.
+
+You can also specify `expand` on a `Query`.
+
+```js
+var q = new StackMob.Collection.Query();
+q.setExpand(3);
+```
+
+### Selecting Related Fields
+
+You can limited the fields returned for related objects.
+
+Only get the `action` from related `todo` objects, represented by the `chores` field:
+
+```js
+var todos = new Todos();
+
+var q = new StackMob.Collection.Query();
+q.select('chores').select('chores.action').setExpand(1);
+
+todos.query(q, ...)
+
+//todos.toJSON()
+{
+  username: 'Marty',
+  chores: [
+    {
+      todo_id: 1,
+      action: 'Save Doc!'
+    },
+    ...
+  ]
+}
+```
+
+<p class="alert">
+  Select fields to improve performance by reducing the payload that gets sent back.  Particularly useful when you have cyclical references.  <b>StackMob always returns the primary key</b>, even when not specified.
+</p>
+
+## Decoupling Related Objects
+
+You can decouple the relationship between two objects.  Remove chore `1` from the `Marty`'s list.  The todo object `1` remains in the datastore.
+
+```javascript
+var user = new StackMob.User({ username: 'Marty' });
+user.deleteAndSave('chores', ['1'], StackMob.SOFT_DELETE, { success: ..., error: ... }); 
+```
+
+### Delete Related Objects
+
+But you may want to delete a relationship **and** remove the actual related object from the database.
+
+```javascript
+var user = new StackMob.User({ username: 'Marty' });
+user.deleteAndSave('chores', ['1'], StackMob.HARD_DELETE, { success: ..., error: ... }); 
 </script>
 ```
 
-
-## Fetching Relationships (Join)
-
-The big advantage of defining relationships is that you can query for a lot of information in a single API call.  The data is generally the same as what you'd want a traditional SQL "join" to return.  You can query for a `user` and get full instances of the related `chores` he has in a single call using the `expand` feature.
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User({ username: 'Marty' });
-  
-  //No "expand"
-  user.fetch(); 
-  
-  /*
-   Results in:
-   {
-     username: 'Marty',
-     chores: [ '123', '456', 789'], 
-     'createddate': ...,
-     'lastmoddate': ...
-   }
-   */
-  
-  //Fetching WITH "expand"
-  user.fetchExpanded(1);
-  
-  /*
-   Results in:
-   {
-     username: 'Marty',
-     chores: [
-     	{
-     		todo_id: '123',
-     		action: 'Wash Biff's Car',
-     		createddate: ...,
-     		lastmoddate: ... 
-     	}, 
-     	{
-     		todo_id: '456',
-     		action: 'Save Doc!',
-     		createddate: ...,
-     		lastmoddate: ... 
-     	},
-			{
-     		todo_id: '789',
-     		action: 'Save Mom and Dad!',
-     		createddate: ...,
-     		lastmoddate: ... 
-     	}
-     ], 
-     'createddate': ...,
-     'lastmoddate': ...
-   }
-   */
-  
-</script>
-```
-
-Notice that with `fetchExpanded`, you don't have to query for the user and then make separate queries for the individual `Todo` items.  Instead, you can just fetch the expanded user!
-
-If `Todo` had related objects, you can keep expanding deeper with `fetchExpanded(2)`.  StackMob lets you expand up to a **depth of 3**.  
-
-## Deleting Related Objects
-
-You can delete related objects in a single API call - without having to update the entire object.  This is also "thread safe" in that if multiple users delete related relationships from the object, StackMob will correctly handle each request and process them appropriately.
-
-## Soft Delete
-
-You can remove a relationship from an object (but keep the related object in the database) with a soft delete by passing the third parameter below as `false`.
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User({ username: 'Marty' });
-  user.deleteAndSave('chores', ['123', '456'], StackMob.SOFT_DELETE, { ..success... }); //delete the Todo objects with IDs of 123 and 456
-  
-  /*
-   //Before delete:
-   {
-     username: 'Marty',
-     chores: [ 
-     		'123', '456', '789'     
-     'createddate': ...,
-     'lastmoddate': ...
-   }
-   
-   //After delete
-   {
-     username: 'Marty',
-     chores: [ 
-     		'789'     
-     'createddate': ...,
-     'lastmoddate': ...
-   }
-   
-   */
-  
-  var todos = new Todos();
-  todos.fetch();
-  //The above query will return all todo's, including those with ids 123, 456, and 789 because they're still in the database.
-  
-  
-</script>
-```
-
-### Hard Delete
-
-But you may want to delete a relationship **and** remove the actual related object from the database.  Pass in `true` to do a hard delete.
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User({ username: 'Marty' });
-  user.deleteAndSave('chores', ['123', '456'], StackMob.HARD_DELETE, { ..success... }); //delete the chores with IDs of 123 and 456
-  
-  /*
-   //Before delete:
-   {
-     username: 'Marty',
-     chores: [ 
-     		'123', '456', '789'     
-     'createddate': ...,
-     'lastmoddate': ...
-   }
-   
-   //After delete
-   {
-     username: 'Marty',
-     chores: [ 
-     		'789'     
-     'createddate': ...,
-     'lastmoddate': ...
-   }
-   
-   */
-  
-  var todos = new Todos();
-  todos.fetch();
-  //The above query will return only [{ todo_id: '789' ... }] (only the 789 instance)
-  
-</script>
-```
-
+Todo object `1` is removed from the datastore completely.
 
 # User Authentication
 
-StackMob also gives you a way to authenticate your users.  The JS SDK now uses OAuth 2.0 to login. It uses your `user` schema to perform login.
+StackMob also gives you a way to authenticate your users.  The JS SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.
 
 ## Creating a User
 
@@ -750,25 +624,20 @@ user.create({
 });
 ```
 
-That's it!  You've saved a new user to the server!
-
-What's up with the dot in `StackMob.User`?  Don't worry.  It's not any magical javascript - we just wanted to make sure `User` didn't clash with any of your own variables, and so we namespaced `User` under `StackMob`.
+`StackMob.User` is provided with the JS SDK.  It has special authentication methods built in.
 
 <p class="alert"><code>username</code> is the default primary key for <code>StackMob.User</code> objects.  <code>password</code> is a special field that gets encrypted on the server.</p>
 
 ## Fetching a User
 
-Fetching a user is simple.  Just create a `StackMob.User` object with the `username` of the user you want retrieved. (`username` is the default primary key of `StackMob.User` objects.) Then call `fetch`.
+Fetching a user is simple.  Like other objects, just provide the primary key.
 
 
 ```javascript
 var user = new StackMob.User({ username: 'Bill Watterson' });
 //fetches the user "Bill Watterson" asynchronously
 user.fetch({
-  success: function(model) {
-    //After StackMob returns "Bill Watterson", print out the result
-    console.debug(model.get('username') + ': ' + model.get('profession'));
-  }
+  success: function(model, result, options) {}
 });
 ```
 
@@ -778,78 +647,117 @@ Are you using a schema besides `user`?  Maybe you renamed your `username` and `p
 
 ```js
 var Customer = StackMob.User.extend({
-  
+  schemaName: 'customer',
+  loginField: 'email',
+  passwordField: 'pass'
+});
+
+var c = new Customer({
+  email: 'billybob@email.com',
+  passwordField: 'yeehaw'
+});
+c.create(); //saves to "customer"
+```
+
+## Login
+
+Log in your user.
+
+```js
+var user = new StackMob.User({ username: 'chuck norris', password: 'myfists' });
+user.login(false, {
+  success: function(model, result, options) {
+    //if successfully logged in, StackMob returns the full user object to you
+  },
+  error: function(model, result, options) {
+    console.error(result); //or print out the error
+  }
 });
 ```
 
-## Login/Logout
+You can also stay logged in beyond the current session by flagging `true`:
 
-OAuth 2.0 login requires some basic setup.
+```js,1
+user.login(true, {
+  success: ...
+  error: ...
+})
+```
 
-### Login
+* Logging in from another device will invalidate the session on other devices.
 
-For a step by step visit <a href="https://stackmob.com/devcenter/docs/Authenticating-Users-with-the-JS-SDK" target="_blank">Authenticating Users with OAuth 2.0: The JS SDK</a>.
+<p class="alert">
+  StackMob's uses OAuth 2.0 authentication, the industry standard.  When logging in, users are issued an accessToken that will be used to sign their requests to identify them.
+</p>
 
-But as a summary, you'll:
+## Logout
 
-1. prepare a form for login 
-2. prepare a destination page to handle the successful redirect the server will send back.  
-
-And you'll have a logged in user.
-
-### Logout
-
-Logging out is simple too:
+Logging out is easy.
 
 ```javascript
-<script type="text/javascript">
-	//Let's logout a user
-	user.logout();  
-</script>
+var user = new StackMob.User();  //no username necessary, since only 1 user is logged in on the device at a time
+user.logout();  
 ```
 
 ## Checking Login Status
 
-You'll probably want to show different UI depending on whether a user is logged in or not.  
+Check to see if a user is logged in.  These methods are asynchronous because they also check the server in some instances.
 
-To check if *any* user is logged in, use `StackMob.isLoggedIn()`.
+```js
 
-To check to see if a particular user is logged in, use `StackMob.isUserLoggedIn(username)` or use the user's method `user.isLoggedIn()`.
+StackMob.isUserLoggedIn('chuck norris', {
+  yes: function() { /* if yes */ },
+  no: function() { /* if no */ }
+});
 
-Let's login `chucknorris` below and try out the various methods to see what they would print.
+StackMob.isLoggedIn({
+  yes: function() { /* if yes */ },
+  no: function() { /* if no */ }
+});
 
-```javascript
-<script type="text/javascript">
-//Let's start with no user logged in.
+var user = new StackMob.User({ username: 'chuck norris' });
+user.isLoggedIn({
+  yes: function() { /* if yes */ },
+  no: function() { /* if no */ }
+});
 
-StackMob.isLoggedIn(); //evaluates to false
-StackMob.isUserLoggedIn('chucknorris'); //evalutes to false
-
-//Now let's login "chucknorris"
-var user = new StackMob.User({ username: 'chucknorris', password: 'myfists' });
-user.login();
-
-...
-
-//After he's logged in, let's call these methods again
-
-StackMob.isLoggedIn(); //evaluates to true
-
-StackMob.isUserLoggedIn('chucknorris'); //evalutes to true
-
-StackMob.isUserLoggedIn('marty'); //evalutes to false
-
-user.isLoggedIn(); //evaluates to true (because this user instance is 'chucknorris'
-
-//Let's check if "Marty" is logged in.  Nope!
-var invaliduser = new StackMob.User({ username: 'marty' });
-invaliduser.isLoggedIn(); //evaluates to false (because user2 is 'marty');
-
-</script>
 ```
 
+<p class="alert">For optimization, the methods only check the server if we've locally determined that your access token is expired.  It does so in case you were issued refresh tokens that would reopen your user session.  Otherwise, "yes" is called immediately if local tokens exist.</p>
 
-# There's more to learn!
+## Get Logged In User
+
+Get the logged in user.  This is asynchronous, as it may check the server.
+
+```js
+StackMob.getLoggedInUser({
+  success: function(username) {
+    //username is a string if logged in, null if not.
+  }
+});
+```
+
+## Change Password
+
+
+## Password Recovery
+
+
+# Access Controls
+
+
+# Files
+
+# Geolocation
+
+# Facebook
+
+# Twitter
+
+# Cross Domain AJAX
+
+# Deploy
+
 
 Check the <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs" target="_blank">Javascript SDK API documentation page</a> for more!
 
