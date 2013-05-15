@@ -236,7 +236,7 @@ For example, let's try getting the JSON representation of an object after we've 
 ```js
 var todo = new Todo({ ... });
 todo.create(); //an AJAX call is fired to StackMob
-todo.toJSON(); //this may not work because "create" may still be waiting for AJAX request!
+todo.toJSON(); //this may not work because "create" may still be waiting for AJAX request to complete!
 ```
 
 Your code should be inside the success/error callbacks.
@@ -298,7 +298,7 @@ You can also set fields and save things later.
 ```javascript
 var todo = new Todo({ todo_id: '1234' });
 
-todo.set({ finished: true });
+todo.set({ done: true });
 
 todo.save({
   success: function(model, result, options) { console.debug(model.toJSON()); }
