@@ -1,14 +1,31 @@
 Custom Code Developer Guide
 ==========================================
 
-StackMob supports your custom server-side code in Java, Scala, and Clojure.
+StackMob supports your custom server-side code in Java, Scala, and Clojure.  We'll run it on our servers so that you can access it from any client.
 
 # Setup
 
 ## GitHub
 
+GitHub is the easiest way to setup Custom Code.
 
-# Methods
+# Declaring Custom Code
+
+Let's add a `helloworld` method to your Custom Code so that clients can call it.
+
+<span class="tab clientcall" title="iOS SDK"></span>
+asdf
+<span class="tab"></span>
+
+<span class="tab clientcall" title="Android SDK"></span>
+asdf
+<span class="tab"></span>
+
+<span class="tab clientcall" title="JS SDK"></span>
+```js
+StackMob.customcode('helloworld', { name: 'bob' })
+```
+<span class="tab"></span>
 
 how to declare your own methods.
 
