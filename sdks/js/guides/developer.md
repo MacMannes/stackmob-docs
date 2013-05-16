@@ -760,6 +760,7 @@ StackMob.getLoggedInUser({
 ## Change Password
 
 
+
 ## Password Recovery
 
 
@@ -775,14 +776,10 @@ StackMob.getLoggedInUser({
 # Facebook
 
 
-# Twitter
-
-
-# Cross Domain AJAX
-
 
 # Deploy
 
+# Cross Domain AJAX
 
 Check the <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs" target="_blank">Javascript SDK API documentation page</a> for more!
 

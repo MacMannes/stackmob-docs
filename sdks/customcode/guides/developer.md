@@ -1,9 +1,12 @@
 Custom Code Developer Guide
 ==========================================
 
+StackMob supports your custom server-side code in Java, Scala, and Clojure.
+
 # Setup
 
 ## GitHub
+
 
 # Methods
 
@@ -20,6 +23,14 @@ how to declare your own methods.
 ## Fetching Parameters
 
 get params out of request
+
+<span class="tab fetchparams" title="Java"></span>
+asdf
+<span class="tab"></span>
+
+<span class="tab fetchparams" title="Scala"></span>
+asdf
+<span class="tab"></span>
 
 ## Fetching Body
 
