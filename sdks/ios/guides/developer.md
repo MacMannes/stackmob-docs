@@ -64,6 +64,12 @@ Your data model is what Core Data uses to do something, TO BE DEFINED LATER
     return _managedObjectModel;
 }
 ```
+<!--- CREATE SUBCLASSES -->
+
+## Creating `NSManagedObject` Subclasses
+
+FILL IN
+
 <!--- INIT CDS -->
 
 ## Initialize a Core Data Store
@@ -121,41 +127,162 @@ If you want to do your own context creation, use the `persistentStoreCoordinator
 
 # Datastore
 
-## Performing Saves
+<!--- INSERT OBJECT -->
 
-At some point after inserting, updating, and deleting objects from a managed object context, you will initiate a save which will cause all modified objects to be saved to the external store.  In this case that is StackMob as well as a local cache database so data is available while the devices is offline.
+## Creating an Object
 
-The StackMob SDK has placed a wrapper around the familiar `save:` core data method to offer synchronous and asynchronous versions for improved performance. All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html">NSManagedObjectContext+Concurrency</a> class.
+Typically you will create subclasses of `NSManagedObject` for each of your Core Data entities, and create objects simply by instantiating a new instance. Core Data subclasses automatically give you setters and accessors to set an object's values.  Create a new Todo object like so:
 
-### Asynchronous Saves
+```obj-c
+Todo *newTodo = [[Todo alloc] init];
+    
+[newTodo setTitle:self.titleField.text];
+[newTodo setTodoId:[newManagedObject assignObjectId]];
+```
+
+<p class="alert alert-warning">Object IDs must be assigned to an object before it is persisted. This keeps Core Data IDs and StackMob objects in sync. For random arbitrary IDs, use the `assignObjectId` method.</p>
+
+<b>Without Subclasses</b>
+
+Instantiating a generic managed object requires using the generic `NSEntityDescription` method to create a new object in the context.
 
 ```obj-c
 NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
     
 [newManagedObject setValue:self.titleField.text forKey:@"title"];
 [newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
+```
 
+<p class="alert">
+The newly created object is not persisted until you <a href="#PerformingSaves">save the managed object context</a>.
+</p>
+
+<p class="alert alert-info">
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/assignObjectId">assignObjectId</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/primaryKeyField">primaryKeyField</a></br>
+	<a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSEntityDescription_Class/NSEntityDescription.html">insertNewObjectForEntityForName:inManagedObjectContext:</a></br>
+</p>
+
+<!--- READ OBJECT -->
+
+## Reading Objects
+
+To read objects from a particular Entity, create and execute a Core Data fetch request using methods from the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html">NSManagedObjectContext+Concurrency</a> class.
+
+<p class="alert">By default, objects are returned as faults, and attribute values are not accessed from the persistent store until specifically called upon in your code.  This ensures in-memory usage is as low as possible.</p> 
+
+<!--- ASYNC READ -->
+
+### Asynchronous Fetch Requests
+
+We've created an asynchronous wrapper around the familiar `executeFetchRequest:error` method which ensures that fetches are performed off the main thread and will not block your applications UI.
+
+```obj-c
+NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
+     
+// set any predicates or sort descriptors, etc.
+
+// execute the request
+[self.managedObjectContext executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
+    NSLog(@"%@",results);
+} onFailure:^(NSError *error) {
+    NSLog(@"Error fetching: %@", error);
+}];
+```
+
+If you wish to return managed object IDs rather than objects, use the following method:
+
+```obj-c
+[self.managedObjectContext executeFetchRequest:fetchRequest returnManagedObjectIDs:YES onSuccess:^(NSArray *results) {
+    NSLog(@"%@",results);
+} onFailure:^(NSError *error) {
+    NSLog(@"Error fetching: %@", error);
+}];
+```
+
+<p class="alert alert-info">
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:onSuccess:onFailure:">executeFetchRequest:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:onSuccess:onFailure:">executeFetchRequest:returnManagedObjectIDs:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:onSuccess:onFailure:">executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:">executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:</a></br>
+</p>
+
+<!--- SYNC READ -->
+
+### Synchronous Fetch Requests
+
+To execute synchronous fetches, use the `executeFetchRequestAndWait:error:` method. This works like `executeFetchRequest:error`, but uses the child-parent context model that is used internally by the SDK.
+
+```obj-c
+NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
+     
+// set any predicates or sort descriptors, etc.
+
+// execute the request
+NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRequest error:&error];
+```
+
+<p class="alert alert-info">
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:error:">executeFetchRequestAndWait:error:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:returnManagedObjectIDs:error:">executeFetchRequestAndWait:returnManagedObjectIDs:error:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:returnManagedObjectIDs:options:error:">executeFetchRequestAndWait:returnManagedObjectIDs:options:error:</a></br>
+</p>
+
+<!--- UPDATE OBJECT -->
+
+## Updating an Object
+
+After fetching an existing mananged object, update it by simply changing the object's values. The updated values are not persisted until the managed object context is saved.
+
+<!--- DELETE OBJECT -->
+
+## Deleting an Object
+
+```obj-c
+[self.manangedObjectContext deleteObject:aManagedObject];
+```
+
+<p class="alert alert-info">
+	<a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectContext_Class/NSManagedObjectContext.html">deleteObject:</a>
+</p>
+
+<!--- SAVE -->
+
+## Performing Saves
+
+At some point after inserting, updating, and deleting objects from a managed object context, you will initiate a save which will cause all modified objects to be persisted to the external store.  The external store in this case is StackMob as well as a local cache database, ensuring data is available while the devices is offline.
+
+The StackMob SDK has placed a wrapper around the familiar `save:` core data method to offer synchronous and asynchronous versions for improved performance. All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html">NSManagedObjectContext+Concurrency</a> class.
+
+<!--- ASYNC SAVES -->
+
+### Asynchronous Saves
+
+Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked.
+
+```obj-c
 [self.managedObjectContext saveOnSuccess:^{
     NSLog(@"You created a new object!");
 } onFailure:^(NSError *error) {
     NSLog(@"There was an error! %@", error);
 }];
 ```
+
+Use the callbacks to update the UI, notifiy other dependent files, etc.
+
 <p class="alert alert-info">
 	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveOnSuccess:onFailure:">saveOnSuccess:onFailure:</a></br>
 	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveWithSuccessCallbackQueue:failureCallbackQueue:onSuccess:onFailure:">saveWithSuccessCallbackQueue:failureCallbackQueue:onSuccess:onFailure:</a></br>
 	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveWithSuccessCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:">saveWithSuccessCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:</a></br>
 </p>
 
+<!--- SYNC SAVES -->
 
 ### Synchronous Saves
 
-```obj-c
-NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
-    
-[newManagedObject setValue:self.titleField.text forKey:@"title"];
-[newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
+Although the SDK synchronous save methods behave like Core Data's native `save:` method, we recommend using them because they follow the child-parent context patterns used internally by the SDK.
 
+```obj-c
 NSError *error = nil;
 BOOL success = [self.managedObjectContext saveAndWait:&error];
 ```
@@ -165,6 +292,7 @@ BOOL success = [self.managedObjectContext saveAndWait:&error];
 	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveAndWait:options:">saveAndWait:options:</a></br>
 </p>
 
+<!--- PER REQUEST OPTIONS -->
 
 ## Per Request Options
 
@@ -176,8 +304,6 @@ Not all options provided by the SMRequestOptions class are taken into account du
 Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
 </p>
 
-
-
 <!--- LOWER LEVEL DATASTORE API -->
 
 ## Lower Level Data Store API
@@ -186,9 +312,31 @@ If you want to make direct REST-based calls to the Datastore, check out the <a h
 
 # Queries
 
+## Predicates
+
+## Supported Queries
+
 # Relationships
 
+## One to One
+
+## One to Many
+
+## Many to Many
+
 # User Authentication
+
+## Creating a User Object
+
+## Logging in to StackMob
+
+## Checking Logged in Status
+
+## Logging out of StackMob
+
+## Reset a Password
+
+## Forgot Password
 
 # Geolocation
 
