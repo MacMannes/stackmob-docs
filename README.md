@@ -7,9 +7,7 @@ This is the home of StackMob's public facing docs.  Feel free to contribute by f
 
 We encourage you to contribute to StackMob Docs!  Whether it's an edit, a small code fix, or even a completely new tutorial, we're happy to have you involved!
 
-As developers, we joined StackMob to help other developers, and we thank you for giving back too.
-
-# How to Contribute
+Here's how:
 
 1.  Fork the StackMob Docs repository
 2.  Edit your file within the GitHub UI or push your fix to your repo
