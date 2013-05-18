@@ -142,11 +142,6 @@ Custom Code can access your datastore via the Custom Code SDK (included in your 
 
 You'll be accessing the datastore via `DataService`.
 
-<p class="alert alert-info">
-	There are plenty of <a href="https://github.com/stackmob/stackmob-customcode-java-examples/tree/master/src/main/java/com/stackmob/example/CRUD" target="_blank" rel="nofollow">fully working Custom Code Datastore examples</a> available.  You can fork the repo and link it to your StackMob account.
-</p>
-
-
 ## Create
 
 Let's create an object in the datastore from custom code.
@@ -242,6 +237,10 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 }
 ```
 
+<p class="alert alert-info">
+	There are plenty of <a href="https://github.com/stackmob/stackmob-customcode-java-examples/tree/master/src/main/java/com/stackmob/example/CRUD" target="_blank" rel="nofollow">fully working Custom Code Datastore examples</a> available.  You can fork the repo and link it to your StackMob account.
+</p>
+
 
 # Queries
 
@@ -257,7 +256,7 @@ You can fetch parameters out of the URL for GET and DELETE requests.  You can fe
 
 Let's get the parameters out of the request URL.  To start out, let's first make a GET request from the client SDKs with a few parameters.
 
-<span class="tab clientcall" title="iOS SDK"></span>
+<span class="tab clientcallgetparams" title="iOS SDK"></span>
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 	initGetRequestWithMethod:@"hello_world"];
@@ -276,7 +275,7 @@ SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 ```
 <span class="tab"></span>
 
-<span class="tab clientcall" title="Android SDK"></span>
+<span class="tab clientcallgetparams" title="Android SDK"></span>
 ```java
 StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
     @Override public void success(String responseBody) {}
@@ -285,7 +284,7 @@ StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() 
 ```
 <span class="tab"></span>
 
-<span class="tab clientcall" title="JS SDK"></span>
+<span class="tab clientcallgetparams" title="JS SDK"></span>
 ```js
 StackMob.customcode('hello_world', { name: 'joe', age: 10 }, 'GET', {
 	success: function(result) {},
@@ -309,17 +308,63 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 }
 ```
 
-### Fetching Body
-
-Perhaps you've sent up form url encoded parameters in your POST and PUT calls.  The code's the same as above.
-
 ### Fetching JSON Body
 
 Perhaps you're sending up JSON.  Let's do that with the client SDKs.
 
+<span class="tab clientcallpostjson" title="iOS SDK"></span>
+```obj-c
+SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
+	initGetRequestWithMethod:@"hello_world"];
+         
+[[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
+  onSuccess:^(NSURLRequest *request, 
+  			  NSHTTPURLResponse *response, 
+  			  id JSON) {
+        NSLog(@"Success: %@",JSON);
+  } onFailure:^(NSURLRequest *request, 
+  				NSHTTPURLResponse *response, 
+  				NSError *error, 
+  				id JSON){
+        NSLog(@"Failure: %@",error);
+}];
+```
+<span class="tab"></span>
+
+<span class="tab clientcallpostjson" title="Android SDK"></span>
+```java
+StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
+    @Override public void success(String responseBody) {}
+    @Override public void failure(StackMobException e) {}
+});
+```
+<span class="tab"></span>
+
+<span class="tab clientcallpostjson" title="JS SDK"></span>
+```js
+StackMob.customcode('hello_world', { name: 'joe', age: 10 }, 'POST', {
+	success: function(result) {},
+	error: function(result) {}
+})
+```
+<span class="tab"></span>
+
+
+These send up a request of:
+
+```js
+URL:
+https://api.stackmob.com/hello_world
+
+Body:
+
+{name:'joe',age:10}
+
+```
+
 Let's see how we can pull that out of the JSON body.
 
-```java,1,2,9
+```java,1,2,10
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -341,47 +386,391 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 }
 ```
 
+<p class="alert">
+	StackMob returns <code>request.getBody()</code> as a plain String, so you'll need to mold it into the format you want - in this case JSON.
+</p>
+
 <p class="alert alert-info">
 	Here's a full custom code class example of <a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/ReadParams.java" rel="nofollow">extracting JSON out of the request body</a>
 </p>
 
 
-## Equality
+## Fetching Multiple Results
 
-You can query against the datastore with the Custom Code SDK.
+At the heart of fetching objects is the `DataService`.  The `DataService` is retrieved from the request which is passed into the `execute` method.  To read several objects, you'd use the `readObjects` method.
 
-Let's look for some objects with equality comparisons.
+```java,2,4
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	DataService ds = serviceProvider.getDataService();
+	...
+	results = ds.readObjects("car", query, 0, filters);
+}
+```
+
+Let's look at `readObjects` more closely.  The method is overloaded, so let's take a look at the expanded one.
 
 ```java
+List<SMObject> readObjects(String schema,
+                           List<SMCondition> conditions,
+                           int expandDepth,
+                           ResultFilters resultFilters)
+                           throws InvalidSchemaException,
+                                  DatastoreException
+```
+We'll cover each of the parameters in more detail below, but here's an overview:
+
+* `schema` - the name of schema you're querying
+* `conditions` - the list of conditions which comprise the query (less than, greater than)
+* `expandDepth` - the depth to which a query should be expanded for relationships (return full objects X levels deep)
+* `resultFilters` - the options to be used when filtering the resultset (pagination, ordering)
+
+## Equality
+
+Let's look for users with the birthyear "2000".
+
+```java,10
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	List<SMCondition> query = new ArrayList<SMCondition>();
+
+	String year = "2000"
+
+	DataService ds = serviceProvider.getDataService();
+	List<SMObject> results;
+
+	try {
+	  query.add(new SMEquals("birthyear", new SMInt(Long.parseLong(year))));
+	  results = ds.readObjects("user", query, 0, filters);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
 ```
 
 ## Comparison
 
-You can query for greater than/less than.
+You can query for greater than/less than.  Let's get all users with a `birthyear` field greater or equal to the year 2000.
+
+```java,11
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	List<SMCondition> query = new ArrayList<SMCondition>();
+
+	String year = "2000"
+
+	DataService ds = serviceProvider.getDataService();
+	List<SMObject> results;
+
+	try {
+	  // We only want years greater than or equal to the user input
+	  query.add(new SMGreaterOrEqual("birthyear", new SMInt(Long.parseLong(year))));
+	  results = ds.readObjects("user", query, 0, filters);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
 
 ## Array Queries
 
 You can query for objects to see if an array or relationship contains a value.
 
+Say a `user` had an array of `friends`, and you want to get those who are friends with `john` and `jane`.
+
+```java,2-6
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	List<SMCondition> query = new ArrayList<SMCondition>();
+	List<SMValue> values = new ArrayList<SMValue>(); 
+	values.add(new SMString("john"));
+	values.add(new SMString("jane"));
+	query.add(new SMIn("friends", values));
+
+	...
+
+	DataService ds = serviceProvider.getDataService();
+	List<SMObject> results;
+
+	try {
+	  results = ds.readObjects("user", query, 0, filters);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+This works for both array and relationship fields.
+
 ## Pagination Queries
 
 Fetch a few results at a time.  Let's return items 5 through 9.
 
+```java,3
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	List<SMCondition> query = new ArrayList<SMCondition>();
+
+	ResultFilters filters = new ResultFilters(0, 9, null, null);
+
+	DataService ds = serviceProvider.getDataService();
+	List<SMObject> results;
+
+	try {
+	  results = ds.readObjects("user", query, 0, filters);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+
+
+<p class="alert alert-info">
+	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/PaginateResults.java" rel="nofollow">Pagination Example</a>
+</p>
+
+## Ordering
+
+You can sort results and even provide tie breakers.  We are going to primarily sort by year (oldest to most recent) and then by createddate from newest to oldest.
+
+Pass `SMOrdering` specifiers into `ResultFilters`.
+
+
+```java,2-5
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	List<SMOrdering> orderings = Arrays.asList(
+	        new SMOrdering("year", OrderingDirection.ASCENDING),
+	        new SMOrdering("createddate", OrderingDirection.DESCENDING));
+	ResultFilters filters = new ResultFilters(0, -1, orderings, null); //don't limit the number of results, so set to -1
+
+	DataService ds = serviceProvider.getDataService();
+	List<SMObject> results;
+
+	try {
+	  query.add(new SMGreaterOrEqual("year", new SMInt(Long.parseLong(year))));
+	  results = ds.readObjects("user", query, 0, filters);
+
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+
 # Relationships
 
-StackMob supports relationships.
+Just as in our SDKs, you can manipulate relationships from the Custom Code SDK.
+
+Let's assume we have a `user` schema, and we've related the user to the `car` schema.  Let's add cars to the user.
+
+[Screenshot of Relationship between User and Car]
 
 ## Adding related objects
 
+**Existing Objects**
+
+If the `car` already exists in the datastore, and you want to relate it with a `user`.  You just need to relate the two existing objects together with the primary keys.
+
+```java,9
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	DataService ds = serviceProvider.getDataService();
+	
+	List<SMValue> relatedObjects = new ArrayList<SMValue>();
+	relatedObjects.add(new SMString("Camry")); //primary keys of car objects
+	relatedObjects.add(new SMString("Accord"));
+
+	try {
+	  SMObject result = ds.addRelatedObjects("user", new SMString("john"), "garage", valuesToAppend);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+No new objects are created in the datastores.  We're just linking existing objects with each other.
+
+**New Objects**
+
+If the cars *don't* exist in the `car` schema yet, we can create them and relate them to the `user` in one call.  Let's give a `user` two new `cars`.  The following will create the two `car` objects in the respective `car` schema.
+
+```java,23,24
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	// These are some example cars that will be created
+	Map<String, SMValue> carValues1 = new HashMap<String, SMValue>();
+	carValues1.put("make", new SMString("Audi"));
+	carValues1.put("model", new SMString("R8"));
+	carValues1.put("year", new SMInt(2005L));
+
+	Map<String, SMValue> carValues2 = new HashMap<String, SMValue>();
+	carValues2.put("make", new SMString("Audi"));
+	carValues2.put("model", new SMString("spyder"));
+	carValues2.put("year", new SMInt(2005L));
+
+	SMObject car1 = new SMObject(carValues1);
+	SMObject car2 = new SMObject(carValues2);
+
+	List<SMObject> cars = new ArrayList<SMObject>();
+	cars.add(car1);
+	cars.add(car2);
+
+	DataService ds = serviceProvider.getDataService();
+
+	try {
+	  BulkResult result = ds.createRelatedObjects(
+	  	"user", new SMString(owner), "cars", cars);
+
+	  feedback.put(owner + " now owns", cars);
+
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+[Talk about the difference between BulkResult and List<SMObject> ]]
 
 ## Fetching related objects
+
+To retrieve related objects from the datastore, you can simply call `readObjects`.  Normally the related objects are represented by the primary keys:
+
+```js
+{
+	username: 'john',
+	cars: ['Camry', 'Accord']
+}
+```
+
+But you can get **expanded related objects** by passing an expand depth of 1.
+
+```js
+{
+	username: 'john',
+	cars: [{
+		car_id: 'Camry',
+		maker: 'Toyota',
+		...
+	}, {
+		car_id: 'Accord',
+		maker: 'Honda',
+		...
+	}]
+}
+```
+
+Here's the code.
+
+```java,3,5,6
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	DataService ds = serviceProvider.getDataService();
+	var expandDepth = 1;
+	try {
+		List<SMObject> results = ds.readObjects("user", 
+			new ArrayList<SMCondition>(), expandDepth);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
 
 # Authentication
 
 The StackMob client SDKs support OAuth 2.0 login.  When they make a request to custom code, custom code is aware of the logged in user.
 
-```java
+```java,2
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	if (request.getLoggedInUser() != null) loggedInAction();
+	else notLoggedInAction();
+	...
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
 ```
+
+* We currently don't have a way in custom code to generate OAuth 2.0 tokens at this time.
+
+# Geolocation
+
+## Persisting Geopoints
+
+To manipulate geolocations in Custom Code, we'll just prepare the `lat` and `long` values as `SMDouble` instances.  We'll then pass them as a `SMSet` into our CRUD operations.
+
+Let's update `john`'s home with a new geolocation value.
+
+```java
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+
+	DataService ds = serviceProvider.getDataService();
+	
+	Map<String, SMValue> geoPoint = new HashMap<String, SMValue>();
+	geoPoint.put("lat", new SMDouble(new Double(37.772201));
+	geoPoint.put("lon", new SMDouble(new Double(-122.406326));
+
+	List<SMUpdate> update = new ArrayList<SMUpdate>();
+	update.add(new SMSet("home", new SMObject(geoPoint)));
+
+	try {
+	  SMObject result = ds.updateObject("user", new SMString("john"), update);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+<p class="alert alert-info">
+	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/geopoints/WriteGeo.java">Write Geo</a>
+</p>
+
+
+
+## Querying Geopoints
+
+Let's query for several users who live within ~60 miles of us.
+
+```java
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+
+    SMNear near = new SMNear(           // Near-condition results will always be sorted by distance
+            "position",                 // name of GeoField in schema
+            new SMDouble(37.77207),     // latitude
+            new SMDouble(-122.40621),   // longitude
+            new SMDouble(.0025));       // radius - (62.25 mi) can be null
+
+    SMWithinBox withinBox = new SMWithinBox(  // Whereas withinbox results can be sorted
+            "position",
+            new SMDouble(37.8),
+            new SMDouble(-122.47),      // Top Left coords
+            new SMDouble(37.7),
+            new SMDouble(-122.3));      // Bottom Right coords
+
+    DataService ds = serviceProvider.getDataService();
+
+    List<SMCondition> query = new ArrayList<SMCondition>();
+    query.add(near);
+    query.add(withinBox);
+    
+
+    try {
+      List<SMObject> results = ds.readObjects("user", query);
+    } catch (Exception e) {}
+
+    return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+  }
+```
+<p class="alert">
+	StackMob geolocation distances are in radians.  .0025 radians is around 62.25 miles.
+</p>
+
+<p class="alert alert-info">
+	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/geopoints/ReadGeo.java">Reading Geo</a>
+</p>
+
+
+# Push
+
+## Registering Devices
+
+
+## Broadcast Messages
+
+
+## Direct Messages
+
+
 
 # External HTTP Calls
 
