@@ -587,7 +587,7 @@ No new objects are created in the datastores.  We're just linking existing objec
 
 **New Objects**
 
-If the cars *don't* exist in the `car` schema yet, we can create them and relate them to the `user` in one call.  Let's give a `user` two new `cars`.  The following will create the two `car` objects in the respective `car` schema.
+If the cars *don't* exist in the `car` schema yet, we can create them and relate them to the `user` in one call.  Let's give a `user` two new `cars`.  The following will create the two `car` objects in the respective `car` schema and relate them to the user at the same time.
 
 ```java,23,24
 public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
@@ -613,13 +613,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 	try {
 	  BulkResult result = ds.createRelatedObjects(
-	  	"user", new SMString(owner), "cars", cars);
+	  	"user", new SMString("john"), "cars", cars);
 
 	  feedback.put(owner + " now owns", cars);
 
 	} catch (Exception e) {}
 
 	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+The user should now look something like:
+
+```js
+{
+	username: 'john',
+	cars: ["151gd", "1351dg5"],
+	...
 }
 ```
 
@@ -764,17 +774,135 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 ## Registering Devices
 
+Let's pass a `device_token` to the method and register it.  Here, we'll register it to a particular username so that in the future, we can send push messages to StackMob usernames rather than device tokens.  That'll make things a bit easier.
+
+Because StackMob supports both Apple and Google Push notifications, you need to specify the type as well.
+
+```java,3,8,11,12
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	//Specify the token type
+	TokenType deviceTokenType = TokenType.iOS;
+
+	//Can also be TokenType.AndroidGCM or TokenType.Android (the latter is deprecated)
+
+	String deviceToken = request.getParams().get("device_token"); //device token 
+	TokenAndType token = new TokenAndType(deviceToken, deviceTokenType); // token type can be iOS or GCM
+
+	try {
+	  PushService service = serviceProvider.getPushService();
+	  service.registerTokenForUser(username, token);
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+You've now registered the device token so that StackMob can send messages to it.
+
+<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/SMPushRegisterDevice.java" rel="nofollow">Register Device example</a>
 
 ## Broadcast Messages
 
+```java
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	Map<String, String> payload = new HashMap<String, String>();
+
+	try {
+	  PushService ps = serviceProvider.getPushService();
+	  // Add data to your push payload
+	  payload.put("key1", "value1");
+	  payload.put("sound", "someSound.mp3");
+	  payload.put("alert", "Push Alert!");
+
+	  ps.broadcastPush(payload);
+
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/BroadcastPushNotification.java
 
 ## Direct Messages
 
+```java
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	Map<String, String> payload = new HashMap<String, String>();
 
+	try {
+	  PushService ps = serviceProvider.getPushService();
+
+	  // Add data to your payload
+	  payload.put("badge", "1");
+	  payload.put("key1", "some data");
+
+	  // Send the payload to the specified user
+	  ps.sendPushToUsers(Arrays.asList("john"),payload);
+
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/DirectPushNotification.java
+
+
+
+# Logging
+
+You can write logs that you can view at <a href="https://dashboard.stackmob.com/data/logs">your Dashboard Logs</a>.
+
+```java
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	LoggerService logger = serviceProvider.getLoggerService(Logging.class);
+
+	logger.info("This is an INFO log");
+	logger.info("This is ")
+	
+	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+<p class="alert alert-info">
+	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/Logging.java" rel="nofollow">A full example of writing logs.</a>
+</p>
 
 # External HTTP Calls
 
 You can make calls to external APIs from custom code, but for security purposes, they must go through our HTTP call maker.
+
+```java
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+	// The service you're going to be using
+	String url = "http://www.httpbin.org/get";
+
+	// Formulate request headers
+	Header accept = new Header("Accept-Charset", "utf-8");
+	Header content = new Header("Content-Type", "application/x-www-form-urlencoded");
+
+	Set<Header> set = new HashSet();
+	set.add(accept);
+	set.add(content);
+
+	try {
+	  HttpService http = serviceProvider.getHttpService();
+
+	  /* In this Example we are going to be making a GET request
+	   * but PUT/POST/DELETE requests are also possible.
+	   */
+	  GetRequest req = new GetRequest(url,set);
+	  HttpResponse resp = http.get(req);
+
+	  responseCode = resp.getCode();
+	  responseBody = resp.getBody();
+
+	} catch (Exception e) {}
+
+	return new ResponseToProcess(responseCode, ...);
+}
+```
 
 <p class="alert alert-info">
 	Here's a basic <a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/HttpRequest.java" rel="nofollow">custom code class example of making an external API call</a>.
@@ -809,24 +937,6 @@ Now from the command line, run `maven compile`.  Maven will start building your 
 
 To include JARs
 
-# Logging
-
-You can write logs that you can view at <a href="https://dashboard.stackmob.com/data/logs">your Dashboard Logs</a>.
-
-```java
-public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
-	LoggerService logger = serviceProvider.getLoggerService(Logging.class);
-
-	logger.info("This is an INFO log");
-	logger.info("This is ")
-	
-	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
-}
-```
-
-<p class="alert alert-info">
-	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/Logging.java" rel="nofollow">A full example of writing logs.</a>
-</p>
 
 # Deploying Code
 
