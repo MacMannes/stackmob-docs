@@ -859,7 +859,9 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 	LoggerService logger = serviceProvider.getLoggerService(Logging.class);
 
 	logger.info("This is an INFO log");
-	logger.info("This is ")
+	logger.error("This is ");
+	logger.warn("This is ");
+	logger.debug("This is ");
 	
 	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
 }
