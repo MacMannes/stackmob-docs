@@ -1,7 +1,7 @@
-Custom Code Developer Guide
+Developer Guide
 ==========================================
 
-To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to all.  You can always find <a href="https://github.com/stackmob/stackmob-customcode-example" rel="nofollow">Scala and Clojure Custom Code examples</a> in our GitHub collection.
+To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to all.  You can always find <a href="https://github.com/stackmob/stackmob-customcode-example" rel="nofollow">Scala and Clojure Custom Code examples</a> in our GitHub collection.  Plenty of working Java examples are available at <a href="https://github.com/stackmob/stackmob-customcode-java-examples">https://github.com/stackmob/stackmob-customcode-java-examples</a>.
 
 # Introduction
 
@@ -67,7 +67,7 @@ StackMob.customcode('hello_world', {}, 'GET', {
 ```
 <span class="tab"></span>
 
-You can easily interact with server code from the clients.
+The server will execute the server side custom code and return a response with a body that you define, allowing you to easily communicate between client and server.
 
 You can also use the Dashboard Console to call your API methods.
 
@@ -114,7 +114,7 @@ This method will return JSON when called:
 
 `getMethodName` defines your API endpoint: <i>https://api.stackmob.com/</i>`hello_world`.
 
-`getParams` whitelists the parameters you would pass into the method.  For REST API GET/DELETE requests, this would mean parameters from the URL.  For PUT/POST requests, these would be in the url-form-encoded body.
+`getParams` whitelists the parameters you would pass into the method from the URL.  (It does not fetch parameters from the POST body because StackMob custom code doesn't support www-url-form-encoded requests at this time)
 
 `execute` runs when the REST API point for `https://api.stackmob.com/hello_world` is hit.  The hashmap that is returned will translate to a JSON object in the response.
 
@@ -707,8 +707,8 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 	DataService ds = serviceProvider.getDataService();
 	
 	Map<String, SMValue> geoPoint = new HashMap<String, SMValue>();
-	geoPoint.put("lat", new SMDouble(new Double(37.772201));
-	geoPoint.put("lon", new SMDouble(new Double(-122.406326));
+	geoPoint.put("lat", new SMDouble(37.772201));
+	geoPoint.put("lon", new SMDouble(-122.406326));
 
 	List<SMUpdate> update = new ArrayList<SMUpdate>();
 	update.add(new SMSet("home", new SMObject(geoPoint)));
@@ -916,6 +916,36 @@ You can send up custom headers in your custom code API calls.
 
 You can also send back custom response headers and response bodies in various formats (non-JSON).
 
+# Caching
+
+The SDK includes functionality in `CachingService` to store key/value data in a fast, distributed cache. If your custom code does expensive computation or long running I/O, you should consider caching the results to make your code more efficient.
+
+For example, if your code does expensive datastore queries, and the queries don't need to be fresh for each request, you could increase its performance like this (exception handling omitted for clarity):
+
+```java
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider provider) {
+	CachingService cache = provider.getCachingService();
+	String result = cache.get("expensive-query");
+	if(result == null) {
+		result = executeExpensiveQuery();
+		cache.set("expensive-query", result, 1000); //store the result for 1000 milliseconds
+	}
+
+	return new ResponseToProcess(responseCode, ...);
+}
+```
+
+[See the CachingService JavaDoc](http://stackmob.github.com/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/caching/CachingService.html)
+
+A few more notes:
+
+* The above pattern works if the datastore query can be up to 1 second stale. We recommend that you cache as much as possible and query only the parts that need to be fresh.
+* We recommend holding temporary data in `CachingService` rather than memory wherever possible
+* All of your app's cache data is namespaced, so it won't be overwritten by another app
+* `CachingService` limits the size of each key and value, and rate limits the number of `get` and `set` calls your app can make.
+* `CachingService` `get`s and `set`s are almost always faster than `DatastoreService` operations
+
+
 # External Dependencies
 
 If you're working with external libraries, you can include them with Maven or include the JAR.
@@ -929,7 +959,6 @@ Maven helps you build your projects by also organizing your dependencies.  Many 
 
 ```
 
-Now from the command line, run `maven compile`.  Maven will start building your project and finally output your Custom Code JAR that you'll upload to StackMob.
 
 <p class="alert alert-info">
 	Learn more about Maven and how to find JARs in Maven.
@@ -940,9 +969,48 @@ Now from the command line, run `maven compile`.  Maven will start building your 
 To include JARs
 
 
-# Deploying Code
+# Building Custom Code
 
-You have two ways of getting your code running on StackMob.  You can upload a JAR that you've built
+You have several ways of building your code.
+
+For Java, StackMob recommends using <a href="http://maven.apache.org/download.cgi" rel="nofollow" target="_blank">Maven</a>.
+
+<span class="tab build" title="Maven"></span>
+
+
+```xml
+<dependency>
+  <groupId>com.stackmob</groupId>
+  <artifactId>customcode</artifactId>
+  <version>0.5.6</version>
+  <scope>provided</scope>
+</dependency>
+```
+
+Also, you can see what an example pom.xml file would look like for your project [here](https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/pom.xml).
+
+<span class="tab"></span>
+
+
+<span class="tab build" title="sbt"></span>
+
+**sbt - Simple Build Tool**
+
+```scala
+libraryDependencies += "com.stackmob" % "customcode" % "0.5.6" % "provided"
+```
+
+In our custom code example repo you'll find a sample scala-sbt project with the file <a href="https://github.com/stackmob/stackmob-customcode-example/blob/master/scala-sbt/build.sbt">build.sbt</a>. 
+For those not familiar with sbt, here is the <a href="https://github.com/harrah/xsbt/wiki/Getting-Started-Setup">Getting Started with sbt</a>
+
+<span class="tab"></span>
+
+<span class="tab build" title="Manual"></span>
+
+
+<span class="tab"></span>
+
+
 
 ## GitHub
 
