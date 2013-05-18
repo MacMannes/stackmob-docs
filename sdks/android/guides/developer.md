@@ -100,6 +100,7 @@ myTask.save(new StackMobModelCallback() {
         // the call failed
     }
 });
+```
 
 ## Delete an Object
 
