@@ -9,7 +9,7 @@ Custom Code is code you write that runs on the StackMob server in Java, Scala, a
 
 If you wrote a method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's accessible via the REST API with your OAuth 1.0 or OAuth 2.0 keys.
 
-# Try it!
+## Try it!
 
 Interested in trying custom code without needing to write any yet?  You can either upload a ready-to-go JAR or link your app with a GitHub repository.
 
@@ -26,7 +26,7 @@ Interested in trying custom code without needing to write any yet?  You can eith
 
 Now that Custom Code is running on StackMob, let's try it.
 
-# Calling Custom Code
+## Calling Custom Code
 
 The StackMob client SDKs can call custom code via the REST API.
 
@@ -74,7 +74,7 @@ You can also use the Dashboard Console to call your API methods.
 [Dashboard Console Screenshot]
 
 
-# Declaring Custom Code
+## Declaring Custom Code
 
 GitHub is the easiest way to get started with Custom Code.  Clone, download, or fork this repo to get started: <a href="https://github.com/stackmob/stackmob-customcode-java-examples" rel="nofollow">Java Custom Code examples</a>.  The necessary `pom.xml` and files are ready to go.
 
