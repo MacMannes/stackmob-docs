@@ -1,15 +1,15 @@
-# Analytics
+# Binary Data via Amazon S3
 
-## Objective
+<h3>Objective</h3>
 Adding a Binary field to schemas
 
-## Experience Level
+<h3>Experience Level</h3>
 Beginner
 
-## Estimated Time to Complete<
+<h3>Estimated Time to Complete</h3>
 ~5 minutes
 
-## Prerequisites
+<h3>Prerequisites</h3>
 
 * You have a StackMob account. If you don't, <a href="https://stackmob.com/signup" target="_blank">sign up</a> now!
 
@@ -20,9 +20,9 @@ Beginner
 * You have an Amazon Web Services account. If you don't, <a href="http://aws.amazon.com" target="_blank">sign up</a> now!  You'll store Binary data on Amazon S3.
 
 
-# Let's get started!
+<h1>Let's get started!</h1>
 
-## Setup an Amazon S3 Bucket
+<h2>Setup an Amazon S3 Bucket</h2>
 
 * <a href="http://aws.amazon.com" target="_blank">Login to the Amazon Web Services</a> portal
 * Click on S3
@@ -30,7 +30,7 @@ Beginner
 * Give you bucket a name and click create
 
 
-## Add S3 settings to your StackMob application
+<h2>Add S3 settings to your StackMob application</h2>
 You'll need your AWS security credentials to allow StackMob to save data on S3.  
 
 
@@ -53,7 +53,7 @@ Copy the **Access Key Id** and **Secret Access Key** and paste them into the <a 
 Type in the name of the S3 bucket you just created.  You can leave the S3 Path Alias blank.  Click the **submit button**.
 
 
-## Add a Binary Field
+<h2>Add a Binary Field</h2>
 
 Go to <a href="https://dashboard.stackmob.com/schemas/">Manage Schemas</a> and click `Edit` link on one of the schemas that you would like to add a Binary  field.
 

@@ -1,3 +1,5 @@
+<h1>StackMob Hosting</h1>
+
 # Hosting your HTML5 App on StackMob
 
 StackMob's HTML5 service and <a href="https://developer.stackmob.com/tutorials/js">Javascript SDK</a> (built upon <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>) lets you host your web app on StackMob while connecting to StackMob's API seamlessly through same-domain Javascript AJAX calls.

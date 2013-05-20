@@ -1,1 +1,1 @@
-# Analytics Docs
+# StackMob Analytics

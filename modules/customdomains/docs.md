@@ -1,3 +1,5 @@
+<h1>StackMob Custom Domains</h1>
+
 # Setting up Custom Domains
 
 StackMob allows you to setup custom domain names.  If you have access to change your domain's CNAME on your domain name service, then you can have you domain point to StackMob's hosted HTML5 service.
