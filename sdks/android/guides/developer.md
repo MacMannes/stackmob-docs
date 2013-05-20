@@ -65,13 +65,9 @@ myTask.save(new StackMobModelCallback() {
 });
 ```
 
-## Read an Object
-
-
-[HOW TO SET ID?]
+## Reload an Object
 
 ```java
-Task myTask = new Task("1234");
 myTask.fetch(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -88,7 +84,6 @@ myTask.fetch(new StackMobModelCallback() {
 ## Update an Object
 
 ```java
-Task myTask = new Task("1234");
 myTask.save(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -105,7 +100,6 @@ myTask.save(new StackMobModelCallback() {
 ## Delete an Object
 
 ```java
-Task myTask = new Task("1234");
 myTask.destroy(new StackMobModelCallback() {
     @Override
     public void success() {
