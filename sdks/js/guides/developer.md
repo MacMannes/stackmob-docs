@@ -183,7 +183,7 @@ To work with an array of your objects, define your `Collection`.
 Let's use the JS SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
 
 
-## Creating Objects
+## Create an Obect
 
 Save an instance of your `todo` object to the server.
 
@@ -251,7 +251,7 @@ todo.create({
 ```
 
 
-## Reading Objects
+## Read an Object
 
 To fetch your `todo` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.
 
@@ -279,7 +279,7 @@ todo.fetch({
 </p>
 
 
-## Updating Objects
+## Update an Object
 
 You can edit existing objects easily.  Let's update `todo` object `1234` with a new field: `done` and let's mark it as `true`.
 
@@ -309,7 +309,7 @@ todo.save({
 ```
 
 
-## Deleting Objects
+## Delete an Object
 
 Let's now delete your object.
 
