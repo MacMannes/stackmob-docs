@@ -142,7 +142,14 @@ public class TaskList extends StackMobModel {
 
 ## Deleting from an Array
 
-code for deleting from array
+```java
+myTaskList.getTasks().remove(0);
+myTaskList.save();
+```
+or to avoid resending the whole array
+```java
+myTaskList.remove("tasks", myTask, new StackMobCallback() { ... });
+```
 
 # Queries
 
@@ -329,11 +336,11 @@ taskList.fetch(StackMobOptions.depthOf(1), new StackMobModelCallback() {
 
 ## Adding Related Objects
 
-create a related object and associate it with the parent in one API call
+Just save the object
 
 ## Decoupling Related Objects
 
-de associating a related object from the parent
+not actually possible via the model api
 
 # User Authentication
 
