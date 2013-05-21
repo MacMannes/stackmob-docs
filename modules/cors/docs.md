@@ -1,4 +1,5 @@
-# StackMob CORS
+StackMob CORS
+=====================================
 
 At StackMob, we want to make your mobile development life as simple as possible while providing you with the most powerful set of tools to help you along the way. For those of you using our JavaScript SDK, we are happy to announce support for <a href="http://en.wikipedia.org/wiki/Cross-origin_resource_sharing" title="CORS" target="_blank">Cross-origin Resource Sharing (CORS)</a>.  Additionally, <a href="https://developer.stackmob.com/sdk" target="_blank">JavaScript SDK v0.8.0</a> has also been released to utilize CORS support in your apps.
 

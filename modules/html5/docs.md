@@ -1,4 +1,5 @@
-<h1>StackMob Hosting</h1>
+StackMob HTML Hosting
+=====================================
 
 # Hosting your HTML5 App on StackMob
 

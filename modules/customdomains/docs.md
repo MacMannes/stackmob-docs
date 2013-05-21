@@ -1,4 +1,5 @@
-<h1>StackMob Custom Domains</h1>
+StackMob Custom Domains
+=====================================
 
 # Setting up Custom Domains
 
