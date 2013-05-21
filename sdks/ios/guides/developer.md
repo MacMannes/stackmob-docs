@@ -25,15 +25,20 @@ client = [[SMClient alloc] initWithAPIVersion:@"YOUR_API_VERSION" publicKey:@"YO
 
 For `YOUR_API_VERSION`, pass `@"0"` for Development, `@"1"` or higher for the corresponding version in Production.
 
-If you haven't found your public key yet, check out **Manage App Info** under the **App Settings** sidebar on the <a href="https://dashboard.stackmob.com">Dashboard page</a>.
+If you haven't found your public key yet, check out **Manage App Info** under the **App Settings** sidebar on the <a href="https://dashboard.stackmob.com" target="_blank">Dashboard page</a>.
 
 From then on you can either pass your client instance around, or use `[SMClient defaultClient]` to retrieve it.
 
-<p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#//api/name/initWithAPIVersion:publicKey:">initWithAPIVersions:publicKey:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#//api/name/defaultClient">defaultClient</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#//api/name/initWithAPIVersion:apiHost:publicKey:userSchema:userPrimaryKeyField:userPasswordField:">initWithAPIVersion:apiHost:publicKey:userSchema:userPrimaryKeyField:userPasswordField:</a></br>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Initialize" target="_blank">Initialize a Client</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!--- USING CORE DATA -->
 
@@ -43,9 +48,9 @@ StackMob recommends using Core Data for data persistance. It provides a powerful
 
 The three main pieces of Core Data are instances of:
 
-* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectContext_Class/NSManagedObjectContext.html">NSManagedObjectContext</a> - This is what you use to create, read, update and delete objects in your database.
-* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSPersistentStoreCoordinator_Class/NSPersistentStoreCoordinator.html">NSPersistentStoreCoordinator</a> - Coordinates between the managed object context and the actual database, in this case StackMob.
-* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectModel_Class/Reference/Reference.html">NSManagedObjectModel</a> - References a file where you defined your object graph.
+* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectContext_Class/NSManagedObjectContext.html" target="_blank">NSManagedObjectContext</a> - This is what you use to create, read, update and delete objects in your database.
+* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSPersistentStoreCoordinator_Class/NSPersistentStoreCoordinator.html" target="_blank">NSPersistentStoreCoordinator</a> - Coordinates between the managed object context and the actual database, in this case StackMob.
+* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectModel_Class/Reference/Reference.html" target="_blank">NSManagedObjectModel</a> - References a file where you defined your object graph.
 
 <!--- DEF MOM -->
 
@@ -86,10 +91,16 @@ SMCoreDataStore *coreDataStore = [client coreDataStoreWithManagedObjectModel:aMa
 
 From then on you can either pass your core data store instance around, or use `[[SMClient defaultClient] coreDataStore]` to retrieve it.
 
-<p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#//api/name/coreDataStoreWithManagedObjectModel:">coreDataStoreWithManagedObjectModel:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#//api/name/coreDataStore">coreDataStore</a>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Retrieving a Datastore" target="_blank">Retrieving a Datastore</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!--- OBTAIN MOC -->
 
@@ -112,12 +123,17 @@ You can obtain the managed object context for the main thread at any time by acc
 
 If you want to do your own context creation, use the `persistentStoreCoordinator` property to ensure your objects are being saved to the StackMob server.
 
-<p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#//api/name/contextForCurrentThread">contextForCurrentThread</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#//api/name/setDefaultMergePolicy:applyToMainThreadContextAndParent:">setDefaultMergePolicy:applyToMainThreadContextAndParent:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#//api/name/mainThreadContext">mainThreadContext</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#//api/name/persistentStoreCoordinator">persistentStoreCoordinator</a>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+      	<li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#task_Obtaining a Managed Object Context" target="_blank">Obtaining a Managed Object Context</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#task_Properties" target="_blank">Persistent Store Coordinator and Main Thread Context properties</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!---
 	///////////////////
@@ -157,19 +173,34 @@ NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntit
 The newly created object is not persisted until you <a href="#PerformingSaves">save the managed object context</a>.
 </p>
 
-<p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/assignObjectId">assignObjectId</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/primaryKeyField">primaryKeyField</a></br>
-	<a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSEntityDescription_Class/NSEntityDescription.html">insertNewObjectForEntityForName:inManagedObjectContext:</a></br>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/assignObjectId" target="_blank">assignObjectId</a></li>
+		<li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/primaryKeyField" target="_blank">primaryKeyField</a></li>
+		<li><a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSEntityDescription_Class/NSEntityDescription.html" target="_blank">NSEntityDescription Class Reference</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Create-an-Object" target="_blank">Create an Object</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!--- READ OBJECT -->
 
 ## Reading Objects
 
-To read objects from a particular Entity, create and execute a Core Data fetch request using methods from the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html">NSManagedObjectContext+Concurrency</a> class.
+To read objects from a particular Entity, create and execute a Core Data fetch request using methods from the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
 
-<p class="alert">By default, objects are returned as faults, and attribute values are not accessed from the persistent store until specifically called upon in your code.  This ensures in-memory usage is as low as possible.</p> 
+For a list of StackMob supported `NSFetchRequest` methods, visit the `Fetch Requests` section of the <a href="file://localhost/Users/mattvaz/Documents/stackmob/editAppledocs/ios-sdk/CoreDataSupportSpecs.html#fetch_request" target="_blank">Core Data Support Specs</a>.
+
+<p class="alert">By default, objects are returned as faults, and attribute values are not accessed from the persistent store until specifically called upon in your code.  This ensures in-memory usage is as low as possible.</br></br>All information on specifying conditions for a query can be found in the INSERT LINK TO QUERIES.</p> 
 
 <!--- ASYNC READ -->
 
@@ -201,10 +232,10 @@ If you wish to return managed object IDs rather than objects, use the following 
 ```
 
 <p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:onSuccess:onFailure:">executeFetchRequest:onSuccess:onFailure:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:onSuccess:onFailure:">executeFetchRequest:returnManagedObjectIDs:onSuccess:onFailure:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:onSuccess:onFailure:">executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:onSuccess:onFailure:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:">executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:onSuccess:onFailure:" target="_blank">executeFetchRequest:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:onSuccess:onFailure:" target="_blank">executeFetchRequest:returnManagedObjectIDs:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:onSuccess:onFailure:" target="_blank">executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:" target="_blank">executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:</a></br>
 </p>
 
 <!--- SYNC READ -->
@@ -223,9 +254,9 @@ NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRe
 ```
 
 <p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:error:">executeFetchRequestAndWait:error:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:returnManagedObjectIDs:error:">executeFetchRequestAndWait:returnManagedObjectIDs:error:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:returnManagedObjectIDs:options:error:">executeFetchRequestAndWait:returnManagedObjectIDs:options:error:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:error:" target="_blank">executeFetchRequestAndWait:error:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:returnManagedObjectIDs:error:" target="_blank">executeFetchRequestAndWait:returnManagedObjectIDs:error:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequestAndWait:returnManagedObjectIDs:options:error:" target="_blank">executeFetchRequestAndWait:returnManagedObjectIDs:options:error:</a></br>
 </p>
 
 <!--- UPDATE OBJECT -->
@@ -243,7 +274,7 @@ After fetching an existing mananged object, update it by simply changing the obj
 ```
 
 <p class="alert alert-info">
-	<a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectContext_Class/NSManagedObjectContext.html">deleteObject:</a>
+	<a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectContext_Class/NSManagedObjectContext.html" target="_blank">deleteObject:</a>
 </p>
 
 <!--- SAVE -->
@@ -252,13 +283,13 @@ After fetching an existing mananged object, update it by simply changing the obj
 
 At some point after inserting, updating, and deleting objects from a managed object context, you will initiate a save which will cause all modified objects to be persisted to the external store.  The external store in this case is StackMob as well as a local cache database, ensuring data is available while the devices is offline.
 
-The StackMob SDK has placed a wrapper around the familiar `save:` core data method to offer synchronous and asynchronous versions for improved performance. All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html">NSManagedObjectContext+Concurrency</a> class.
+The StackMob SDK has placed a wrapper around the familiar `save:` core data method to offer synchronous and asynchronous versions for improved performance. All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
 
 <!--- ASYNC SAVES -->
 
 ### Asynchronous Saves
 
-Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked.
+Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked. If other events rely on the sucessful save, place them in the callbacks.
 
 ```obj-c
 [self.managedObjectContext saveOnSuccess:^{
@@ -271,9 +302,9 @@ Asynchronous saves are great for executing a save off the main thread, ensuring 
 Use the callbacks to update the UI, notifiy other dependent files, etc.
 
 <p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveOnSuccess:onFailure:">saveOnSuccess:onFailure:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveWithSuccessCallbackQueue:failureCallbackQueue:onSuccess:onFailure:">saveWithSuccessCallbackQueue:failureCallbackQueue:onSuccess:onFailure:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveWithSuccessCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:">saveWithSuccessCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveOnSuccess:onFailure:" target="_blank">saveOnSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveWithSuccessCallbackQueue:failureCallbackQueue:onSuccess:onFailure:" target="_blank">saveWithSuccessCallbackQueue:failureCallbackQueue:onSuccess:onFailure:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveWithSuccessCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:" target="_blank">saveWithSuccessCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:</a></br>
 </p>
 
 <!--- SYNC SAVES -->
@@ -288,15 +319,15 @@ BOOL success = [self.managedObjectContext saveAndWait:&error];
 ```
 
 <p class="alert alert-info">
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveAndWait:">saveAndWait:</a></br>
-	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveAndWait:options:">saveAndWait:options:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveAndWait:" target="_blank">saveAndWait:</a></br>
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/saveAndWait:options:" target="_blank">saveAndWait:options:</a></br>
 </p>
 
 <!--- PER REQUEST OPTIONS -->
 
 ## Per Request Options
 
-Each type of method (asynchronous/synchronous save/fetch) has an overloaded method declaration with a parameter that takes an instance of <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html">SMRequestOptions</a>. The parameter name in all methods is called options. This allows you to provide a custom `SMRequestOptions` instance that will be applied to all calls in that request. For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific save request to run over SSL i.e. all inserts/updates/deletes for that request will be sent over SSL.
+Each type of method (asynchronous/synchronous save/fetch) has an overloaded method declaration with a parameter that takes an instance of <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions</a>. The parameter name in all methods is called options. This allows you to provide a custom `SMRequestOptions` instance that will be applied to all calls in that request. For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific save request to run over SSL i.e. all inserts/updates/deletes for that request will be sent over SSL.
 
 <p class="alert">
 Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to customize and will override the default for the duration of the request:</br></br>
@@ -308,37 +339,286 @@ Customizing other options can result in unexpected requests, which can lead to s
 
 ## Lower Level Data Store API
 
-If you want to make direct REST-based calls to the Datastore, check out the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMDataStore.html">SMDataStore</a> class.
+If you want to make direct REST-based calls to the Datastore, check out the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMDataStore.html" target="_blank">SMDataStore</a> class.
+
+<!---
+	///////////////////
+	QUERIES
+	//////////////////
+-->
 
 # Queries
 
+<!--- Predicates -->
+
 ## Predicates
 
-## Supported Queries
+In Core Data, every read starts out with a fetch request. You can then add predicates (conditions), sort descriptiors, offsets (ranges), etc. to return a more granular subset of results.
+
+To learn more about fetch requests visit Apple's documentation on <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CoreData/Articles/cdFetching.html" target="_blank">Fetching Managed Objects</a>.
+
+For a list of StackMob supported predicate types, visit the `Predicates` section of the <a href="file://localhost/Users/mattvaz/Documents/stackmob/editAppledocs/ios-sdk/CoreDataSupportSpecs.html#predicates" target="_blank">Core Data Support Specs</a>.
+
+<!--- Lower Level Query API -->
+
+## Lower Level Query API
+
+To perform queries using the lower level API, you'll first instantiate an instance of `SMQuery`:
+
+```obj-c
+SMQuery *newQuery = [[SMQuery alloc] initWithSchema:@"todo"];
+```
+
+Next, you'll add conditions, pagination, sorting, etc as needed:
+
+```obj-c
+[newQuery where:@"title" isEqualTo:@"Do Homework"];
+// add additional conditions
+```
+
+Finally, perform the query through the datastore property of your client instance:
+
+```obj-c
+[[[SMClient defaultClient] datastore] performQuery:newQuery onSuccess:^(NSArray *results) {
+	// Successful query
+} onFailure:^(NSError *error) {
+	// Error
+}];
+```
+
+Visit the <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMQuery.html" target="_blank">SMQuery Class Reference</a> for a list of all available methods.
+
+<p class="alert">
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#//api/name/performQuery:onSuccess:onFailure:" target="_blank">performQuery:onSuccess:onFailure:</a>
+</p>
+
+<!---
+	///////////////////
+	RELATIONSHIPS
+	//////////////////
+-->
 
 # Relationships
 
+When you create relationships between entities in your Core Data model, they will translate directly to relationships on StackMob.  Here are the important things to note:
+
+* Core Data recommends creating inverse relationships to maintain referential integrity. This ensures that when you delete one object, any related objects are updated as well.
+* Core Data supports <a href="http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/coredata/Articles/cdRelationships.html">Delete Rules</a>. Take this into considertation if you are building cross-platform.
+* The great thing about Core Data handling relationship logic is that it will all translate from the client to StackMob, so no extra work is necessary.
+
+<!--- One To One -->
+
 ## One to One
+
+Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the singluar version of the entity it points to, like so:
+
+INSERT PICTURE
+
+<!--- One To Many -->
 
 ## One to Many
 
+Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the plural version of the entity it points to, like so:
+
+INSERT PICTURE
+
+In the data model, be sure to check the box for a To-Many relationship, as shown.
+
+<!--- Many To Many -->
+
 ## Many to Many
+
+You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
+
+<!---
+	///////////////////
+	USER AUTHENTICATION
+	//////////////////
+-->
 
 # User Authentication
 
+## The User Schema
+
+When you create an application on StackMob, a **user** schema is automatically generated, with **username** as it's primary key field as well as a **password** field. This is the default schema for user objects.
+ 
+When you initialize an `SMClient` with `initWithAPIVersion:publicKey:`, the following defaults are set:
+
+* apiHost = @"api.stackmob.com";
+* userSchema = @"user";
+* userPrimaryKeyField = @"username";
+* userPasswordField = @"password";
+
+To change the defaults so they match your schemas and fields on StackMob:
+
+* With your instance of `SMClient`, you can directly set the properties listed above using the dot notation or setters.  For example:
+
+```obj-c
+self.client.userSchema = @"teacher";
+[self.client setUserPrimaryKeyField:@"email"];
+```
+
+* Alternatively, you can set all the properties at once using `initWithAPIVersion:apiHost:publicKey:userSchema:userPrimaryKeyField:userPasswordField:`.
+
+<p class="alert">Don't forget to check the **Create as a User Object** box when <a href="https://developer.stackmob.com/api/schemas/create" target="_blank">creating a new schema</a> for user objects.</p>
+
+<p class="alert-info">
+
+</p>
+
 ## Creating a User Object
+
+In Core Data, you'll first create an entity which maps to your user schema on StackMob. It's most likely called `user`, so your entity will be called `User`.
+
+<p class="alert">Do not create an attribute for the password field. It would not be safe to have passwords floating around, and <code>SMUserManagedObject</code> provides helper methods to safely set a password for a user object</p> 
+
+Next, after creating a managed object subclass for the entity, you'll change the inherited class from `NSManagedObject` to `SMUserManagedObject`. This class provides methods to properly initialize a user object, as they need to link to the client. It also provides methods to set the user's password during creation.
+
+In your entity subclass implementation file, we recommend overriding the init method to call the init method from `SMUserManagedObject`. This ensures that the user object is properly instantiated. Your init method might look something like:
+
+```obj-c
+- (id)initIntoManagedObjectContext:(NSManagedObjectContext *)context {
+	// initWithEntityName:insertIntoManagedObjectContext is an SMUserManagedObject method.
+    self = [super initWithEntityName:entity insertIntoManagedObjectContext:context];
+     
+    if (self) {
+        // assign local variables and do other init stuff here
+    }
+     
+    return self;
+}
+```
+
+You'll then create new user objects by creating managed object instances of your entity subclass, like so:
+
+```obj-c
+User *newUser = [[User alloc] init];
+[newUser setUsername:@"Bob"];
+[newUser setPassword:@"vkfjakvjvjnfosg"];
+[newUser setAge:[NSNumber numberWithInt:34]];
+
+[self.managedObjectContext saveOnSuccess:^{
+	// Saved the user object
+} onFailure:^(NSError *error){
+	// Error
+}];
+```
+
+<p class="alert-info">
+	<a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMUserManagedObject.html" target="_blank">SMUserManagedObject Class Reference</a>
+</p>
+
+TUTORIAL: CREATE A USER OBJECT
 
 ## Logging in to StackMob
 
-## Checking Logged in Status
+Logging into StackMob using the standard username/password pattern is done through the `SMClient` instance:
+
+```obj-c
+[[SMClient defaultClient] loginWithUsername:username password:password onSuccess:^(NSDictionary *result){
+	// result contains a dictionary representation of the user object
+} onFailure:^(NSError *){
+	// Error
+}];
+```
+
+<p class="alert-info">
+	ADD LINKS HERE
+</p>
+
+## Manipulating a User Object
+
+The next time the user logs in to your app, you may need to have a copy of the user object around to make updates. To do this, simply create a fetch request and specify a predicate such that the only result should be your logged in user:
+
+```obj-c
+// Pull username from login screen text field, for example
+NSString *username = self.textField.text;
+
+NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
+[userFetch setPredicate:[NSPredicate predicateWithFormat:@"username == %@", username]];
+
+[self.manangedObjectContext executeFetchRequest:userFetch onSuccess:^(NSArray *results){
+	if (results count]) { // // There should only be one result };
+
+	User *currentUser = (User *)[results objectAtIndex:0];
+	// Edit user object or store ID to pass around
+
+}];
+
+<a class="alert">Managed Objects are not thread safe. Pass object IDs between threads and blocks.</p>
+
+## Retrieve Logged In User
+
+```obj-c
+[[SMClient defaultClient] loginWithUsername:username password:password onSuccess:^(NSDictionary *result){
+	// result contains a dictionary representation of the user object
+} onFailure:^(NSError *){
+	// Error
+}];
+```
+
+## Check Status
+
+To see whether your user is logged in, use the `isLoggedIn` and `isLoggedOut` methods of the client.
+
+INSERT API LINKS
+
+## Automatic Login Refresh
+
+The iOS SDK come built in with automatic login refresh functionality.  This means that if an access token has expired and a request comes back unauthorized, the SDK will automatically send a request for a new session access token using the refresh token from the last session.
+
+If a user logs in to one device, then logs into another device, the refresh token from the login on the first device becomes invalid. To handle this situation, provide a block to be executed when a token refresh fails using the `setTokenRefreshFailureBlock:` method, like so:
+
+```obj-c
+[[SMClient defaultClient] setTokenRefreshFailureBlock:^(NSError *error, SMFailureBlock originalFailureBlock){
+	// You are given the refresh error as well as the failure callback from the original request if you choose to call it.
+	// We recommend logging in again by presenting a temporary login screen to the user, then picking up where they left off in the UI
+}];
+```
+
+<p class="alert-info">
+	ADD LINKS
+</p>
 
 ## Logging out of StackMob
 
+```obj-c
+[[SMClient defaultClient] logoutOnSuccess:^(NSDictionary *result){
+	// Successful logout
+} onFailure:^(NSError *error){
+	// Error
+}];
+```
+
+<p class="alert-info">
+	
+</p>
+
 ## Reset a Password
+
+<p class="alert-info">
+	
+</p>
 
 ## Forgot Password
 
+<p class="alert-info">
+	
+</p>
+
+<!---
+	///////////////////
+	GEO-LOCATION
+	//////////////////
+-->
+
 # Geolocation
+
+<!---
+	///////////////////
+	SOCIAL INTEGRATION
+	//////////////////
+-->
 
 # Social Integration
 
