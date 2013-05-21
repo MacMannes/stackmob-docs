@@ -1,4 +1,5 @@
-<h1>Developer Guide</h1>
+iOS Developer Guide
+=====================================
 
 Core Data allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications. For those interested in sticking to the REST-based way of making requests, we provide the full Datastore API as well.
 

@@ -1,4 +1,5 @@
-# Access Controls - Schema Permissions
+Access Controls - Schema Permissions
+=====================================
 
 StackMob provides a way for you to set access level controls on your schemas.  You can limit your users' Create, Read, Update, or Delete access with various permission levels.  This feature is implemented using OAuth 2 and supported by the current versions of our all our SDKs.
 
