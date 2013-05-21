@@ -65,13 +65,9 @@ myTask.save(new StackMobModelCallback() {
 });
 ```
 
-## Read an Object
-
-
-[HOW TO SET ID?]
+## Reload an Object
 
 ```java
-Task myTask = new Task("1234");
 myTask.fetch(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -88,7 +84,6 @@ myTask.fetch(new StackMobModelCallback() {
 ## Update an Object
 
 ```java
-Task myTask = new Task("1234");
 myTask.save(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -105,7 +100,6 @@ myTask.save(new StackMobModelCallback() {
 ## Delete an Object
 
 ```java
-Task myTask = new Task("1234");
 myTask.destroy(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -148,17 +142,82 @@ public class TaskList extends StackMobModel {
 
 ## Deleting from an Array
 
+```java
+myTaskList.getTasks().remove(0);
+myTaskList.save();
+```
+or to avoid resending the whole array
+```java
+myTaskList.remove("tasks", myTask, new StackMobCallback() { ... });
+```
+
 # Queries
 
 ## Comparison
 
+```java
+Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3), new StackMobQueryCallback<Task>() {
+    @Override
+    public void success(List<Task> result) {
+       // You've now got a list of high priority tasks
+    }
+
+    @Override
+    public void failure(StackMobException e) {
+    }
+});
+```
+
 ## Relationship and Arrays
 
+(in queries)
+
 ## Pagination
+
+```java
+Task.query(Task.class, new StackMobQuery().isInRange(0, 9), new StackMobQueryCallback<Task>() {
+    @Override
+    public void success(List<Task> result) {
+       // You've now got a list of all tasks
+    }
+
+    @Override
+    public void failure(StackMobException e) {
+    }
+});
+```
 
 ## Ordering
 
 ## Select Fields
+
+```java
+    Task.query(Task.class, new StackMobQuery().isInRange(0, 9), StackMobOptions.selectedFields(Arrays.asList("name", "priority")), new StackMobQueryCallback<Task>() {
+        @Override
+        public void success(List<Task> result) {
+           // You've now got a list of the tasks
+        }
+ 
+        @Override
+        public void failure(StackMobException e) {
+        }
+    });
+```
+
+## Chaining
+
+```java
+Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3).field(new StackMobQueryField("done").isEqualTo(true)), new StackMobQueryCallback<Task>() {
+    @Override
+    public void success(List<Task> result) {
+       // You've now got a list of high priority, completed tasks
+    }
+
+    @Override
+    public void failure(StackMobException e) {
+    }
+});
+```
 
 # Relationships
 
@@ -277,9 +336,11 @@ taskList.fetch(StackMobOptions.depthOf(1), new StackMobModelCallback() {
 
 ## Adding Related Objects
 
-## Fetching Related Objects
+Just save the object
 
 ## Decoupling Related Objects
+
+not actually possible via the model api
 
 # User Authentication
 
@@ -318,6 +379,10 @@ user.save();
 ## Fetching a User
 
 ## Custom User Model
+
+how do you declare a custom user modeL?
+
+with custom username/password fields?
 
 ## Login
 
@@ -787,8 +852,6 @@ StackMobPush.getPush().broadcastPushNotification(payload, standardToastCallback)
 <h3>Push without users</h3>
 
 If you just want to do push without worrying about users (if you're only ever doing broadcasts for example) you can find a lower level API in [StackMobPush](http://stackmob.github.com/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/push/StackMobPush.html). You can user an arbitrary string for username if you don't plan on using it at all
-
-Congratulations on completing this tutorial!
 
 * Read the javadocs for [StackMobUser](http://stackmob.github.com/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html) and [StackMobPush](http://stackmob.github.com/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/push/StackMobPush.html)
 * [Browse Source Code](https://github.com/stackmob/stackmob-android-examples)
