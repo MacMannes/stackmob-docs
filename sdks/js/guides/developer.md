@@ -161,6 +161,7 @@ You can also display the JSON representation of your model by calling the `toJSO
 ```
 
 
+
 ## Defining Collections
 
 To work with an array of your objects, define your `Collection`.
@@ -700,6 +701,8 @@ user.login(true, {
 })
 ```
 
+Your user will be logged in for an hour.
+
 * Logging in from another device will invalidate the session on other devices.
 
 <p class="alert">
@@ -759,32 +762,335 @@ StackMob.getLoggedInUser({
 
 ## Change Password
 
+```js
+var user = new StackMob.User({ username: 'Chuck Norris', password: 'myfists' });
+user.login();
 
+
+user.resetPassword('myfists', 'mynewandimprovedfists', {
+  success: function(..) {},
+  error: function(..) {}
+}); //changes password from 'myfists' to 'mynewandimprovedfists'
+```
 
 ## Password Recovery
 
+If your user has forgotten his or her password, they can request that an email with a temporary password be sent to an email address.  That email address should be a field in the user schema.  You'll need to specify which field represents the email address when defining your User schema.
+
+[Screenshot of Forgot password UI in user schema]
+
+```js
+var user = new StackMob.User({ username: 'Chuck Norris' });
+//assume StackMob.User has an "email" field, and Chuck Norris's email is "chucknorris@somewhere.com"
+user.forgotPassword({
+  success: function(...) {},
+  error: function(...) {}
+}); //tells StackMob to send an email to Chuck Norris at "chucknorris@somewhere.com"
+```
+
+The user will receive the new password in their email.  You should then have them login with the temporary password and provide a new one.
+
+```js,6
+var user = new StackMob.User({ username: 'Chuck Norris' });
+user.forgotPassword(...); 
+
+//after checking getting his temp password in his email...
+
+user.loginWithTempAndSetNewPassword('temporary password from StackMob email', 'mysuperfists', true, {
+  success: function(..) {},
+  error: function(..) {}
+});
+```
+
+As with `login`, you can set whether or not to stay logged in.
+
+# Facebook
+
+You can log in Facebook users into your StackMob app.  After using the Facebook JavaScript SDK to login, simply pass the Facebook access token into the login method.  StackMob will log the user in.  If the user doesn't exist yet, StackMob will create an instance for you in the datastore.
+
+```js
+FB.login(function(response) {
+  if (response.authResponse) {
+
+    var accessToken = response.authResponse.accessToken;
+    var user = new StackMob.User();
+    user.loginWithFacebookAutoCreate(accessToken, true); //true, stay logged in.
+
+  } else {
+    console.log('User cancelled login or did not fully authorize.');
+  }
+}, {scope: 'email'});
+```
 
 # Access Controls
 
+StackMob provides you the ability to lock down access to your data with Access Controls.  You can disallow access to Create, Read, Update or Delete.  With user authentication, you can even restrict permissions at a user level.
+
+Here, we set it so that only logged in users can create objects for this schema.
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/Scrumptious/dashboard-acl.png" alt=""/>
+
+<p class="alert alert-info">
+  Explore different Access Control Levels.
+</p>
 
 # Files
+
+You can upload files to StackMob.  The files are saved to your Amazon S3 account, which you link with StackMob.  This'll allow you to more easily manage your files and retain content.
+
+A file is represented as a `Binary` file type field on your schema.  <a href="" target="_blank">Add a <code>binary</code> field to your schema</a>.  To save the file, you'll call `setBinaryFile` with three parameters:
+
+* the file, Base64 encoded as a string
+* the file name
+* the file type (image/png)
+
+```js
+var base64Content = //the file, base64 encoded as a string
+var fileName = //
+var fileType = theFile.type;
+
+user.setBinaryFile('profilepic', fileName, fileType, base64Content);
+```
+
+Let's take an expanded example and get a file from the local filesystem with the HTML5 FileReader API:
+
+```js
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+ 
+<script type="text/javascript">
+/* <![CDATA[ */
+    StackMob.init({
+        publicKey: 'your_public_key',
+    apiVersion: 0
+  });
+/* ]]> */
+</script>
+ 
+</head>
+<body>
+ 
+<table>
+  <tr>
+    <td>File to Encode:</td>
+    <td><input type="file" id="files" name="files[]" multiple /></td>
+  </tr>
+</table>
+ 
+<script type="text/javascript">
+  //Define your Todo class once on the page.
+  var Todo = StackMob.Model.extend({
+    schemaName: 'todo'
+  });
+ 
+  var todoInstance = new Todo();
+  var fieldname = 'picture'; //name of binary field that you created in your schema
+  
+  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+ 
+    // Loop through the FileList
+    for (var i = 0, f; f = files[i]; i++) {
+ 
+      var reader = new FileReader();
+ 
+      // Closure to capture the file information
+      reader.onload = (function(theFile) {
+        return function(e) {
+ 
+          /*
+            e.target.result will return "data:image/jpeg;base64,[base64 encoded data]...".
+            We only want the "[base64 encoded data] portion, so strip out the first part
+          */
+          var base64Content = e.target.result.substring(e.target.result.indexOf(',') + 1, e.target.result.length);
+          var fileName = theFile.name;
+          var fileType = theFile.type;
+ 
+          todoInstance.setBinaryFile(fieldname, fileName, fileType, base64Content);
+          todoInstance.save();
+ 
+        };
+      })(f);
+ 
+      // Read in the file as a data URL
+      fileContent = reader.readAsDataURL(f);
+ 
+    }
+  }
+ 
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+ 
+</script>
+ 
+</body>
+</html>
+```
+
+<p class="alert alert-info">
+  <a href="https://developer.stackmob.com/sdks/js/api#a-setbinaryfile">API Docs for saving files</a>
+</p>
 
 
 # Geolocation
 
+StackMob supports geolocations, allowing you to save and search geo data.  Geolocations are saved to a `geopoint` field type on your schema.  Add a 
 
-# Facebook
 
+## Saving Geopoints
+
+Let's save a geopoint to `place`.  We'll use the `StackMob.GeoPoint` object to help with things.  It's a helper object that will convert the geopoint data to the JSON format we need via `toJSON`.
+
+```js
+var Place = new StackMob.Model.extend({ schemaName: 'place' }); 
+ 
+var latlon = new StackMob.GeoPoint(37.772161,-122.406443); //lat, lon
+var stackmob_office = new Place({ location: latlon.toJSON() }); //notice "toJSON()"
+stackmob_office.create({
+  success: function(..) {},
+  error: function(..) {}
+});
+```
+
+That's it!  Check out the dashboard for your new point.
+
+[SCREENSHOT OF OBJECT BROWSER]
+
+
+## Querying Geopoints
+
+To query for geopoints near a particular location, you can use several `StackMob.Collection.Query` additions for geopoints.  You can use:
+
+* `mustBeNearMi` - returns locations near to you with the distance from point (in miles)
+* `isWithinMi` - returns locations near you without the distance from point (in miles)
+* `isWithinBox` - returns locations within a rectangle
+
+These queries are generally in radians, but we've provided helper methods to search by `miles` or `kilometers`.
+
+Let's search for places 1 mile near StackMob.
+
+```js,11
+var Place = StackMob.Model.extend({ schemaName: 'place' });
+var Places = StackMob.Collection.extend({ model: Place });
+ 
+var latlon = new StackMob.GeoPoint(37.772161, -122.406443);
+ 
+var q = new StackMob.Collection.Query();
+q.mustBeNearMi('location', latlon, 1);
+ 
+var placesContainer = new Places();
+placesContainer.query(q, {
+  success: function(model) {
+    console.debug(model);
+  },
+  error: function(model, response) {
+    console.debug(response);
+  }
+});
+```
+
+Now let's query for places within a search box, represented with two opposite corners of the rectangle as geopoints.
+
+```js
+var Place = StackMob.Model.extend({ schemaName: 'place' });
+var Places = StackMob.Collection.extend({ model: Place });
+
+ 
+var q = new StackMob.Collection.Query();
+q.isWithinBox('location', new StackMob.GeoPoint(37.77493,-122.419416), new StackMob.GeoPoint(37.783367,-122.408579));
+ 
+var places = new Attractions();
+places.query(q, {
+  success: function(collection) {
+      console.debug(collection.toJSON());
+  }
+});
+```
+
+See more about geolocation data in the resources below.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection.query_with_stackmob.geopoint" target="_blank"></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+# Custom Code
+
+With the Custom Code module, StackMob lets you write code that runs and executes on the server.  Sending batch push messages?  Running some jobs?  Write it in Custom Code and call it from the SDK or anything that can hit a REST API.  You can define custom JSON responses so that your server can also notify the client of the result.
+
+```js
+StackMob.customcode('helloworld', 
+  { who: "Kodi" }, //method parameters
+  'GET', //skip third param for default 'GET'
+  {
+      success: function(result) {
+          console.debug(result); //prints out the returned JSON your custom code specifies
+          /*
+           {
+              msg: "Hello World, Kodi!"
+           }
+           */
+      }
+  } 
+);
+```
+
+The above sends a `GET` request to `https://api.stackmob.com/helloworld?who=Kodi`.
+
+Read more about <a href="/customcode-sdk/developer-guide" target="_blank">StackMob Custom Code</a>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/sdks/js/api#a-customcode" target="_blank"></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 # Deploy
 
-# Cross Domain AJAX
+You're done developing your app!  You've been working in StackMob development environment and you now want to get everything to the production environment.  StackMob let's you do that easily.  Let's go through what you'll need to do.
 
-Check the <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs" target="_blank">Javascript SDK API documentation page</a> for more!
+1.  Check your CORS settings
+2.  Deploy your API
+3.  Deploy HTML5 (only if using StackMob's HTML5 hosting module)
 
-* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-forgotpassword" target="_blank">Forgot Password/Reset Password</a>
-* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-createuserwithfacebook" target="_blank">Facebook Integration</a>
-* <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs#a-stackmob.geopoint" target="_blank">Geo Spatial Queries</a>
+## CORS Settings
 
-In the meantime, feel free to visit the Javascript API Docs for more info and examples. <a href="https://developer.stackmob.com/stackmob-js-sdk/api-docs" class="button blue">Read StackMob Javascript API Docs</a>
+When deploying to production, you'll need to whitelist the domains you want to receive StackMob API calls from.  By default, your development environment allows all domains.
+
+Why do you need this?  Browsers typically only allow AJAX calls to fire against the same origin/domain.  This means that if you're on `https://www.mysite.com`, browsers won't allow AJAX calls to go to `https://api.stackmob.com`.  But with CORS (cross origin resource sharing), modern browsers can.
+
+Perhaps you've seen the cross-domain call error before:
+
+[Screenshot of error]
+
+Again, the development environment is defaulted to allow any domain.  You can configure your accepted development and production domains in the <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS module settings</a>.  Most importantly, you'll need to whitelist your production domains.  The protocol and port matter.
+
+## API
+
+StackMob gives you separate development and production environments so that you can keep your test data and custom code separate from your production set.  Deploying your API is a *critical* step you need to do when deploying.  StackMob provides a simple UI to help you do this easily.
+
+Read about how to <a href="https://developer.stackmob.com/" target="_blank">Deploy your API</a>
+
+[SCREENSHOT of DEPLOY UI]
+
+
+## HTML5
+
+If you're using StackMob's HTML5 hosting service, you'll also need to <a href="https://developer.stackmob.com/" target="_blank">deploy your HTML files to production</a>.
+
+[Deploy HTML5]
