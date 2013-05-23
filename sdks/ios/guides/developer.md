@@ -45,7 +45,9 @@ From then on you can either pass your client instance around, or use `[SMClient 
 
 ## Using Core Data
 
-StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.  If you want to learn the basics, check out INSERT LINK TO REFERENCES AND EBOOK.
+StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand. If you are new to Core Data check out our list of <a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#core_data_references" target="_blank">Core Data References</a>.
+
+INSERT MAKE SURE YOU READ THROUGH CODING PRACTICES AND ARE AWARE OF SUPOPRT SPECS
 
 The three main pieces of Core Data are instances of:
 
@@ -97,7 +99,7 @@ From then on you can either pass your core data store instance around, or use `[
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Retrieving a Datastore" target="_blank">Retrieving a Datastore</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Retrieving a Datastore" target="_blank">SMClient: Retrieving a Datastore</a></li>
       </ul>
     </div>
   </div>
@@ -203,7 +205,7 @@ For a list of StackMob supported `NSFetchRequest` methods, visit the `Fetch Requ
 
 <p class="alert">By default, objects are returned as faults, and attribute values are not accessed from the persistent store until specifically called upon in your code.  This ensures in-memory usage is as low as possible.</br></br>All information on specifying conditions for a query can be found in the INSERT LINK TO QUERIES.</p> 
 
-<!--- ASYNC READ -->
+<!--- SUB: ASYNC READ -->
 
 ### Asynchronous Fetch Requests
 
@@ -239,7 +241,7 @@ If you wish to return managed object IDs rather than objects, use the following 
 	<a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#//api/name/executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:" target="_blank">executeFetchRequest:returnManagedObjectIDs:successCallbackQueue:failureCallbackQueue:options:onSuccess:onFailure:</a></br>
 </p>
 
-<!--- SYNC READ -->
+<!--- SUB: SYNC READ -->
 
 ### Synchronous Fetch Requests
 
@@ -439,6 +441,8 @@ You can achieve a many to many relationship by simply creating two relationships
 
 # User Authentication
 
+<!--- The User Schema -->
+
 ## The User Schema
 
 When you create an application on StackMob, a **user** schema is automatically generated, with **username** as it's primary key field as well as a **password** field. This is the default schema for user objects.
@@ -466,6 +470,8 @@ self.client.userSchema = @"teacher";
 <p class="alert-info">
 
 </p>
+
+<!--- Creating User Object -->
 
 ## Creating a User Object
 
@@ -511,6 +517,8 @@ User *newUser = [[User alloc] init];
 
 TUTORIAL: CREATE A USER OBJECT
 
+<!--- Login -->
+
 ## Logging in to StackMob
 
 Logging into StackMob using the standard username/password pattern is done through the `SMClient` instance:
@@ -527,7 +535,9 @@ Logging into StackMob using the standard username/password pattern is done throu
 	ADD LINKS HERE
 </p>
 
-## Manipulating a User Object
+<!--- Edit User object -->
+
+## Updating a User Object
 
 The next time the user logs in to your app, you may need to have a copy of the user object around to make updates. To do this, simply create a fetch request and specify a predicate such that the only result should be your logged in user:
 
@@ -548,6 +558,8 @@ NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 
 <a class="alert">Managed Objects are not thread safe. Pass object IDs between threads and blocks.</p>
 
+<!--- Get logged in user -->
+
 ## Retrieve Logged In User
 
 ```obj-c
@@ -558,11 +570,15 @@ NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 }];
 ```
 
+<!--- Check Status -->
+
 ## Check Status
 
-To see whether your user is logged in, use the `isLoggedIn` and `isLoggedOut` methods of the client.
+To see whether your user is logged in, use the `SMClient` `isLoggedIn` and `isLoggedOut` methods.
 
 INSERT API LINKS
+
+<!--- Auto Refresh -->
 
 ## Automatic Login Refresh
 
@@ -581,7 +597,9 @@ If a user logs in to one device, then logs into another device, the refresh toke
 	ADD LINKS
 </p>
 
-## Logging out of StackMob
+<!--- Logout -->
+
+## Logout of StackMob
 
 ```obj-c
 [[SMClient defaultClient] logoutOnSuccess:^(NSDictionary *result){
@@ -593,15 +611,35 @@ If a user logs in to one device, then logs into another device, the refresh toke
 
 <p class="alert-info">
 	
-</p>
+</p> 
+
+<!--- Reset -->
 
 ## Reset a Password
+
+Developers can easily implement a reset password workflow in their application. A basic example workflow might look like the following:
+
+1. Implement a screen for logged in users to reset their password.
+2. Allow the user to insert their current password, followed by a new password. Optionally ask them to confirm the new password.
+3. Initiate a method which calls the `SMClient` `changeLoggedInUserPasswordFrom:to:onSuccess:onFailure:` method.
+4. The logged in user's password is reset!
 
 <p class="alert-info">
 	
 </p>
 
+<!--- Forgot Pass -->
+
 ## Forgot Password
+
+Developers can easily implement a forgot password workflow in their application. To do this, your user schema will need to have a field dedicated to users' email addresses, which can be the username field if your users sign in with their emails, for example. Choose the correct field which maps to emails in the **Forgot Password** section on the user schema configuration page. Once you have done this, a basic example workflow might look like the following:
+
+1. Have a button on the login screen which maps to a forgot password method.
+2. When the user presses the button they are propmpted to enter their username.
+3. This should trigger the `SMClient` `sendForgotPaswordEmailForUser:onSuccess:onFailure:` method. The user wull receive an email with a temporary password.
+4. When they come back to your app, they enter their username and temp password and are prompted to enter a new password.
+5. Developers complete the workflow by logging in the user with the `SMClient` `loginWithUsername:temporaryPassword:settingNewPassword:onSuccess:onFailure:` method.
+6. The logged in user's password is reset!
 
 <p class="alert-info">
 	
@@ -614,6 +652,276 @@ If a user logs in to one device, then logs into another device, the refresh toke
 -->
 
 # Geolocation
+
+<!--- Add schema field -->
+
+## Add a GeoPoint Schema Field
+
+In order for a schema to allow for geopoints, it must have a field with the GeoPoint type. Follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-GeoPoint-Field-to-Schemas" target="_blank">Adding a GeoPoint Field To Schemas</a> tutorial to get set up.
+
+<p class="alert">Geopoint fields are not inferred by StackMob, and must be added manually through the Dashboard.</p>
+
+<!--- Track Geo-Location -->
+
+## Start Tracking Geo-Location
+
+`SMLocationManager` is a built-in `CLLocationManager` singleton for use in retrieving `CLLocationCoordinate2D` points. 
+ 
+Many apps make use of geo location data; `SMLocationManager` aides in this process by eliminating the boilerplate code needed to build a `CLLocationManager` singleton.
+
+<!--- SUB: Using SMLocationManager -->
+
+### Using SMLocationManager
+
+First, import the class where needed: 
+
+```obj-c
+#import "SMLocationManager.h"
+```
+
+To start retrieving data, first prompt `SMLocationManager` to start listening for updates from the device GPS:
+
+```obj-c
+[[[SMLocationManager sharedInstance] locationManager] startUpdatingLocation];
+```
+
+When you are finished, tell the location manager to stop listening for GPS updates.
+
+```obj-c
+[[[SMLocationManager sharedInstance] locationManager] stopUpdatingLocation];
+```
+
+<!--- SUB: Manual lat/lon -->
+
+## Manually Pulling the Latitude and Longitude ##
+
+If you wish to pull the latitude and longitude data manually from the location manager, do so with the following:
+
+```obj-c
+NSNumber *latitude = [[NSNumber alloc] initWithDouble:[[[[SMLocationManager sharedInstance] locationManager] location] coordinate].latitude];
+NSNumber *longitude = [[NSNumber alloc] initWithDouble:[[[[SMLocationManager sharedInstance] locationManager] location] coordinate].longitude];
+```
+
+Often times it may take a few run loops for the location manager to start receiving actual data after <i>startUpdatingLocation</i> is called.  You may need to implement the necessary logic to ensure you are not pulling nil data.
+
+<!--- SUB: Subclass SMLocationManager -->
+
+## Subclassing SMLocationManager ##
+
+Out of the box, `SMLocationManager` gives you the ability to start/stop pulling GPS location data, as well as retrieve the current latitude and longitude of the device.  If you would like more control and customization, it's recommended you subclass `SMLocationManager`. In the init method of your subclass, you can configure the properties of the `CLLocationManager` as needed.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.apple.com/library/mac/#documentation/CoreLocation/Reference/CLLocationManager_Class/CLLocationManager/CLLocationManager.html" target="_blank">CCLocationManager</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Save Geo Data -->
+
+## Save Geo-Location Data
+
+The `SMGeoPoint` class provides a simple interface around a geopoint. It inherits from `NSDictionary` and has two instance methods: `latitude` and `longitude`.
+
+Use the provided class method to obtain the current location data of the device:
+
+```obj-c
+[SMGeoPoint getGeoPointForCurrentLocationOnSuccess:^(SMGeoPoint *geoPoint) {
+     
+    // Do something with geoPoint.latitude and geoPoint.longitude
+     
+} onFailure:^(NSError *error) {
+
+    // Error
+}];
+```
+
+GeoPoints are stored in Core Data using the `Transformable` attribute type. To save an `SMGeoPoint` in Core Data, it must be archived into `NSData`:
+
+```obj-c
+NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
+NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
+
+SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
+
+NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
+```
+
+ Since `getGeoPointForCurrentLocationOnSuccess:onFailure:` gives us back an instance of `SMGeoPoint`, we can easily save objects with geo data like so:
+
+```obj-c
+[SMGeoPoint getGeoPointForCurrentLocationOnSuccess:^(SMGeoPoint *geoPoint) {
+     
+    Todo *todo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
+    todo.todoId = [todo assignObjectId];
+    todo.title = @"My Location";
+
+    todo.location = [NSKeyedArchiver archivedDataWithRootObject:geoPoint];
+     
+    /*
+     Save the location to StackMob.
+     */
+   [self.managedObjectContext saveOnSuccess:^{
+       NSLog(@"Created new object in Todo schema");
+   } onFailure:^(NSError *error) {
+        NSLog(@"Error creating object: %@", error);
+   }];
+     
+} onFailure:^(NSError *error) {
+    NSLog(@"Error getting SMGeoPoint: %@", error);
+}];
+```
+
+<p class="alert">Geo Location in iOS relies on the **MapKit** framework.</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="" target="_blank"></a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Saving-Geo-Location-Data" target="_blank">Saving Geo Location Data</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Read Geo-Location -->
+
+## Reading Geo-Location Values
+
+Because managed object geopoint data will be contained in a tranformable attribute type, it must be unarchived to be properly read:
+
+```obj-c
+NSData *data = [managedObject objectForKey:@"location"];
+
+SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+```
+
+<!--- Query Geo-Location -->
+
+## Query based on Geo-Location
+
+To query using `SMGeoPoint`, use the special predicate methods provided by the `SMPredicate` class:
+
+```obj-c
+NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"EntityName"];
+
+// Fisherman's Wharf
+CLLocationCoordinate2D coordinate;
+coordinate.latitude = 37.810317;
+coordinate.longitude = -122.418167;
+
+SMGeoPoint *geoPoint = [SMGeoPoint geoPointWithCoordinate:coordinate];
+SMPredicate *predicate = [SMPredicate predicateWhere:@"geopoint" isWithin:3.5 milesOfGeoPoint:geoPoint];
+[fetchRequest setPredicate:predicate];
+
+// Execute fetch request
+[self.managedObjectContext executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
+    
+    // Once you've made a fetch request, make sure to unarchive the NSData
+
+    NSManagedObject *object = [results objectAtIndex:0];
+    NSData *data = [object objectForKey:@"location"];
+    SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+} onFailure:^(NSError *error) {
+
+        NSLog(@"Error: %@", error);
+}];
+```
+
+The `SMPredicate` class provides method to query based on range in miles or kilometers, as well as bounds by SW and NE corners, or even just near a provided point.
+
+All <code>SMPredicate</code> methods to query based on an instance of <code>SMGeoPoint</code> have an equivalent method to query based on an instance of <code>CLLocationCoordinate2D</code>.
+
+<p class="alert">Fetching from the cache using <code>SMPredicate</code> is not supported, and will return an empty array of results. Similarly, when a fetch is performed from the network (StackMob), any results are not cached.</p>
+
+<!--- Geo-Location through DS API -->
+
+## Geo-Locatin using the Datastore API
+
+<!--- SUB: Saving -->
+
+### Saving 
+
+You can make an `SMGeoPoint` with a latitude and a longitude:
+
+```obj-c
+NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
+NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
+
+SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
+```
+ 
+Alternatively, you can use a `CLLocationCoordinate2D` coordinate:
+
+```obj-c
+CLLocationCoordinate2D renoCoordinate = CLLocationCoordinate2DMake(39.537940, -119.783936);
+
+SMGeoPoint *reno = [SMGeoPoint geoPointWithCoordinate:renoCoordinate];
+```
+
+To save an SMGeoPoint, store it in a dictionary of arguments to be uploaded to StackMob:
+
+```obj-c
+CLLocationCoordinate2D renoCoordinate = CLLocationCoordinate2DMake(39.537940, -119.783936);
+  
+SMGeoPoint *location = [SMGeoPoint geoPointWithCoordinate:renoCoordinate];
+ 
+NSDictionary *arguments = [NSDictionary dictionaryWithObjectsAndKeys:@"My Location", @"name", location, @"location", nil];
+ 
+[[[SMClient defaultClient] dataStore] createObject:arguments inSchema:@"todo" onSuccess:^(NSDictionary *theObject, NSString *schema) {
+    NSLog(@"Created object %@ in schema %@", theObject, schema);
+ 
+} onFailure:^(NSError *theError, NSDictionary *theObject, NSString *schema) {
+    NSLog(@"Error creating object: %@", theError);
+}];
+```
+
+<!--- SUB: Reading -->
+
+### Reading
+
+You can query geo data by using conditions found in the `SMQuery` class. Here is an example of querying for all people within 5 miles of a given location:
+
+```obj-c
+NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
+NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
+
+SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
+
+SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
+
+[query where:@"location" isWithin:5 milesOfGeoPoint:location];
+
+[[[SMClient defaultClient] datastore] performQuery:query onSuccess:^(NSArray *results) {
+  // Successful query
+} onFailure:^(NSError *error) {
+  // Error
+}];
+
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMQuery.html" target="_blank">SMQuery Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!---
 	///////////////////
@@ -631,24 +939,208 @@ If a user logs in to one device, then logs into another device, the refresh toke
 
 ## Gigya
 
+# Custom Code
+
 # Push Notifications
+
+<!---
+  ///////////////////
+  OFFLINE SYNC
+  //////////////////
+-->
 
 # Offline Sync
 
-Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. See the Offline Sync Guide for all information.
+Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
 
-# Error Codes
+Read the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Offline Sync Guide</a> for all information.
+
+<!---
+  ///////////////////
+  NETWORK REACHABILITY
+  //////////////////
+-->
+
+# Checking Network Reachability
+
+<!--- SMNetworkReachability -->
+
+## Using the SMNNetworkReachability Class
+
+`SMNetworkReachability` provides an interface to monitor the network reachability from the device to StackMob.
+ 
+ Network reachability checks are already built into the SDK.  When the network is not reachable and a request is made, an error with domain `SMError` and status code -105 (SMNetworkNotReachable) will be returned.
+ 
+ An instance of `SMNetworkReachability` is created during the initialization of an `SMUserSession`, accessible by the `networkMonitor` property.
+
+ A shorthand is available through the `SMClient` instance:
+
+ ```obj-c
+ client.networkMonitor
+ ```
+ 
+ ## Checking the Current Network Status
+ 
+ To manually check the current network status, use the <currentNetworkStatus> method:
+
+ ```obj-c
+ SMNetworkStatus currentStatus = [self.client.networkMonirot currentNetworkStatus];
+ ```
+ 
+ This method will return an `SMNetworkStatus`, defined as:
+
+```obj-c
+typedef enum {
+    SMNetworkStatusUnknown = -1,
+    SMNetworkStatusNotReachable  = 0,
+    SMNetworkStatusReachable = 1,
+} SMNetworkStatus;
+```
+ 
+* Reachable - the device has a network connection and can successfully reach StackMob.
+* Not Reachable - StackMob is not reachable either because there is no network connection on the device or the service is down.
+* Unknown - Typically this status arises during in-between times of network connection initialization.
+ 
+An example of testing reachability before sending a request would look like this:
+
+```obj-c
+if ([self.client.networkMonitor currentNetworkStatus] == SMNetworkStatusReachable) {
+    // send request
+}
+```
+ 
+You can also handle each state case by case in a switch statement:
+
+```obj-c
+switch([client.session.networkMonitor currentNetworkStatus]) {
+    case  SMNetworkStatusReachable:
+        // do Reachable stuff
+        break;
+    case SMNetworkStatusNotReachable:
+        // do NotReachable stuff
+        break;
+    case SMNetworkStatusUnknown:
+        // do Unknown stuff
+        break;
+    default:
+        break;
+}
+```
+
+<!--- Status Change Notifications -->
+
+## Registering For Network Status Change Notifications
+
+You can register to receive notifications when the network status changes by simply adding an observer for the notification name `SMNetworkStatusDidChangeNotification`.  The notification will have a `userInfo` dictionary containing one entry with key `SMCurrentNetworkStatusKey` and `NSNumber` representing the `SMNetworkStatus` value.
+
+In order to access the value of `SMCurrentNetworkStatusKey` in a format for comparing to specific states or use in a switch statement, retrieve the intValue like this:
+
+```obj-c
+if ([[[notification userInfo] objectForKey:SMCurrentNetworkStatusKey] intValue] == SMNetworkStatusReachable) {
+    // do Reachable stuff
+}
+```
+
+<p class="alert">Remember to remove your notification observer before the application terminates.</p>
+ 
+ 
+## Executing a Block Whenever the Network Status Changes ## 
+
+Often times you may want to change the cache policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
+
+```obj-c
+[self.client.networkMonitor setNetworkStatusChangeBlock:^(SMNetworkStatus status){
+    
+    if (status == SMNetworkStatusReachable) {
+      ...
+    } else {
+      ...
+    }
+
+}];
+```
+
+Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
+
+```obj-c
+[self.client.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^(SMNetworkStatus status){
+    
+    if (status == SMNetworkStatusReachable) {
+      return SMCachePolicyTryNetworkOnly;
+    } else {
+      return SMCachePolicyTryCacheOnly;
+    }
+
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMNetworkReachability.html" target="_blank">SMNetworkReachability Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!---
+  ///////////////////
+  ERROR CODES
+  //////////////////
+-->
+
+# SDK Error Codes
+
+When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occured. A full list can be found in the API Refererence:
+
+<a href="http://stackmob.github.io/stackmob-ios-sdk/ErrorCodeTranslations.html" target="_blank">Error Code Translations</a>
+
+<!---
+  ///////////////////
+  DEBUGGING
+  //////////////////
+-->
 
 # Debugging
 
-# Network Reachability
+The SDK provides a few flags to assist in debugging. They can be found in the Debugging section of the API Refererence main page:
 
-# Custom Code
+<a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#debugging" target="_blank">Debugging</a>
+
+<!---
+  ///////////////////
+  CODING PRACTICES
+  //////////////////
+-->
 
 # Core Data Coding Practices
 
+There are some important coding practices to adhere to when developing with StackMob and Core Data. They can be found in the StackMob <--> Core Data Coding Practices section of the API Refererence main page:
+
+<a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#coding_practices" target="_blank">StackMob <--> Core Data Coding Practices</a>
+
+<!---
+  ///////////////////
+  SUPPORT SPECS
+  //////////////////
+-->
+
 # Core Data Integration Support Specs
+
+A full list of what Core Data features and methods are supported with StackMob can be found in the API Reference:
+
+<a href="http://stackmob.github.io/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">StackMob <--> Core Data Support Specifications</a>
+
+<!---
+  ///////////////////
+  DEPRECATIONS
+  //////////////////
+-->
 
 # Deprecations
 
-# Core Data References
+As we improve the SDK, sometimes that means we need to deprecate methods or properties. A full list of deprecations by SDK version can be found in the Deprecations section of the API Reference:
+
+<a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#deprecations" target="_blank">Deprecations</a>
