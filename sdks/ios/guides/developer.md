@@ -458,6 +458,7 @@ To change the defaults so they match your schemas and fields on StackMob:
 
 * With your instance of `SMClient`, you can directly set the properties listed above using the dot notation or setters.  For example:
 
+
 ```obj-c
 self.client.userSchema = @"teacher";
 [self.client setUserPrimaryKeyField:@"email"];
@@ -465,11 +466,7 @@ self.client.userSchema = @"teacher";
 
 * Alternatively, you can set all the properties at once using `initWithAPIVersion:apiHost:publicKey:userSchema:userPrimaryKeyField:userPasswordField:`.
 
-<p class="alert">Don't forget to check the **Create as a User Object** box when <a href="https://developer.stackmob.com/api/schemas/create" target="_blank">creating a new schema</a> for user objects.</p>
-
-<p class="alert-info">
-
-</p>
+<p class="alert">Don't forget to check the <b>Create as a User Object</b> box when <a href="https://developer.stackmob.com/api/schemas/create" target="_blank">creating a new schema</a> for user objects.</p>
 
 <!--- Creating User Object -->
 
@@ -535,7 +532,9 @@ Logging into StackMob using the standard username/password pattern is done throu
 	ADD LINKS HERE
 </p>
 
+
 <!--- Edit User object -->
+
 
 ## Updating a User Object
 
@@ -555,8 +554,9 @@ NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 	// Edit user object or store ID to pass around
 
 }];
+```
 
-<a class="alert">Managed Objects are not thread safe. Pass object IDs between threads and blocks.</p>
+<p class="alert">Managed Objects are not thread safe. Pass object IDs between threads and blocks.</p>
 
 <!--- Get logged in user -->
 
@@ -570,6 +570,7 @@ NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 }];
 ```
 
+
 <!--- Check Status -->
 
 ## Check Status
@@ -577,6 +578,7 @@ NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 To see whether your user is logged in, use the `SMClient` `isLoggedIn` and `isLoggedOut` methods.
 
 INSERT API LINKS
+
 
 <!--- Auto Refresh -->
 
@@ -593,10 +595,6 @@ If a user logs in to one device, then logs into another device, the refresh toke
 }];
 ```
 
-<p class="alert-info">
-	ADD LINKS
-</p>
-
 <!--- Logout -->
 
 ## Logout of StackMob
@@ -609,10 +607,6 @@ If a user logs in to one device, then logs into another device, the refresh toke
 }];
 ```
 
-<p class="alert-info">
-	
-</p> 
-
 <!--- Reset -->
 
 ## Reset a Password
@@ -623,10 +617,6 @@ Developers can easily implement a reset password workflow in their application. 
 2. Allow the user to insert their current password, followed by a new password. Optionally ask them to confirm the new password.
 3. Initiate a method which calls the `SMClient` `changeLoggedInUserPasswordFrom:to:onSuccess:onFailure:` method.
 4. The logged in user's password is reset!
-
-<p class="alert-info">
-	
-</p>
 
 <!--- Forgot Pass -->
 
@@ -641,9 +631,6 @@ Developers can easily implement a forgot password workflow in their application.
 5. Developers complete the workflow by logging in the user with the `SMClient` `loginWithUsername:temporaryPassword:settingNewPassword:onSuccess:onFailure:` method.
 6. The logged in user's password is reset!
 
-<p class="alert-info">
-	
-</p>
 
 <!---
 	///////////////////
@@ -931,15 +918,34 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
 
 # Social Integration
 
+<!--- Facebook -->
+
 ## Facebook
 
 ### 
 
+<!--- Twitter -->
+
 ## Twitter
+
+<!--- Gigya -->
 
 ## Gigya
 
+<!---
+  ///////////////////
+  CUSTOM CODE
+  //////////////////
+-->
+
 # Custom Code
+
+<!---
+  ///////////////////
+  PUSH
+  //////////////////
+-->
+
 
 # Push Notifications
 
