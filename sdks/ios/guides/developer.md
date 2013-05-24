@@ -918,15 +918,101 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
 
 # Social Integration
 
+StackMob provides integrations with Facebook, Twitter and Gigya to allow users to login to StackMob using pre-existing credentials. The Facebook and Twitter integration also feature interfaces to post status updates. 
+
 <!--- Facebook -->
 
 ## Facebook
 
-### 
+<!--- SUB: FB Login Workflow -->
+
+### Implement Facebook Login Workflow
+
+You will need to download the Facebook SDK and follow their tutorials to get login working in your application. Once you have a Facebook session open you will direct the application in the `sessionStateChanged:state:error` Facebook method to login to StackMob using the provided Facebook access token.
+
+All the implementation details on Facebook's end can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Facebook" target="_blank">Facebook Tutorial</a>.
+
+<!--- SUB: Login with Facebook -->
+
+### StackMob Login Using Facebook
+
+Logging into StackMob using Facebook credentials requires that a StackMob user object already exists and is linked to the user's Facebook access token. Fortunately, you can do all of that with one method.
+
+Assuming you have opened a Facebook session and have initiated a custom method from the Facebook `sessionStateChanged:state:error` method, you would login to StackMob like so:
+
+```obj-c,3-13
+[[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection,NSDictionary<FBGraphUser> *user, NSError *error) {
+ if (!error) {
+     [[SMClient defaultClient] loginWithFacebookToken:FBSession.activeSession.accessTokenData.accessToken createUserIfNeeded:YES usernameForCreate:user.username onSuccess:^(NSDictionary *result) {
+         NSLog(@"Logged in with StackMob");
+         [self updateView];
+     } onFailure:^(NSError *error) {
+         NSLog(@"Error: %@", error);
+     }];
+ } else {
+     // Handle error accordingly
+     NSLog(@"Error getting current Facebook user data, %@", error);
+ }
+}];
+```
+
+<p class="alert">By wrapping the login call in the `requestForMe` block, we can assign the Facebook user's username as the primary key of the StackMob user object. This is completely optional, and if nil is passed to the <code>usernameForCreate</code> parameter the Facebook user's ID is used.</p> 
+
+This login method will create a StackMob user object and link them to the provided Facebook token if one does not already exist.
+
+Alternatively, you can implement a more manual workflow using the methods listed in LINK TO CREATE A STACKMOB USER and LINK/UNLINK FB TOKEN.
+
+<!--- SUB: Create User -->
+
+### Create a User Object
+
+You can create a new StackMob user object and link a Facebook access token for future login using Facebook credentials:
+
+```obj-c
+[[SMClient defaultClient] createUserWithFacebook:activeSession.accessTokenData.accessToken onSuccess:^(NSDictionary *result) {
+  // New user created
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+### Link/Unlink Facebook Tokens
+
+If you have an existing StackMob user object and you want to link that object with a Facebook token to enable future login using Facebook credentials, use the link token method:
+
+<p class="alert">The user must be logged in for the link to work.</p>
+
+```obj-c
+[[SMClient defaultClient] linkLoggedInUserWithFacebookToken:activeSession.aceessTokenData.accessToken onSuccess:^(NSDictionary *result) {
+  // Succssful link
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+You can also unlink a logged in user object from a token at any time:
+
+```obj-c
+[[SMClient defaultClient] unlinkLoggedInUserFromFacebookOnSuccess:^{
+  // Successful unlink
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+### Update Facebook Status
+
+### Get Facebook User Info
 
 <!--- Twitter -->
 
 ## Twitter
+
+### Implement Twitter Login Workflow
+
+You will need to download the Twitter SDK and follow their tutorials to get login working in your application. Once you have a Twitter session open you will direct the application to login to StackMob using the provided Twitter access token.
+
+All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Twitter" target="_blank">Twitter Tutorial</a>.
 
 <!--- Gigya -->
 
