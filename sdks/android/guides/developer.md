@@ -1,9 +1,16 @@
-Android Developer Guide
+Developer Guide
 =====================================
+
+StackMob's Android SDK enables your application to take advantage of StackMob's REST API on Android devices.  It's your app's interface to StackMob's services.
+
 
 # Setup
 
 ## Initializing the Android SDK
+
+Download the Android SDK from here.  It'll guide you on how to setup your app - most importantly, you'll be initializing your code with your StackMob public key, identifying your app.  <a href="https://dashboard.stackmob.com/settings" target="_blank">Find your public key on your app dashboard</a>.
+
+[SCREENSHOT OF DASHBOARD AND KEYS?]
 
 ```java,6,7
 public class MainActivity extends Activity {
@@ -17,7 +24,12 @@ public class MainActivity extends Activity {
 }
 ```
 
+
 ## Defining a Model
+
+Let's say you're creating a simple todo-list app, where you have an object type called `Task`.  Even before we get to the backend, datastore, and all that good stuff, let's define our object types.
+
+Define your `Task` class by extending from `StackMobModel`.  Doing this will give your object its StackMob save/fetch abilities.
 
 ```java,1,3
 import com.stackmob.sdk.model.StackMobModel;
@@ -26,29 +38,57 @@ public class Task extends StackMobModel {
  
     private String name;
     private Date dueDate;
-    private int priority;
-    private boolean done;
  
     public Task(String name, Date dueDate) {
         super(Task.class);
         this.name = name;
         this.dueDate = dueDate;
-        this.priority = 0;
-        this.done = false;
     }
 }
 ```
 
+This'll be the base of our project.
+
 # Datastore
 
-## Create an Save Object
+Let's use the Android SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
+
+## Create a Save Object
+
+Save an instance of your `todo` object to the server.
 
 ```java
 Task myTask = new Task("Learn more about StackMob", new Date());
 myTask.save();
 ```
 
+That's it!  That fires off an HTTP request to StackMob's REST API which saves your object.  StackMob will **automatically create your schema** for you if it doesn't already exist.  By extending `StackMobModel`, we'll automatically serialize your fields into JSON and save your data against a new `task` schema, which we've inferred from your classname.
+
+Here's how it'll look on the server:
+
+[SCREENSHOT OF DATA BROWSER]
+
+And 
+
+[SCREENSHOT OF SCHEMA LIST]
+
+StackMob automatically generates some fields for you on the server-side too.
+
+* `task_id` (the primary key) - primary keys will have the format of `[schemaName]_id`
+* `createddate` - the created date in milliseconds
+* `lastmoddate` - the last modified date in milliseconds
+* `sm_owner` - who created the object (we'll get into this later!)
+
+<p class="alert">
+  If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a `create` call. (This only occurs in the development environment.)
+
+  <a href="">`binary`</a> and <a href="">`geopoint`</a> fields need to be created via the UI and are not automatically generated for you.
+</p>
+
+
 ## Asynchronous Calls
+
+Most StackMob calls are done asynchronously. This means that your code on the client continues to run while your HTTP request to StackMob may still be en route to the server.  `success` and `failure` are guaranteed to only execute **after** the call has returned, so if you have some action that you want to run after a `save` call, be sure to put it in the `success` or `failure` callbacks.
 
 ```java
 Task myTask = new Task("Learn even more about StackMob", new Date());
@@ -65,9 +105,12 @@ myTask.save(new StackMobModelCallback() {
 });
 ```
 
-## Reload an Object
+## Read an Object
+
+To fetch your `task` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.  Below, we'll assume the primary key is "1234".
 
 ```java
+Task myTask = new Task("1234");
 myTask.fetch(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -81,9 +124,15 @@ myTask.fetch(new StackMobModelCallback() {
 });
 ```
 
+The above makes an HTTP REST API call to StackMob.  A JSON object is returned, and we automatically fill your `myTask` object.
+
 ## Update an Object
 
+You can edit existing objects easily.  Let's update `task` object `1234` with a new field: `done` and let's mark it as `true`.
+
 ```java
+Task myTask = new Task("1234");
+myTask.setIsDone(true);
 myTask.save(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -97,9 +146,38 @@ myTask.save(new StackMobModelCallback() {
 });
 ```
 
+(We assume above that we've added a new `done` field.)
+
+```java,5,11,14,15
+public class Task extends StackMobModel {
+ 
+    private String name;
+    private Date dueDate;
+    private boolean done;
+ 
+    public Task(String name, Date dueDate) {
+        super(Task.class);
+        this.name = name;
+        this.dueDate = dueDate;
+        this.done = false;
+    }
+
+    public boolean getIsDone() { return this.done; }
+    public void setIsDone(boolean isDone) { this.done = isDone; }
+}
+```
+
+
+<p class="alert">
+  If you save a <b>field</b> that previously didn't exist, StackMob will add that to your schema automatically (only in the development environment).
+</p>
+
 ## Delete an Object
 
+Let's delete the object of id `1234`.
+
 ```java
+Task myTask = new Task("1234");
 myTask.destroy(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -115,18 +193,18 @@ myTask.destroy(new StackMobModelCallback() {
 
 ## Arrays
 
+You can save arrays.  Let's add to our `Task` class so that it has an array of notes (`strings`) you can jot down.
 
-```java
-public class TaskList extends StackMobModel {
- 
+```java,4,9,17-19
+public class Task extends StackMobModel {
     private String name;
-    private List<Task> tasks;
-    private Task topTask;
-    private TaskList parentList;
+    private Date dueDate;
+    private List<String> notes;
  
-    public TaskList(String name) {
-        super(TaskList.class);
-        tasks = new ArrayList<Task>();
+    public Todo(String name, Date dueDate) {
+        super(Todo.class);
+        this.dueDate = dueDate;
+        this.notes = new ArrayList<String>();
         this.name = name;
     }
  
@@ -134,32 +212,81 @@ public class TaskList extends StackMobModel {
         return name;
     }
  
-    public List<Task> getTasks() {
-        return tasks;
+    public List<String> getNotes() {
+        return notes;
+    }
+
+    public List<String> setNotes(List<String> notes) {
+        this.notes = notes;
     }
 }
 ```
 
-## Deleting from an Array
+You can save arrays as you normally would:
 
 ```java
-myTaskList.getTasks().remove(0);
-myTaskList.save();
+List<String> notes = new ArrayList<String>();
+notes.add("check the Android Developer Guide");
+notes.add("I was last reading about arrays");
+
+Task myTask = new Task("Learn more Android!", new Date());
+myTask.setNotes(notes)
+myTask.save(...);
 ```
-or to avoid resending the whole array
-```java
-myTaskList.remove("tasks", myTask, new StackMobCallback() { ... });
+
+An array of strings will be saved on the server side.
+
+Arrays are special in that if you have two users saving to the same array at the same time, they could overwrite each others changes.
+
+e.g. John saves `['do A', 'do B']` and Jill saves `['do C']`.  Whoever calls `save` last will "win", overwriting the other data.
+
+But sometimes you want to append to an array.  StackMob provides ways of *appending* to arrays so that the end result will be `['do A', 'do B', 'do C']`, even if multiple users are operating on that field.
+
+Let's append to an array by adding to the "notes" field, which corresponds to your array field name in your schema.  The following example is of a `String` type, but as long as it matches the field type (`Boolean`, `Integer`), it will be fine.
+
+```java,7
+List<String> notes = new ArrayList<String>();
+notes.add("Check the Android Developer Guide");
+notes.add("I was last reading about arrays");
+
+...
+//add to your Task instance
+myTask.append("notes", notes, new StackMobCallback(...);
 ```
+
+`append` will safely add the items to the client and server instances of the task, even if multiple clients are operating on that field.
+
+
+## Deleting from an Array
+
+To safely remove elements from an array, use `remove`.
+
+```java,7
+List<String> notes = new ArrayList<String>();
+notes.add("Check the Android Developer Guide");
+notes.add("I was last reading about arrays");
+
+...
+//add to your Task instance
+myTask.remove("notes", notes, new StackMobCallback(...);
+```
+
+The string elements "Check the Android..." and "I was last reading.." will be removed from the object on the client and server instances.  This is safer than saving a whole list, the result of which would be the replacement of the entire array rather editing elements of it.
 
 # Queries
 
+To query objects by field parameters, paginate, sort by, and more, use the static `query(..)` method provided by `StackMobModel`.
+
 ## Comparison
+
+Let's get `Task` objects where a `priority` integer field is greater than `3`.  The success callback will produce a list of matching `Task` objects.
 
 ```java
 Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3), new StackMobQueryCallback<Task>() {
     @Override
     public void success(List<Task> result) {
        // You've now got a list of high priority tasks
+       // You can iterate over them here to generate some UI.
     }
 
     @Override
@@ -168,14 +295,51 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3), ne
 });
 ```
 
-## Relationship and Arrays
 
-(in queries)
+## Chaining
+
+You can chain together query parameters.  Let's search for `Task` objects with `priority > 3` and `done=true`.
+
+```java
+Task.query(Task.class, 
+        new StackMobQuery().fieldIsGreaterThan("priority", 3).
+            field(new StackMobQueryField("done").isEqualTo(true)), 
+        new StackMobQueryCallback<Task>() {
+    @Override
+    public void success(List<Task> result) {
+       // You've now got a list of high priority, completed tasks
+    }
+
+    @Override
+    public void failure(StackMobException e) {
+    }
+});
+```
+
+## Querying for Multiple Values
+
+Looking for matching elements in arrays?  Let's get objects that have `A` or `B` in the `notes` array.  e.g. a `Task` object with `{ notes: ['A', 'C', 'E'], ...}` would be returned because it matched on `A`.
+
+```java
+Task.query(Task.class, new StackMobQuery().fieldIsIn("notes", Arrays.asList("A", "B")), 
+        new StackMobQueryCallback<Task>() {
+    @Override
+    public void success(List<Task> result) {
+       // You've now got a list of high priority, completed tasks
+    }
+
+    @Override
+    public void failure(StackMobException e) {
+    }
+});
+```
 
 ## Pagination
 
+You can paginate over results.  Let's grab the first ten.
+
 ```java
-Task.query(Task.class, new StackMobQuery().isInRange(0, 9), new StackMobQueryCallback<Task>() {
+Todo.query(Todo.class, new StackMobQuery().isInRange(0, 9), new StackMobQueryCallback<Task>() {
     @Override
     public void success(List<Task> result) {
        // You've now got a list of all tasks
@@ -191,6 +355,9 @@ Task.query(Task.class, new StackMobQuery().isInRange(0, 9), new StackMobQueryCal
 
 ## Select Fields
 
+Only return back a subset of fields, reducing the payload.  Get the first ten `Task` objects but only return the `name` and `priority` fields.  (IDs will be returned also, as StackMob always returns the ID).  This will reduce the amount of data sent over the network, if bandwidth is a concern.
+
+
 ```java
     Task.query(Task.class, new StackMobQuery().isInRange(0, 9), StackMobOptions.selectedFields(Arrays.asList("name", "priority")), new StackMobQueryCallback<Task>() {
         @Override
@@ -203,6 +370,29 @@ Task.query(Task.class, new StackMobQuery().isInRange(0, 9), new StackMobQueryCal
         }
     });
 ```
+
+This will return JSON objects with just three fields:
+
+* todo_id
+* name
+* priority
+
+```js
+[
+  {
+    todo_id: '1234',
+    name: 'Learn more Android!',
+    priority: 3
+  },
+  {
+    todo_id: '4567',
+    name: 'Learn even more Android!',
+    priority: 2
+  },
+  ...
+]
+```
+
 
 ## Chaining
 
@@ -252,7 +442,7 @@ public class Task extends StackMobModel {
 }
 ```
 
-Each `Task` object now can have a link to another `Task` object. This is called a one-to-one relation. Any child of a class extending `StackMobMob`, or any collection of them, becomes a relation like this and is stored independently. Now let's take a look at a new object.
+Each `Task` object now can have a link to another `Task` object. This is called a one-to-one relation. Any child of a class extending `StackMobModel`, or any collection of them, becomes a relation like this and is stored independently. Now let's take a look at a new object.
 
 ## One to Many Relationship
 
@@ -336,15 +526,24 @@ taskList.fetch(StackMobOptions.depthOf(1), new StackMobModelCallback() {
 
 ## Adding Related Objects
 
-Just save the object
+create a related object and associate it with the parent in one API call
+
+appendAndSave
 
 ## Decoupling Related Objects
 
-not actually possible via the model api
+remove
+
+removeAndSave
 
 # User Authentication
 
+StackMob gives you a way to authenticate your users.  The Android SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.
+
+
 ## Creating a User
+
+Let's create a user object.  Below, our `User` class extends `StackMobUser` (which in turn extends `StackMobModel`).  `StackMobUser` will provide us authentication methods.
 
 ```java
 import com.stackmob.sdk.model.StackMobUser;
@@ -376,18 +575,23 @@ User user = new User("bob", "mypassword");
 user.save();
 ```
 
+<p class="alert"><code>username</code> is the default primary key for <code>StackMob.User</code> objects.  <code>password</code> is a special field that gets encrypted on the server.</p>
+
 ## Fetching a User
 
-## Custom User Model
+Fetching a user is simple.  Like other objects, just provide the primary key.
 
-how do you declare a custom user modeL?
-
-with custom username/password fields?
+```java
+User user = new User("bob");
+user.fetch(...);
+```
 
 ## Login
 
+Let's login your user.  If you recall, we have a `User` object with a `username/password` constructor.  Let's login that user.
+
 ```java
-User user = new User("AzureDiamond", "hunter2");
+User user = new User("bob", "mypassword");
 user.login(new StackMobModelCallback() {
  
     @Override
@@ -400,7 +604,17 @@ user.login(new StackMobModelCallback() {
 }
 ```
 
+Your user will be logged in for an hour.
+
+* Logging in from another device will invalidate the session on other devices.
+
+<p class="alert">
+  StackMob's uses OAuth 2.0 authentication, the industry standard.  When logging in, users are issued an accessToken that will be used to sign their requests to identify them.
+</p>
+
 ## Logout
+
+Logging out is easy.  Simply call `logout` on your user object.
 
 ```java
 user.logout(new StackMobModelCallback() {
@@ -417,6 +631,8 @@ user.logout(new StackMobModelCallback() {
 ```
 
 ## Checking Login Status
+
+Check to see if a user is logged in.  These methods are asynchronous because they also check the server in some instances.
 
 ```java
 if(StackMob.getStackMob().isLoggedIn()) {
@@ -442,8 +658,10 @@ if(StackMob.getStackMob().isLoggedIn()) {
 
 ## Change Password
 
+If your user is logged in, your user may want to change his/her password.  To do so, you can call `resetPassword` on their behalf.  They'll have to provide their current password and their new password.
+
 ```java
-user.resetPassword("[old password]", "[new password]", new StackMobModelCallback() {
+user.resetPassword("[current password]", "[new password]", new StackMobModelCallback() {
  
     @Override
     public void success() {
@@ -457,8 +675,14 @@ user.resetPassword("[old password]", "[new password]", new StackMobModelCallback
 
 ## Password Recovery
 
+If your user has forgotten his or her password, they can request that an email with a temporary password be sent to an email address.  That email address should be a field in the user schema.  You'll need to specify which field represents the email address when defining your User schema.
+
+[Screenshot of Forgot password UI in user schema]
+
+Call `sendForgotPasswordEmail` and specify the `username` (primary key) of the user you want to send the email to.
+
 ```java
-StackMobUser.sendForgotPasswordEmail("johndoe", new StackMobModelCallback() {
+StackMobUser.sendForgotPasswordEmail("bob", new StackMobModelCallback() {
     @Override public void success() {
     }
  
@@ -466,6 +690,8 @@ StackMobUser.sendForgotPasswordEmail("johndoe", new StackMobModelCallback() {
     }
 });
 ```
+
+<p class="alert">Be sure to send it to the <code>username</code>, not the email address!</p>
 
 # Access Controls
 
