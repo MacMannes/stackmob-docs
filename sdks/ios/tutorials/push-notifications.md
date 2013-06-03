@@ -1,4 +1,5 @@
-<h2>Introduction to Apple Push Notifications</h2>
+Introduction to Apple Push Notifications
+=======================================
 
 Before you start using push notifications on StackMob, you should familiarize yourself with the client-side aspects of Apple Push Notification Service (APNS) by reading the <a target="_blank" href="https://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1">Local Notifications and Push Notification Programming Guide</a>. Don't worry about the server-side aspects of push - that's what we're here for.
 

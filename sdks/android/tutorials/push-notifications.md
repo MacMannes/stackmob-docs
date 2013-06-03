@@ -1,16 +1,16 @@
 Want to just see it in action? Check out the [PushDemo example app](https://github.com/stackmob/stackmob-android-examples)
 
-<h3>Objective</h3>
+<h2>Objective</h2>
 
 Register an app for push with StackMob, and send/receive a message
 
-<h3>Experience Level</h3>
+<h2>Experience Level</h2>
 Beginner
 
-<h3>Estimated time to complete</h3>
+<h2>Estimated time to complete</h2>
 ~15 minutes
 
-<h3>Prerequisites</h3>
+<h2>Prerequisites</h2>
 
 * An app <a href="https://developer.stackmob.com/stackmob-android-sdk/configure">set up for StackMob</a>
 
@@ -18,11 +18,11 @@ Beginner
 
 <h1>Let's get started!</h1>
 
-<h3>Introduction to Android Push Notifications</h3>
+<h2>Introduction to Android Push Notifications</h2>
 
 StackMob integrates with Google's GCM service for push notifications on Android. Before you start using push notifications for Android on StackMob, you should familiarize yourself with the client-side aspects of GCM by reading the [Google Cloud Messaging Framework](http://developer.android.com/guide/google/gcm/gs.html) guide. Don't worry about the server-side aspects of push - that's what we're here for.
 
-<h3>Android Push Notifications on StackMob</h3>
+<h2>Android Push Notifications on StackMob</h2>
 
 StackMob helps you with your Push Notification process by providing you the backend to send push messages. Follow these steps to get Push running for your Android application.
 
@@ -32,16 +32,16 @@ StackMob helps you with your Push Notification process by providing you the back
 1. Get a valid Android registration ID for your device for testing.
 1. Send push notifications to your Android device from StackMob's web console.
 
-<h3>Generating and Uploading your API Key</h3>
+<h2>Generating and Uploading your API Key</h2>
 
 To use the push service you'll need to obtain a API Key from Google and [upload it to the StackMob server](https://dashboard.stackmob.com/module/push/settings/android). Upload your API Key to Sandbox. When you deploy your app to Production, you'll want to upload an API Key there as well. It can be the same one or a different one.
 
-<h3>Sending and Receiving Push Messages</h3>
+<h2>Sending and Receiving Push Messages</h2>
 
 Now that you have an API Key, let's test sending & receiving push notifications. First, make sure yourn API Key is correctly saved [here](https://dashboard.stackmob.com/module/push/settings/android). Next, set up an Android app. You'll do the appropriate setup and write the code to create & register a registration ID and to receive push messages.
 
 
-<h3>App Setup</h3>
+<h2>App Setup</h2>
 
 If you're using the <a href="https://github.com/stackmob/stackmob-android-examples">Android Starter Project</a>, GCM Push is already set up for you. Just set up your [StackMob credentials](https://developer.stackmob.com/stackmob-android-sdk/configure, and add your sender id to the top of <a href="https://github.com/stackmob/stackmob-android-examples/blob/master/PushDemo/src/com/stackmob/pushdemo/PushDemoActivity.java" target="_blank">`PushDemoActivity.java`</a>
 

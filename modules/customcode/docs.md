@@ -1,4 +1,5 @@
-# Hosting your Custom Code on StackMob
+Hosting your Custom Code on StackMob
+==========
 
 StackMob's Custom Code service and SDK enables you to implement your own server-side logic and still have access to all the same StackMob APIs for managing your app's data. We host and run your code so you never have to worry about configuring or managing your own servers.
 

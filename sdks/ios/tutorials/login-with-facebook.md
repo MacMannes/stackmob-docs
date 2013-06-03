@@ -1,15 +1,20 @@
+iOS Facebook
+====================
+
+## Overview
+
 <div class="alert">Also check out our <a href="https://www.stackmob.com/product/facebook">technology partnership with Facebook!</a> and our <a href="https://developer.stackmob.com/facebook/ios">Facebook demo app</a></div>
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/facebook-login-logout.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Login with Facebook and if necessary create a new user on StackMob and link to their facebook account.  Log the user into StackMob and be able to check their logged in status.
 
-<h3>Experience Level</h3>
+### Experience Level
 Intermediate
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~15 minutes
 
 <h3>Prerequisites</h3>

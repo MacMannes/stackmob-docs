@@ -4,8 +4,8 @@ StackMob supports push notifications for iOS and Android. Check out the tutorial
 
 ### iOS
 
-[iOS Push Notification Tutorial](https://developer.stackmob.com/ios-sdk/push-notifications-tutorials)
+[iOS Push Notification Tutorial](https://developer.stackmob.com/ios-sdk/push-notifications-tutorial)
 
 ### Android
 
-[Android Push Notification Tutorial](https://developer.stackmob.com/android-sdk/push-notifications-tutorials)
+[Android Push Notification Tutorial](https://developer.stackmob.com/android-sdk/push-notifications-tutorial)
