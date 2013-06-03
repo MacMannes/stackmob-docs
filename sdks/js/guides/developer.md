@@ -1164,7 +1164,9 @@ So now if you call `todos.fetch(..)`, you'll get a 401 Unauthorized error if you
 
 You can upload files to StackMob.  The files are saved to your Amazon S3 account, which you link with StackMob.  This'll allow you to more easily manage your files and retain content.
 
-A file is represented as a `Binary` file type field on your schema.  <a href="" target="_blank">Add a <code>binary</code> field to your schema</a>.  To save the file, you'll call `setBinaryFile` with three parameters:
+<a href="https://developer.stackmob.com/modules/s3/docs">Link StackMob with your S3 account and create a `binary` field on your schema.</a>
+
+A file is represented as a `Binary` file type field on your schema.  To save the file, you'll call `setBinaryFile` with three parameters:
 
 * the file, Base64 encoded as a string
 * the file name

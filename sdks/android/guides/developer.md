@@ -73,8 +73,6 @@ public class Task extends StackMobModel {
   </div>
 </div>
 
-https://github.com/stackmob/stackmob-android-examples/blob/master/TaskMob/src/com/stackmob/taskmob/TaskMob.java
-
 # Datastore
 
 Let's use the Android SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
@@ -132,6 +130,7 @@ This will assign the primary key as `1`.  If the key already exists, the call wi
       <strong>API References</strong>
       <ul>
         <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobModel.html" target="_blank">StackMobModel</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobModel.html#save()" target="_blank">StackMobModel#save</a></li>
       </ul>
     </div>
   </div>
@@ -156,6 +155,17 @@ myTask.save(new StackMobModelCallback() {
 });
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/callback/StackMobCallback.html" target="_blank">StackMobCallback</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Read an Object
 
 To fetch your `task` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.  Below, we'll assume the primary key is "1234".
@@ -176,6 +186,18 @@ myTask.fetch(new StackMobModelCallback() {
 ```
 
 The above makes an HTTP REST API call to StackMob.  A JSON object is returned, and we automatically fill your `myTask` object.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobModel.html" target="_blank">StackMobModel</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobModel.html#fetch(com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobModel#fetch</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Update an Object
 
@@ -223,6 +245,18 @@ public class Task extends StackMobModel {
   If you save a <b>field</b> that previously didn't exist, StackMob will add that to your schema automatically (only in the development environment).
 </p>
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobModel.html" target="_blank">StackMobModel</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobModel.html#save()" target="_blank">StackMobModel#save</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Delete an Object
 
 Let's delete the object of id `1234`.
@@ -242,6 +276,20 @@ myTask.destroy(new StackMobModelCallback() {
 });
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobModel.html" target="_blank">StackMobModel</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobModel.html#destroy()" target="_blank">StackMobModel#destroy</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
 ## Create Multiple Objects at Once
 
 Wnat to create multiple objects in one call?
@@ -255,6 +303,20 @@ Task.saveMultiple(Arrays.asList(firstTask, secondTask), new StackMobCallback(...
 This saves multiple objects in a single request call.
 
 StackMob currently do not support multiple updates at once.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobModel.html" target="_blank">StackMobModel</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobModel.html#saveMultiple(java.util.List, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobModel#saveMultiple</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 
 ## Arrays
 
@@ -392,6 +454,20 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3), ne
 });
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/index.html?com/stackmob/sdk/api/StackMobQuery.html" target="_blank">StackMobQuery</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobQuery.html#fieldIsEqualTo(java.lang.String, int)" target="_blank">StackMobQuery#fieldIs...</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
 
 ## Chaining
 
@@ -431,6 +507,19 @@ Task.query(Task.class, new StackMobQuery().fieldIsIn("notes", Arrays.asList("A",
 });
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/index.html?com/stackmob/sdk/api/StackMobQuery.html" target="_blank">StackMobQuery</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobQuery.html#fieldIsIn(java.lang.String, java.util.List)" target="_blank">StackMobQuery#fieldIsIn</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 ## Pagination
 
 You can paginate over results.  Let's grab the first ten.
@@ -449,7 +538,18 @@ Todo.query(Todo.class, new StackMobQuery().isInRange(0, 9),
 });
 ```
 
-## Ordering
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/index.html?com/stackmob/sdk/api/StackMobQuery.html" target="_blank">StackMobQuery</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobQuery.html#isInRange(java.lang.Integer, java.lang.Integer)" target="_blank">StackMobQuery#isInRange</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 ## Select Fields
 
@@ -495,6 +595,18 @@ Again, the ID is returned by default no matter what fields you select.
 ]
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/index.html?com/stackmob/sdk/api/StackMobOptions.html" target="_blank">StackMobOptions</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobOptions.html#selectedFields(java.util.List)" target="_blank">StackMobOptions#selectedFields</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 ## Chaining
 
@@ -533,6 +645,18 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3).
     }
 });
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/index.html?com/stackmob/sdk/api/StackMobQuery.html" target="_blank">StackMobQuery</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/callback/StackMobCountCallback.html" target="_blank">StackMobCountCallback</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # Relationships
 
@@ -665,6 +789,17 @@ removeAndSave
 
 StackMob gives you a way to authenticate your users.  The Android SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobUser.html" target="_blank">StackMobUser</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 ## Creating a User
 
@@ -737,6 +872,18 @@ Your user will be logged in for an hour.
   StackMob's uses OAuth 2.0 authentication, the industry standard.  When logging in, users are issued an accessToken that will be used to sign their requests to identify them.
 </p>
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobUser.html" target="_blank">StackMobUser</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#login(java.util.Map, com.stackmob.sdk.api.StackMobOptions, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobUser#login</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Logout
 
 Logging out is easy.  Simply call `logout` on your user object.
@@ -754,6 +901,18 @@ user.logout(new StackMobModelCallback() {
     }
 });
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobUser.html" target="_blank">StackMobUser</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#logout(com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobUser#logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Checking Login Status
 
@@ -781,6 +940,20 @@ if(StackMob.getStackMob().isLoggedIn()) {
 ```
 
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMob.html#isLoggedIn()" target="_blank">StackMob#isLoggedIn,isUserLoggedIn,isLoggedOut</a>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#isLoggedIn()" target="_blank">StackMobUser#isLoggedIn</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
 ## Change Password
 
 If your user is logged in, your user may want to change his/her password.  To do so, you can call `resetPassword` on their behalf.  They'll have to provide their current password and their new password.
@@ -797,6 +970,19 @@ user.resetPassword("[current password]", "[new password]", new StackMobModelCall
     }
 }
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobUser.html" target="_blank">StackMobUser</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#resetPassword(java.lang.String, java.lang.String, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobUser#resetPassword</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 ## Password Recovery
 
@@ -818,7 +1004,45 @@ StackMobUser.sendForgotPasswordEmail("bob", new StackMobModelCallback() {
 
 <p class="alert">Be sure to send it to the <code>username</code>, not the email address!</p>
 
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/?com/stackmob/sdk/model/StackMobUser.html" target="_blank">StackMobUser</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#sentForgotPasswordEmail(java.lang.String, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobUser#sentForgotPasswordEmail</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#loginResettingTemporaryPassword(java.lang.String, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobUser#loginResettingTemporaryPassword</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
 # Access Controls
+
+
+StackMob provides you the ability to lock down access to your data with Access Controls.  You can disallow access to Create, Read, Update or Delete.  With user authentication, you can even restrict permissions at a user level.
+
+Here, we set it so that only logged in users can create objects for this schema.
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/Scrumptious/dashboard-acl.png" alt=""/>
+
+So now if you call `tasks.fetch(..)`, you'll get a 401 Unauthorized error if you aren't logged in.  Because the logic is handled server-side, nobody can mess with your control logic even if they view the client side code.
+
+<a href="https://developer.stackmob.com/modules/acl/docs" target="_blank">Read about all the Access Control options.</a> Find which one works best for your use case.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>References</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/modules/acl/docs" target="_blank">Access Control Options</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # Files
 
@@ -879,6 +1103,18 @@ Once the success callback is called, you can check `getS3Url()` to get the url t
 myTask.destroy()
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobFile.html" target="_blank">StackMobFile</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 # Geolocation
 
 To use geopoints, you first need to create a geopoint field in your schema. Go to [Manage Schemas](), edit your schema, and create a field of type Geopoint.
@@ -922,6 +1158,17 @@ public class Task extends StackMobModel {
 [StackMobGeoPoint](http://stackmob.github.com/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobGeoPoint.html) is a longitude/latitude pair representing a point. It uses radians, and you can convert distances to radians via the static methods on `StackMobGeoPoint`. You can now save and query for your `Task` object, and the location field will be treated like any other data. Once you have some objects with geopoints stored you use them for spacially
 aware queries. 
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobGeoPoint.html" target="_blank">StackMobGeoPoint</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <h3>Near Queries</h3>
 
 Near queries allow you to get a list of objects sorted by distance from a given `GeoPoint`. You can optionally specify a maximum distance to search. Any ordering you specify will be ignored. Here's a query to find all `Task` objects
@@ -946,6 +1193,17 @@ Task.query(Task.class, q, new StackMobQueryCallback<Task>() {
 ```
 Note how the `StackMobGeoPoint` objects you get back from a near query have a property `getQueryDistanceRadians` available. This is the distance between that point and the reference (in this case San Francisco), which can be handy.
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobQuery.html#fieldIsNear(java.lang.String, com.stackmob.sdk.api.StackMobGeoPoint)" target="_blank">StackMobQuery#fieldIsNear (radians, mi, km)</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 <h3>Within Queries</h3>
 Within queries search for results within a specified radius of a given point or within a 2-dimensional box. These queries do not have a natural ordering. Unlike near queries, if you specify an ordering for the result set it will be honored. 
@@ -964,6 +1222,17 @@ Task.query(Task.class, q, new StackMobQueryCallback<Task>() {
 });
 
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/api/StackMobQuery.html#fieldIsWithinRadiusInKm(java.lang.String, com.stackmob.sdk.api.StackMobGeoPoint, java.lang.Double)" target="_blank">StackMobQuery#fieldIsWithin...</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # Social Integration
 
@@ -1031,6 +1300,17 @@ existingUser.linkWithFacebook(facebookToken, new StackMobModelCallback() {
 
 Being logged in with Facebook is exactly the same as being logged in regularly, with extra bits of functionality. StackMobUser has two methods only usable when logged in with facebook: `postFacebookMessage` and `getFacebookUserInfo`. These allow more interation with the actual Facebook account.
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#loginWithFacebook(java.lang.String, boolean, java.lang.String, com.stackmob.sdk.api.StackMobOptions, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobUser#loginWithFacebook</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Twitter
 
 StackMob allows you to use Twitter for user authentication in place of or allongside the built-in [User Authentication](https://developer.stackmob.com/tutorials/android/User-Authentication). This means rather than having a username and password login screen, you can have a "login with twitter" button. 
@@ -1096,6 +1376,17 @@ existingUser.linkWithTwitter(twitterToken, twitterSecret, new StackMobModelCallb
 
 Being logged in with Twitter is exactly the same as being logged in regularly, with extra bits of functionality. StackMobUser has two methods only usable when logged in with twitter: `postTwitterMessage` and `getTwitterUserInfo`. These allow more interation with the actual Twitter account.
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#loginWithTwitter(java.lang.String, java.lang.String, boolean, java.lang.String, com.stackmob.sdk.api.StackMobOptions, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobUser#loginWithTwitter</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 # Push Notifications
 
 <h3>Introduction to Android Push Notifications</h3>
@@ -1156,12 +1447,34 @@ User user = new User("<username>", "<optional password>");
 user.registerForPush(new StackMobPushToken(getRegistrationID()), standardToastCallback)
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#registerForPush(com.stackmob.sdk.push.StackMobPushToken, com.stackmob.sdk.callback.StackMobRawCallback)" target="_blank">StackMobUser#registerForPuash</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <h3>Unregister for push</h3>
 When a user unsubscribes from push messages you'll want to remove their tokens from StackMob
 
 ```java
 user.removeFromPush(new StackMobPushToken(getRegistrationID()), standardToastCallback)
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#removeFromPush(com.stackmob.sdk.push.StackMobPushToken, com.stackmob.sdk.callback.StackMobRawCallback)" target="_blank">StackMobUser#removeFromPush</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <h3>Get a user's tokens</h3>
 If you do want to see the raw tokens for a user you can do so:
@@ -1170,6 +1483,17 @@ If you do want to see the raw tokens for a user you can do so:
 user.getPushTokens(new StackMobPushToken(getRegistrationID()), standardToastCallback)
 ```
 The callback will be invoked with a json array that can be serialized to `StackMobPushToken`
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#getPushTokens(com.stackmob.sdk.callback.StackMobRawCallback)" target="_blank">StackMobUser#getPushTokens</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 <h3>Pushing to a user</h3>
@@ -1190,6 +1514,18 @@ User.pushToMultiple(payload, Arrays.asList(user1, user2, user3), standardToastCa
 
 It's simple to save your `User` objects, query for them to get various groupings, and then send push messages.
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#sendPush(java.util.Map, com.stackmob.sdk.callback.StackMobRawCallback)" target="_blank">StackMobUser#sendPush</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobUser.html#pushToMultiple(java.util.Map, java.util.List, com.stackmob.sdk.callback.StackMobRawCallback)" target="_blank">StackMobUser#pushToMultiple</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <h3>Broadcast push message</h3>
 
 Sending a push message to all registered tokens for your app is called a broadcast
@@ -1199,6 +1535,18 @@ Map<String, String> payload = new HashMap<String, String>();
 payload.put("payload", getPushPayload());
 StackMobPush.getPush().broadcastPushNotification(payload, standardToastCallback);
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/push/StackMobPush.html" target="_blank">StackMobPush</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/push/StackMobPush.html#broadcastPushNotification(java.util.Map, com.stackmob.sdk.callback.StackMobRawCallback)" target="_blank">StackMobPush#broadcastPushNotification</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <h3>Push without users</h3>
 
