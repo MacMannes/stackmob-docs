@@ -600,6 +600,41 @@ Response shown in JSON notation for illustration.
 ]
 ```
 
+Looking for particular values not in a field?  Do so in one call by using "nin" queries.
+
+The following shows how you can look for values not in a provided list. Look for values not equal to "john123" and "johnsmith".
+
+Request URL:
+
+```bash
+GET http://api.stackmob.com/user?username[nin]=john123,johnsmith
+```
+
+Request Headers:
+
+```bash
+//"version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=0
+X-StackMob-API-Key: /* Your Public Key */
+```
+
+Response shown in JSON notation for illustration.
+
+```json
+[
+  {
+    "username": "notjohn123",
+    "age": ...,
+    ...
+  },
+  {
+    "username": "notjohnsmith",
+    "age": ...,
+    ...
+  }
+]
+```
+
 ## Querying Arrays
 
 The following shows how you can search for values within an array.  It also uses the `in` query as noted above.
