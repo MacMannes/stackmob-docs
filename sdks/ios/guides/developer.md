@@ -7,7 +7,7 @@ In each section of this guide you may see colored boxes which are meant to highl
 
 <p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
 
-<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and more in-depthg tutorials for you to view.</p> 
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p> 
 
 <!---
 	///////////////////
@@ -1211,6 +1211,113 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
 
 # Binary Data
 
+Binary data works by linking StackMob to your personal Amazon S3 account. You'll then declare a Binary type field in your schema and all files, images, etc. that you save will actually be stored in your S3 library, and the value of the field will be the URL that points to that data.
+
+<!--- Add schema field -->
+
+## Add a Binary Schema Field
+
+<p class="alert">Binary field inference was introduced in iOS SDK v2.0.0+. This means that, while you still need to maunally configure the S3 module settings if you haven't already, you will not need to manually add a Binary field to your schema.</p>
+
+Follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-Binary-Field-to-Schemas" target="_blank">Adding a Binary Field To Schemas</a> tutorial to get the S3 module and a Binary field in your schema set up.
+
+## Saving Binary Data
+
+To save Binary data to StackMob, first create an attribute in your entity of type `String`. This attribute should map to a field on StackMob of type `Binary`.
+
+Next, you will use the `SMBinaryDataConversion` class to convert instances of `NSData` into strings ready to be saved to StackMob.
+
+`SMBinaryDataConversion` offers a class method `stringForBinaryData:name:contentType:` to decode binary data into a string. This is then used to send to StackMob as the value for a field with type `Binary`. The contents of the string will be parsed and the content will be stored on S3. StackMob will then store the url as the value. A call to `refreshObject:mergeChanges:` on the managed object context will update the in-memory value to the url in the persistent store.
+
+Here's an example of converting a picture stored in the app's bundle:
+
+```obj-c
+NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+NSString* pathToImageFile = [bundle pathForResource:@"coolPic" ofType:@"jpg"];
+NSData *theData = [NSData dataWithContentsOfFile:pathToImageFile];
+
+NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:@"whateverNameYouWant" contentType:@"image/jpg"];
+```
+
+Now set the string value to your managed object, save the managed object context, and refresh your in-memory copy of the object to grab the url pointing to your data:
+
+```obj-c
+[newManagedObject setValue:picData forKey:@"pic"];
+
+NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
+[context saveOnSuccess:^{
+  [context refreshObject:newManagedObject mergeChanges:YES];
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+`[newManagedObject valueForKey:@"pic"]` now returns the S3 url for the binary data.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMBinaryDataConversion.html" target="_blank">SMBinaryDataConversion Class Reference</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Upload-to-S3" target="_blank">Upload To S3 Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+## Working Offline
+
+When you save an object with binary data while the device is offline, the value of the attribute will contain a data representation, ready to be saved to StackMob. In order to properly read it at that point, the data must be extracted from the string and decoded.
+
+In order to check if the attribute value is a url or not, use the `stringContainsURL:` method. To convert the string value back to data, use the `dataForString:` method:
+
+```obj-c
+NSString *picString = [newManagedObject valueForKey:@"pic"];
+if ([SMBinaryDataConversion stringContainsURL:picString]) {
+  NSURL *urlForPic = [NSURL URLForString:picString];
+  // Set image from url
+} else {
+  UIImage *image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
+  // Set image directly
+}
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMBinaryDataConversion.html" target="_blank">SMBinaryDataConversion Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+## Binary Data using the Datastore API
+
+When saving objects using the datastore API that include binary data, you must format the value of the field correctly so that it can be parsed by Amazon. The correct value format should look like the following:
+
+`"Content-Type: REPLACE_WITH_CONTENT_TYPE\nContent-Disposition: attachment; filename=REPLACE_WITH_FILE_NAME_NO_PATH_NEEDED\nContent-Transfer-Encoding: base64\n\nBASE_64_ENCODED_STRING_OF_THE_BYTE_ARRAY"`
+
+Here's a real world example of saving a comment with a photo:
+
+```obj-c
+NSString *picData = @"Content-Type: image/png\nContent-Disposition: attachment; filename=profile_pic.png\nContent-Transfer-Encoding: base64\n\niVBORw0KGgoAAAANSUhEUgAAA.....";
+
+NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234", @"comment_id", picData, @"photo", nil];
+
+[[[SMClient defaultClient] dataStore] createObject:objectToCreate inSchema:@"Comment" onSuccess:^(NSDictionary *theObject, NSString *schema) {
+  // Saved object
+} onFailure:^(NSError *theError, NSDictionary *theObject, NSString *schema) {
+  // Error
+}];
+```
 
 
 <!---
@@ -1233,7 +1340,7 @@ StackMob provides integrations with Facebook, Twitter and Gigya to allow users t
 
 You will need to download the Facebook SDK and follow their tutorials to get login working in your application. Once you have a Facebook session open you will direct the application in the `sessionStateChanged:state:error` Facebook method to login to StackMob using the provided Facebook access token.
 
-All the implementation details on Facebook's end can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Facebook" target="_blank">Facebook Tutorial</a>.
+All the implementation details for Facebook's SDK can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Facebook" target="_blank">Facebook Tutorial</a>.
 
 <!--- SUB: Login with Facebook -->
 
@@ -1331,6 +1438,16 @@ All the implementation details on Twitter's end can be found in our <a href="htt
 
 # Custom Code
 
+## Write Custom Code
+
+LINK TO CUSTOM CODE DOCS
+
+## Performing Custom Code Requests
+
+## Setting Request Headers
+
+## Setting Response Content Types
+
 <!---
   ///////////////////
   PUSH
@@ -1339,6 +1456,22 @@ All the implementation details on Twitter's end can be found in our <a href="htt
 
 
 # Push Notifications
+
+## The Push Module
+
+## Initalizing a Push Client
+
+## Registering the Device
+
+## Broadcasting Messages
+
+## Sending Messages to Users
+
+## Sending Messages to Tokens
+
+## Getting Tokens For Users
+
+## Deleting Tokens
 
 <!---
   ///////////////////
@@ -1350,7 +1483,7 @@ All the implementation details on Twitter's end can be found in our <a href="htt
 
 Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
 
-Read the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Offline Sync Guide</a> for all information.
+Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Offline Sync Guide</a> for all information.
 
 <!---
   ///////////////////
