@@ -2520,6 +2520,52 @@ Builds a query where the results' field must match at least one of the value(s) 
   var cerealLovingUsers = new StackMob.Users();
   cerealLovingUsers.query(cerealQuery); //fetch all users who's favoritecereals include "fruit loops" and/or "frosted flakes"
 ```
+
+## mustNotBeOneOf
+
+**Introduced:** JS SDK Version 0.9.3
+
+**Description:**
+
+```javascript
+mustNotBeOneOf(fieldName, value)
+
+fieldName - The field name you are comparing.  Can be also be a fieldName representing an array.
+value - The value or array of values you want to match on.
+```
+
+Builds a query where the results' field must not match any of the value(s) specified in `value`.  If the field is an array, the result will be returned if none of the items in the array matches `value`.
+
+
+**Usage:**
+
+```javascript
+  //"mustNotBeOneOf" for a single numeric value
+  var q = new StackMob.Collection.Query();
+  q.mustNotBeOneOf('age', 100);
+
+  var centennials = new StackMob.Users();
+  centennials.query(q); //fetch all users whose age is 100
+
+
+
+  //"mustNotBeOneOf" for multiples numeric values
+  var stackmobQuery = new StackMob.Collection.Query();
+  stackmobQuery.mustNotBeOneOf('age', [25,30,40]);
+
+  var users = new StackMob.Users();
+  users.query(stackmobQuery); //fetch all users whose age is 25, 30, or 40
+
+
+
+  //"mustNotBeOneOf" for multiples String values
+  var cerealQuery = new StackMob.Collection.Query();
+  cerealQuery.mustNotBeOneOf('favoritecereals', ['fruit loops', 'frosted flakes']);
+
+  var cerealLovingUsers = new StackMob.Users();
+  cerealLovingUsers.query(cerealQuery); //fetch all users who's favoritecereals include "fruit loops" and/or "frosted flakes"
+```
+
 ## notEquals
 
 **Introduced:** JS SDK Version 0.2.0
