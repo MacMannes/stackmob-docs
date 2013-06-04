@@ -1320,6 +1320,144 @@ NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234
 ```
 
 <!---
+  ///////////////////
+  NETWORK REACHABILITY
+  //////////////////
+-->
+
+# Network Reachability
+
+<!--- SMNetworkReachability -->
+
+## SMNNetworkReachability Class
+
+`SMNetworkReachability` provides an interface to monitor the network reachability from the device to StackMob.
+ 
+Network reachability checks are already built into the SDK.  When the network is not reachable and a request is made, an error with domain `SMError` and status code -105 (SMNetworkNotReachable) will be returned.
+
+An instance of `SMNetworkReachability` is created during the initialization of an `SMUserSession`, accessible by the `networkMonitor` property.
+
+A shorthand is available through the `SMClient` instance: `client.networkMonitor`.
+
+## Checking the Current Network Status
+
+To manually check the current network status, use the `currentNetworkStatus` method:
+
+```obj-c
+SMNetworkStatus currentStatus = [self.client.networkMonitor currentNetworkStatus];
+```
+
+This method will return an `SMNetworkStatus`, defined as:
+
+```obj-c
+typedef enum {
+    SMNetworkStatusUnknown = -1,
+    SMNetworkStatusNotReachable  = 0,
+    SMNetworkStatusReachable = 1,
+} SMNetworkStatus;
+```
+ 
+* Reachable - the device has a network connection and can successfully reach StackMob.
+* Not Reachable - StackMob is not reachable either because there is no network connection on the device or the service is down.
+* Unknown - Typically this status arises during in-between times of network connection initialization.
+ 
+An example of testing reachability before sending a request would look like this:
+
+```obj-c
+if ([self.client.networkMonitor currentNetworkStatus] == SMNetworkStatusReachable) {
+    // send request
+}
+```
+ 
+You can also handle each state case by case in a switch statement:
+
+```obj-c
+switch([client.session.networkMonitor currentNetworkStatus]) {
+    case  SMNetworkStatusReachable:
+        // do Reachable stuff
+        break;
+    case SMNetworkStatusNotReachable:
+        // do NotReachable stuff
+        break;
+    case SMNetworkStatusUnknown:
+        // do Unknown stuff
+        break;
+    default:
+        break;
+}
+```
+
+<!--- Status Change Notifications -->
+
+## Status Change Notifications
+
+You can register to receive notifications when the network status changes by simply adding an observer for the notification name `SMNetworkStatusDidChangeNotification`.  The notification will have a `userInfo` dictionary containing one entry with key `SMCurrentNetworkStatusKey` and `NSNumber` representing the `SMNetworkStatus` value.
+
+In order to access the value of `SMCurrentNetworkStatusKey` in a format for comparing to specific states or use in a switch statement, retrieve the intValue like this:
+
+```obj-c
+if ([[[notification userInfo] objectForKey:SMCurrentNetworkStatusKey] intValue] == SMNetworkStatusReachable) {
+    // do Reachable stuff
+}
+```
+
+<p class="alert">Remember to remove your notification observer before the application terminates.</p>
+ 
+ 
+## Status Changes Blocks 
+
+Often times you may want to change the cache policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
+
+```obj-c
+[self.client.networkMonitor setNetworkStatusChangeBlock:^(SMNetworkStatus status){
+    
+    if (status == SMNetworkStatusReachable) {
+      ...
+    } else {
+      ...
+    }
+
+}];
+```
+
+Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
+
+```obj-c
+[self.client.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^(SMNetworkStatus status){
+    
+    if (status == SMNetworkStatusReachable) {
+      return SMCachePolicyTryNetworkOnly;
+    } else {
+      return SMCachePolicyTryCacheOnly;
+    }
+
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMNetworkReachability.html" target="_blank">SMNetworkReachability Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!---
+  ///////////////////
+  OFFLINE SYNC
+  //////////////////
+-->
+
+# Offline Sync
+
+Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
+
+Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Offline Sync Guide</a> for all information.
+
+<!---
 	///////////////////
 	SOCIAL INTEGRATION
 	//////////////////
@@ -1471,148 +1609,6 @@ LINK TO CUSTOM CODE DOCS
 ## Getting Tokens For Users
 
 ## Deleting Tokens
-
-<!---
-  ///////////////////
-  OFFLINE SYNC
-  //////////////////
--->
-
-# Offline Sync
-
-Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
-
-Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Offline Sync Guide</a> for all information.
-
-<!---
-  ///////////////////
-  NETWORK REACHABILITY
-  //////////////////
--->
-
-# Checking Network Reachability
-
-<!--- SMNetworkReachability -->
-
-## Using the SMNNetworkReachability Class
-
-`SMNetworkReachability` provides an interface to monitor the network reachability from the device to StackMob.
- 
- Network reachability checks are already built into the SDK.  When the network is not reachable and a request is made, an error with domain `SMError` and status code -105 (SMNetworkNotReachable) will be returned.
- 
- An instance of `SMNetworkReachability` is created during the initialization of an `SMUserSession`, accessible by the `networkMonitor` property.
-
- A shorthand is available through the `SMClient` instance:
-
- ```obj-c
- client.networkMonitor
- ```
- 
- ## Checking the Current Network Status
- 
- To manually check the current network status, use the <currentNetworkStatus> method:
-
- ```obj-c
- SMNetworkStatus currentStatus = [self.client.networkMonirot currentNetworkStatus];
- ```
- 
- This method will return an `SMNetworkStatus`, defined as:
-
-```obj-c
-typedef enum {
-    SMNetworkStatusUnknown = -1,
-    SMNetworkStatusNotReachable  = 0,
-    SMNetworkStatusReachable = 1,
-} SMNetworkStatus;
-```
- 
-* Reachable - the device has a network connection and can successfully reach StackMob.
-* Not Reachable - StackMob is not reachable either because there is no network connection on the device or the service is down.
-* Unknown - Typically this status arises during in-between times of network connection initialization.
- 
-An example of testing reachability before sending a request would look like this:
-
-```obj-c
-if ([self.client.networkMonitor currentNetworkStatus] == SMNetworkStatusReachable) {
-    // send request
-}
-```
- 
-You can also handle each state case by case in a switch statement:
-
-```obj-c
-switch([client.session.networkMonitor currentNetworkStatus]) {
-    case  SMNetworkStatusReachable:
-        // do Reachable stuff
-        break;
-    case SMNetworkStatusNotReachable:
-        // do NotReachable stuff
-        break;
-    case SMNetworkStatusUnknown:
-        // do Unknown stuff
-        break;
-    default:
-        break;
-}
-```
-
-<!--- Status Change Notifications -->
-
-## Registering For Network Status Change Notifications
-
-You can register to receive notifications when the network status changes by simply adding an observer for the notification name `SMNetworkStatusDidChangeNotification`.  The notification will have a `userInfo` dictionary containing one entry with key `SMCurrentNetworkStatusKey` and `NSNumber` representing the `SMNetworkStatus` value.
-
-In order to access the value of `SMCurrentNetworkStatusKey` in a format for comparing to specific states or use in a switch statement, retrieve the intValue like this:
-
-```obj-c
-if ([[[notification userInfo] objectForKey:SMCurrentNetworkStatusKey] intValue] == SMNetworkStatusReachable) {
-    // do Reachable stuff
-}
-```
-
-<p class="alert">Remember to remove your notification observer before the application terminates.</p>
- 
- 
-## Executing a Block Whenever the Network Status Changes ## 
-
-Often times you may want to change the cache policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
-
-```obj-c
-[self.client.networkMonitor setNetworkStatusChangeBlock:^(SMNetworkStatus status){
-    
-    if (status == SMNetworkStatusReachable) {
-      ...
-    } else {
-      ...
-    }
-
-}];
-```
-
-Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
-
-```obj-c
-[self.client.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^(SMNetworkStatus status){
-    
-    if (status == SMNetworkStatusReachable) {
-      return SMCachePolicyTryNetworkOnly;
-    } else {
-      return SMCachePolicyTryCacheOnly;
-    }
-
-}];
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMNetworkReachability.html" target="_blank">SMNetworkReachability Class Reference</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
 
 <!---
   ///////////////////
@@ -1823,15 +1819,21 @@ As we improve the SDK, sometimes that means we need to deprecate methods or prop
 
 ## v2.0.0
 
-* <b>(SMCoreDataStore)</b> <i>setDefaultMergePolicy:applyToMainThreadContextAndParent:</i>, Use <i>setDefault<b>CoreData</b>MergePolicy:applyToMainThreadContextAndParent:</i>
-* <b>(SMNetworkReachability)</b> <i>SMNetworkStatus</i> options, Use <b>SMNetworkStatusUnknown</b>, <b>SMNetworkStatusNotReachable</b>, <b>SMNetworkStatusReachable</b>
+* <b>(SMCoreDataStore)</b> <i>setDefaultMergePolicy: applyToMainThreadContextAndParent:</i>
+    * Use <i>setDefault<b>CoreData</b>MergePolicy: applyToMainThreadContextAndParent:</i>
+* <b>(SMNetworkReachability)</b> <i>SMNetworkStatus</i> options
+    * Use <b>SMNetworkStatusUnknown</b>, <b>SMNetworkStatusNotReachable</b>, <b>SMNetworkStatusReachable</b>
 
 ## v1.4.0
 
-* <b>(SMClient)</b> <i>loginWithFacebookToken:options:onSuccess:onFailure:</i>, Use <i>loginWithFacebookToken:<b>createUserIfNeeded:</b>options:<b>successCallbackQueue:failureCallbackQueue:</b>onSuccess:onFailure:</i>
-* <b>(SMClient)</b> <i>loginWithTwitterToken:twitterSecret:options:onSuccess:onFailure:</i> , Use <i>loginWithTwitterToken:twitterSecret:<b>createUserIfNeeded:</b>options:<b>successCallbackQueue:failureCallbackQueue:</b>onSuccess:onFailure:</i>
-* <b>(SMClient)</b> <i>loginWithGigyaUID:uidSignature:signatureTimestamp:options:onSuccess:onFailure:</i>, Use <i>loginWithGigyaUID:uidSignature:signatureTimestamp:options:<b>successCallbackQueue:failureCallbackQueue:</b>onSuccess:onFailure:</i>
+* <b>(SMClient)</b> <i>loginWithFacebookToken: options: onSuccess: onFailure:</i>
+    * Use <i>loginWithFacebookToken: <b>createUserIfNeeded: </b>options: <b>successCallbackQueue: failureCallbackQueue: </b>onSuccess: onFailure:</i>
+* <b>(SMClient)</b> <i>loginWithTwitterToken: twitterSecret: options: onSuccess: onFailure:</i>
+    * Use <i>loginWithTwitterToken: twitterSecret: <b>createUserIfNeeded: </b>options: <b>successCallbackQueue: failureCallbackQueue: </b>onSuccess: onFailure:</i>
+* <b>(SMClient)</b> <i>loginWithGigyaUID: uidSignature: signatureTimestamp: options: onSuccess: onFailure:</i>
+    * Use <i>loginWithGigyaUID: uidSignature: signatureTimestamp: options: <b>successCallbackQueue: failureCallbackQueue:</b> onSuccess: onFailure:</i>
 
 ## v1.2.0
 
-* <b>(SMCoreDataStore)</b> <i>managedObjectContext</i> property, Use <i>contextForCurrentThread</i>
+* <b>(SMCoreDataStore)</b> <i>managedObjectContext</i> property
+    * Use <i>contextForCurrentThread</i>
