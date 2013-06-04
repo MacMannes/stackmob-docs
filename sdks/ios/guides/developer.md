@@ -15,7 +15,7 @@ In each section of this guide you may see colored boxes which are meant to highl
 	//////////////////
 -->
 
-# Initialization
+# Setup
 
 <!--- INITIALIZE -->
 
@@ -50,15 +50,13 @@ From then on you can either pass your client instance around, or use `[SMClient 
 
 ## Using Core Data
 
-StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand. If you are new to Core Data check out our list of <a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#core_data_references" target="_blank">Core Data References</a>.
+StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
 
-The three main pieces of Core Data are instances of:
+We've created a separate guide on using StackMob with Core Data, which contains everything from Core Data basics to Coding Practices to Specifications on what is supported by the StackMob integration.
 
-* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectContext_Class/NSManagedObjectContext.html" target="_blank">NSManagedObjectContext</a> - This is what you use to create, read, update and delete objects in your database.
-* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSPersistentStoreCoordinator_Class/NSPersistentStoreCoordinator.html" target="_blank">NSPersistentStoreCoordinator</a> - Coordinates between the managed object context and the actual database, in this case StackMob.
-* <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectModel_Class/Reference/Reference.html" target="_blank">NSManagedObjectModel</a> - References a file where you defined your object graph.
+<p class="alert">Since a lot of your interactions with StackMob will be through Core Data, please be sure to read through the guide.</p>
 
-<p class="alert">Make sure you have read through the <a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#coding_practices" target="_blank">Coding Practices</a> when using Core Data with StackMob, as well as the <a href="http://stackmob.github.io/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">Support Specifications</a> for what Core Data features are supported by Stackmob.</p>
+<a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">StackMob and Core Data Guide</a>
 
 <!--- DEF MOM -->
 
@@ -125,7 +123,7 @@ You can create an `SMCoreDataStore` instance like so:
 SMCoreDataStore *coreDataStore = [[SMClient defaultClient] coreDataStoreWithManagedObjectModel:self.managedObjectModel];
 ```
 
-From then on you can either pass your core data store instance around, or use `[[SMClient defaultClient] coreDataStore]` to retrieve it at any point.
+From then on you can either pass your core data store instance around, or if you are using iOS SDK v2.0.0+, use `[[SMClient defaultClient] coreDataStore]` to retrieve it at any point.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -904,13 +902,15 @@ Developers can easily implement a forgot password workflow in their application.
 
 # Geolocation
 
+StackMob provides GeoPoint field types which allow you to save objects with latitude and longitude coordinates. Once you have objects that contain geo location data, you can query for a subset of those objects near a particular coordinate pair, within a specific radius, or even within a box formed from coordinates. This makes building apps that show all restaurants around a user's current location, or tracking a user's path as they jog through the city, as simple as ever.
+
 <!--- Add schema field -->
 
 ## Add a GeoPoint Schema Field
 
 <p class="alert">Geopoint field inference was introduced in iOS SDK v2.0.0+.</p>
 
-In order for a schema to allow for geopoints, it must have a field with the GeoPoint type. Follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-GeoPoint-Field-to-Schemas" target="_blank">Adding a GeoPoint Field To Schemas</a> tutorial to get set up.
+In order for a schema to allow for geopoints, it must have a field with the GeoPoint type. To manually add a geopoint field to your schema, follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-GeoPoint-Field-to-Schemas" target="_blank">Adding a GeoPoint Field To Schemas</a> tutorial to get set up.
 
 <!--- Track Geo-Location -->
 
@@ -1319,7 +1319,6 @@ NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234
 }];
 ```
 
-
 <!---
 	///////////////////
 	SOCIAL INTEGRATION
@@ -1621,11 +1620,183 @@ Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:
   //////////////////
 -->
 
-# SDK Error Codes
+# Error Handling
 
-When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occured. A full list can be found in the API Refererence:
+When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occured.
 
-<a href="http://stackmob.github.io/stackmob-ios-sdk/ErrorCodeTranslations.html" target="_blank">Error Code Translations</a>
+## Core Data Save Failure Errors
+
+When a Core Data save fails because objects could not be inserted/updated/deleted on StackMob, the error returned is formatted in the following way:
+
+<ul>
+  <li>The error code will be -108, <b>SMErrorCoreDataSave</b></li>
+  <li>The error userInfo property may contain any of the following keys, which are constants you can reference, depending on what the save request consisted of: <b>SMInsertedObjectFailures</b>, <b>SMUpdatedObjectFailures</b>, <b>SMDeletedObjectFailures</b>.</li>
+  <li>If any of those keys exist, its value will be an NSArray instance of NSDictionary instances, one dictionary for each failed object.</li>
+  <li>Each dictionary will include 2 key constants: <b>SMFailedManagedObjectID</b>, whose value is an NSManagedObjectID instance of the managed object that was not saved properly, and <b>SMFailedManagedObjectError</b>, whose value is an NSError instance of what caused the object to not get saved properly.</li>
+</ul>
+
+Here's an example of an error returned when trying to save a user object with primary key "Jack" when a user named "Jack" already exists on the server:
+
+```bash
+Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError error -108.)" UserInfo=0xc99d030 {
+  SMInsertedObjectFailures=(
+    {
+      SMFailedManagedObjectError = "Error Domain=HTTP Code=409 \"The operation couldn\U2019t be completed. 
+          (HTTP error 409.)\" UserInfo=0x8661680 {error=Duplicate key for schema user: \"jack\"}";
+      SMFailedManagedObjectID = "0xc9a0210 <x-coredata://FDCF65C5-02D3-45E9-BA03-793E1A125FCE-12897-00000C7A7DD73EAA/User/pjack>";
+    }
+  )
+}
+```
+
+## StackMob Specific Errors
+
+<table cellpadding="8px" width="600px">
+    <tr align="center">
+        <th>Error Code</th>
+        <th>Typedef</th>
+    </tr>
+    <tr>
+        <td>-100</td>
+        <td>SMErrorInvalidArguments</td>
+    </tr>
+    <tr>
+        <td>-101</td>
+        <td>SMErrorTemporaryPasswordResetRequired</td>
+    </tr>
+    <tr>
+        <td>-102</td>
+        <td>SMErrorNoCountAvailable</td>
+    </tr>
+    <tr>
+        <td>-103</td>
+        <td>SMErrorRefreshTokenInProgress</td>
+    </tr>
+    <tr>
+        <td>-104</td>
+        <td>SMErrorPasswordForUserObjectNotFound</td>
+    </tr>
+    <tr>
+        <td>-105</td>
+        <td>SMErrorNetworkNotReachable</td>
+    </tr>
+    <tr>
+        <td>-106</td>
+        <td>SMErrorCacheIDNotFound</td>
+    </tr>
+    <tr>
+        <td>-107</td>
+        <td>SMErrorCouldNotFillRelationshipFault</td>
+    </tr>
+    <tr>
+        <td>-108</td>
+        <td>SMErrorCoreDataSave</td>
+    </tr>
+    <tr>
+        <td>-109</td>
+        <td>SMErrorRefreshTokenFailed</td>
+    </tr>
+</table>
+
+## General HTTP Errors
+
+<table cellpadding="8px" width="600px">
+    <tr align="center">
+        <th>Error Code</th>
+        <th>Typedef</th>
+    </tr>
+    <tr>
+        <td>400</td>
+        <td>SMErrorBadRequest</td>
+    </tr>
+    <tr>
+        <td>401</td>
+        <td>SMErrorUnauthorized</td>
+    </tr>
+    <tr>
+        <td>403</td>
+        <td>SMErrorForbidden</td>
+    </tr>
+    <tr>
+        <td>404</td>
+        <td>SMErrorNotFound</td>
+    </tr>
+    <tr>
+        <td>408</td>
+        <td>SMErrorTimeout</td>
+    </tr>
+    <tr>
+        <td>409</td>
+        <td>SMErrorConflict</td>
+    </tr>
+    <tr>
+        <td>500</td>
+        <td>SMErrorInternalServerError</td>
+    </tr>
+    <tr>
+        <td>501</td>
+        <td>SMErrorNotImplemented</td>
+    </tr>
+    <tr>
+        <td>502</td>
+        <td>SMErrorBadGateway</td>
+    </tr>
+    <tr>
+        <td>503</td>
+        <td>SMErrorServiceUnavailable</td>
+    </tr>
+    <tr>
+        <td>504</td>
+        <td>SMErrorGatewayTimeout</td>
+    </tr> 
+</table>
+
+## String Constants
+
+The following is a list of string contants used for the domains of errors and names of exceptions.
+
+<table cellpadding="8px" width="600px">
+    <tr align="center">
+        <th>Constant</th>
+        <th>String Value</th>
+    </tr>
+    <tr>
+        <td>SMErrorDomain</td>
+        <td>@"SMError"</td>
+    </tr>
+    <tr>
+        <td>HTTPErrorDomain</td>
+        <td>@"HTTP"</td>
+    </tr>
+    <tr>
+        <td>SMExceptionIncompatibleObject</td>
+        <td>@"SMExceptionIncompatibleObject"</td>
+    </tr>
+    <tr>
+        <td>SMExceptionUnknownSchema</td>
+        <td>@"SMExceptionUnknownSchema"</td>
+    </tr>
+    <tr>
+        <td>SMExceptionAddPersistentStore</td>
+        <td>@"SMExceptionAddPersistentStore"</td>
+    </tr>
+    <tr>
+        <td>SMExceptionCannotFillRelationshipFault</td>
+        <td>@"SMExceptionCannotFillRelationshipFault"</td>
+    </tr>
+    <tr>
+        <td>SMExceptionCacheError</td>
+        <td>@"SMExceptionCacheError"</td>
+    </tr>
+    <tr>
+        <td>SMOriginalErrorCausingRefreshKey</td>
+        <td>@"SMOriginalErrorCausingRefresh"</td>
+    </tr>
+    <tr>
+        <td>SMRefreshErrorObjectKey</td>
+        <td>@"SMRefreshErrorObject"</td>
+    </tr>
+</table>
 
 <!---
   ///////////////////
@@ -1635,33 +1806,10 @@ When errors occur at the SDK level, specific error codes are returned to indicat
 
 # Debugging
 
-The SDK provides a few flags to assist in debugging. They can be found in the Debugging section of the API Refererence main page:
+The iOS SDK gives developers access to two global variables that will enable additional logging statements when using the Core Data integration:
 
-<a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#debugging" target="_blank">Debugging</a>
-
-<!---
-  ///////////////////
-  CODING PRACTICES
-  //////////////////
--->
-
-# Core Data Coding Practices
-
-There are some important coding practices to adhere to when developing with StackMob and Core Data. They can be found in the StackMob <--> Core Data Coding Practices section of the API Refererence main page:
-
-<a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#coding_practices" target="_blank">StackMob <--> Core Data Coding Practices</a>
-
-<!---
-  ///////////////////
-  SUPPORT SPECS
-  //////////////////
--->
-
-# Core Data Integration Support Specs
-
-A full list of what Core Data features and methods are supported with StackMob can be found in the API Reference:
-
-<a href="http://stackmob.github.io/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">StackMob <--> Core Data Support Specifications</a>
+* **SM_CORE_DATA_DEBUG** - In your AppDelegate's `application:DidFinishLaunchingWithOptions:` method, include the line `SM_CORE_DATA_DEBUG = YES;` to turn on log statements from `SMIncrementalStore`. This will provide information about the Datastore calls to StackMob happening behind the scenes during Core Data saves and fetches. The default is `NO`.
+* **SM_MAX_LOG_LENGTH** - Used to control how many characters are printed when logging objects. The default is **10,000**, which is plenty, so you will almost never have to set this.  The only time you will see the string representation of an object truncated is when you have an Attribute of type String that maps to a field of type Binary on StackMob, because you are sending a string containing the binary of the image, etc. String representations of objects that have been truncated end with MAX\_LOG\_LENGTH\_REACHED.
 
 <!---
   ///////////////////
@@ -1669,8 +1817,21 @@ A full list of what Core Data features and methods are supported with StackMob c
   //////////////////
 -->
 
-# Deprecations
+# SDK Deprecations
 
-As we improve the SDK, sometimes that means we need to deprecate methods or properties. A full list of deprecations by SDK version can be found in the Deprecations section of the API Reference:
+As we improve the SDK, sometimes that means we need to deprecate methods or properties.
 
-<a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#deprecations" target="_blank">Deprecations</a>
+## v2.0.0
+
+* <b>(SMCoreDataStore)</b> <i>setDefaultMergePolicy:applyToMainThreadContextAndParent:</i>, Use <i>setDefault<b>CoreData</b>MergePolicy:applyToMainThreadContextAndParent:</i>
+* <b>(SMNetworkReachability)</b> <i>SMNetworkStatus</i> options, Use <b>SMNetworkStatusUnknown</b>, <b>SMNetworkStatusNotReachable</b>, <b>SMNetworkStatusReachable</b>
+
+## v1.4.0
+
+* <b>(SMClient)</b> <i>loginWithFacebookToken:options:onSuccess:onFailure:</i>, Use <i>loginWithFacebookToken:<b>createUserIfNeeded:</b>options:<b>successCallbackQueue:failureCallbackQueue:</b>onSuccess:onFailure:</i>
+* <b>(SMClient)</b> <i>loginWithTwitterToken:twitterSecret:options:onSuccess:onFailure:</i> , Use <i>loginWithTwitterToken:twitterSecret:<b>createUserIfNeeded:</b>options:<b>successCallbackQueue:failureCallbackQueue:</b>onSuccess:onFailure:</i>
+* <b>(SMClient)</b> <i>loginWithGigyaUID:uidSignature:signatureTimestamp:options:onSuccess:onFailure:</i>, Use <i>loginWithGigyaUID:uidSignature:signatureTimestamp:options:<b>successCallbackQueue:failureCallbackQueue:</b>onSuccess:onFailure:</i>
+
+## v1.2.0
+
+* <b>(SMCoreDataStore)</b> <i>managedObjectContext</i> property, Use <i>contextForCurrentThread</i>
