@@ -1,19 +1,22 @@
-# Advanced Queries
+Advanced Queries
+================
+
+## Overview
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/advanced-query.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-## Objective
+### Objective
 
 Create a complex query your data and display results in a table view.
 
-## Experience Level
+### Experience Level
 Beginner
 
-## Estimated time to complete
+### Estimated time to complete
 
 ~5 minutes
 
-## Prerequisites
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -23,7 +26,7 @@ Beginner
 
 * [Download StackMob Read into Table View App](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read-into-table.zip)
 
-## Jump to:
+### Jump to:
 
 * <a href="#and">AND Compound NSPredicate</a>
 * <a href="#additional_methods">Additional Predicates</a>
@@ -34,9 +37,8 @@ Beginner
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-**Let's get started!**
 
-# Open the StackMob Read to TableView
+## Open the StackMob Read to TableView
 
 We’ll use the project from the Read to TableView Tutorial where we read all objects and display them in a table view.  It has StackMob imported, Core Data and a fetchRequest setup to display data in the table view.  This allows you to focus on the objective of this tutorial.
 
@@ -44,7 +46,7 @@ For more information on what's inside of the Read into Table View app, see <a hr
 
 Unzip the StackMob Read into Table View App and open **read-into-table.xcodeproj**.
 
-# Add your Public Key
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -58,7 +60,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 
-# Modify our Todo Entity
+## Modify our Todo Entity
 We are going to modify our Todo Entity to add a new attribute.  Click on **mydatamodel.xcdatamodeld**, select the **Todo** Entity and click the plus sign to add a new attribute.
 Give the new attribute the name **count** with a data type of **Integer16**
 
@@ -68,7 +70,7 @@ Give the new attribute the name **count** with a data type of **Integer16**
 <br><br>
 
 
-# Open ListViewController.m and add code to create an object
+## Open ListViewController.m and add code to create an object
 
 Let's add some code to our ViewDidLoad method to create a new object that has both a title and a count.  Make sure to **import StackMob** at the top of the file.
 
@@ -106,7 +108,7 @@ Add the following **highlighted** code to your ListViewController.m file:
 
 <a name="and"></a>
 
-# Add an AND Compound NSPredicate to the fetchedResultsController in ListViewController.m
+## Add an AND Compound NSPredicate to the fetchedResultsController in ListViewController.m
 
 The NSPredicate class is used to define logical conditions used to constrain a search  for a fetch.  You can pass an array of NSPredicates to NSCompoundPredicate to create a predicate in the form "predicate1" AND "predicate2".
 
@@ -154,7 +156,7 @@ Add the following **highlighted** code to your ListViewController.m file:
 }
 ```
 
-# Build and Run!
+## Build and Run!
 
 Run your project.  You should only see results that match the query with a title of Hello World and a count greater than 2.
 
@@ -298,7 +300,7 @@ Here is a final, more complex example:
 
 <a name="smpredicate"></a>
 
-# SMPredicate 
+## SMPredicate 
 
 SMPredicate is a special subclass of NSPredicate that allows the querying of Geo Points.
 

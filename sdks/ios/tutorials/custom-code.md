@@ -1,3 +1,8 @@
+Custom Code
+===========
+
+## Overview
+
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/custom-code-request.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
 <h3>Objective</h3>
@@ -23,9 +28,6 @@ Beginner
 <h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
-
-<h1>Let's get started!</h1>
-
 
 <h2>Build and Upload your Custom Code</h2> 
 You'll need to build and upload a JAR based on the StackMob Custom Code examples.

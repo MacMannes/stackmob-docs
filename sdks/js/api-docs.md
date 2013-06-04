@@ -1,4 +1,4 @@
-# Javascript SDK Docs
+# Javascript SDK API Reference
 
 The StackMob JS SDK connects your web application to StackMob.  You can perform CRUD operations with your objects, perform filtering queries on them, authenticate users, and more.
 

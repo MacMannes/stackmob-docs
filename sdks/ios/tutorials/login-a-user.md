@@ -1,3 +1,8 @@
+Log In a User
+=============
+
+## Overview
+
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/user-authentication.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
 <h3>Objective</h3>
@@ -28,11 +33,9 @@ There are a few coding practices to adhere to as well as general things to keep 
 * <a href="#login_status">Check Login Status</a>
 * <a href="#logout">Logout</a>
 
-<h1>Let's get started!</h1>
+<h3>Configure XCode Project</h3>
 
-<h2>Configure XCode Project</h2>
-
-<h2>Open the StackMob User Object App</h2>
+<h3>Open the StackMob User Object App</h3>
 
 We’ll use the project from the User Object Tutorial where we created a user object.  It has StackMob imported, Core Data and a User Entity defined for us.    This allows you to focus on the objective of this tutorial.
 
@@ -42,7 +45,7 @@ If you haven't already, download the User Object App from the link under **Prere
 
 Unzip and open **user-object.xcodeproj**.
 
-<h2>Add your Public Key</h2>
+<h3>Add your Public Key</h3>
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -56,7 +59,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 <a name="login">&nbsp;</a>
-<h1><font color="#357EC7">Login</font></h1>
+<h2><font color="#357EC7">Login</font></h2>
 
 Select the storyboard file and drag and drop  a **button** to your view.  Set the label of the button as **login**.
 <br/>
@@ -81,7 +84,7 @@ In the menu, set the Connection to **Action** and enter the name **login**.
 <br />
 <br />
 
-<h2>Open ViewController.h</h2>
+<h3>Open ViewController.h</h3>
 
 
 Add the following **highlighted** code to your ViewController.h file:
@@ -106,7 +109,7 @@ Add the following **highlighted** code to your ViewController.h file:
 
 ```
 
-<h2>Open ViewController.m</h2>
+<h3>Open ViewController.m</h3>
 
 Add the following **highlighted** code to your ViewController.m file. We set our local SMClient instance to the instance returned by the defaultClient class method.  By defualt this method returns the first initialized client,  which was done in our App Delegate.
 
@@ -209,7 +212,7 @@ Add the following **highlighted** code to your ViewController.m file. We set our
 @end
 ```
 
-<h2>Build and Run!</h2>
+<h3>Build and Run!</h3>
 
 Run your project.  Create a user if you haven't already.  Then, enter the username and password and click the login button. In the XCode console log, you'll see the user object returned.
 
@@ -218,7 +221,7 @@ Run your project.  Create a user if you haven't already.  Then, enter the userna
 
 
 <a name="login_status">&nbsp;</a>
-<h1><font color="#357EC7">Check the login status</font></h1>
+<h2><font color="#357EC7">Check the login status</font></h2>
 
 Select the storyboard file and drag and drop a **label** and a **button** to your view.  Set the label text to **Status Unknown** and the button label as **Check Status**.
 <br/>
@@ -250,7 +253,7 @@ In the menu, set the Connection to **Action** and enter the name **checkStatus**
 <br />
 <br />
 
-<h2>Open ViewController.h</h2>
+<h3>Open ViewController.h</h3>
 
 Your ViewController.h file should look like the following:
 
@@ -275,7 +278,7 @@ Your ViewController.h file should look like the following:
 @end
 ```
 
-<h2>Open ViewController.m</h2>
+<h3>Open ViewController.m</h3>
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -394,13 +397,13 @@ Add the following **highlighted** code to your ViewController.m file:
 @end
 ```
 
-<h2>Build and Run!</h2>
+<h3>Build and Run!</h3>
 
 Run your project.  Click the check status button, to see if anyone is logged in. You'll see the status label updated.
 
 
 <a name="logout">&nbsp;</a>
-<h1><font color="#357EC7">Logout</font></h1>
+<h2><font color="#357EC7">Logout</font></h2>
 
 Select the storyboard file and drag and drop a **button** to your view.  Set thebutton label as **logout**.
 <br/>
@@ -424,7 +427,7 @@ In the menu, set the Connection to **Action** and enter the name **logout**
 <br />
 <br />
 
-<h2>Open ViewController.h</h2>
+<h3>Open ViewController.h</h3>
 
 Your ViewController.h file should look like the following:
 
@@ -451,7 +454,7 @@ Your ViewController.h file should look like the following:
 
 ```
 
-<h2>Open ViewController.m</h2>
+<h3>Open ViewController.m</h3>
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -578,7 +581,7 @@ Add the following **highlighted** code to your ViewController.m file:
 @end
 ```
 
-<h2>Build and Run!</h2>
+<h3>Build and Run!</h3>
 
 Run your project.  Click the logout button, then click check status.
 

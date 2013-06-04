@@ -1,6 +1,8 @@
 iOS Developer Guide
 =====================================
 
+## Overview
+
 Core Data allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications. For those interested in sticking to the REST-based way of making requests, we provide the full Datastore API as well.
 
 In each section of this guide you may see colored boxes which are meant to highlight important information:
@@ -15,11 +17,11 @@ In each section of this guide you may see colored boxes which are meant to highl
 	//////////////////
 -->
 
-# Setup
+## Setup
 
 <!--- INITIALIZE -->
 
-## Initializing the iOS SDK
+### Initializing the iOS SDK
 
 Wherever you plan to use StackMob, add `#import "StackMob.h"` to the header file.
 
@@ -48,7 +50,7 @@ From then on you can either pass your client instance around, or use `[SMClient 
 
 <!--- USING CORE DATA -->
 
-## Using Core Data
+### Using Core Data
 
 StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
 
@@ -60,7 +62,7 @@ We've created a separate guide on using StackMob with Core Data, which contains 
 
 <!--- DEF MOM -->
 
-## Defining a Managed Object Model
+### Defining a Managed Object Model
 
 To use Core Data you will define an `NSManagedObjectModel` instance which points to your local object graph, a `.xcdatamodeld` file. This file defines a local representation of your database, using Entities which have attributes and relationships.
 
@@ -92,7 +94,7 @@ Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, dec
 
 <!--- CREATE SUBCLASSES -->
 
-## Creating `NSManagedObject` Subclasses
+### Creating `NSManagedObject` Subclasses
 
 Creating classes for each one of your entities provides a lot of convience around constructors, accessors, validation, formatting, etc. for when you work with managed objects. We recommend you create these custom classes, which you can do by selecting an Entity in the Model Editor and going to `Editor -> Create NSManagedObject Subclass`:
 
@@ -111,7 +113,7 @@ Creating classes for each one of your entities provides a lot of convience aroun
 
 <!--- INIT CDS -->
 
-## Initialize a Core Data Store
+### Initialize a Core Data Store
 
 A Core Data store instance gives you everything you need to work with StackMob's Core Data integration. With your `SMCoreDataStore` object you can retrieve a managed object context configured with a `SMIncrementalStore` as it’s persistent store to allow communication to StackMob from Core Data.  
 
@@ -138,7 +140,7 @@ From then on you can either pass your core data store instance around, or if you
 
 <!--- OBTAIN MOC -->
 
-## Obtaining a Managed Object Context
+### Obtaining a Managed Object Context
 
 You can obtain a managed object context configured from your `SMClient` instance like this:
 
@@ -171,13 +173,13 @@ If you want to do your own context creation, use the `persistentStoreCoordinator
 	//////////////////
 -->
 
-# Datastore
+## Datastore
 
 The following sections include everything you need to know about creating, reading, updating and deleting objects. When you use Core Data you'll perform your write operations on your managed object context, kind of like a scratch pad, and persist the changes by performing a save operation.
 
 <!--- INSERT OBJECT -->
 
-## Creating an Object
+### Creating an Object
 
 Typically you will create an `NSManagedObject` subclass for each of your Core Data entities, giving you convience methods, accessors, etc. You might also find it valuable to define a custom init method. The easiest way to declare a new instance of an entity and fill in its values is like so:
 
@@ -229,7 +231,7 @@ The newly created object is not persisted until you <a href="#PerformingSaves">s
 
 <!--- READ OBJECT -->
 
-## Reading Objects
+### Reading Objects
 
 To read objects from a particular Entity, create and execute a Core Data fetch request using methods from the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
 
@@ -241,7 +243,7 @@ All information on specifying conditions for a query can be found in the <a href
 
 <!--- SUB: ASYNC READ -->
 
-### Asynchronous Fetch Requests
+#### Asynchronous Fetch Requests
 
 We've created an asynchronous wrapper around the familiar `executeFetchRequest:error` method which ensures that fetches are performed off the main thread and will not block your applications UI.
 
@@ -288,7 +290,7 @@ If you wish to return managed object IDs rather than objects, use the following 
 
 <!--- SUB: SYNC READ -->
 
-### Synchronous Fetch Requests
+#### Synchronous Fetch Requests
 
 To execute synchronous fetches, use the `executeFetchRequestAndWait:error:` method. This works like `executeFetchRequest:error`, but uses the child-parent context model that is used internally by the SDK.
 
@@ -315,7 +317,7 @@ NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRe
 
 <!--- UPDATE OBJECT -->
 
-## Updating an Object
+### Updating an Object
 
 After fetching an existing mananged object, update it by simply changing the object's values. The updated values are not persisted until the managed object context is saved.
 
@@ -332,7 +334,7 @@ After fetching an existing mananged object, update it by simply changing the obj
 
 <!--- DELETE OBJECT -->
 
-## Deleting an Object
+### Deleting an Object
 
 Delete an object by simply calling the managed object context `deleteObject` method and passing the manage object you wish to delete. The delete will not be finalized until you sve the managed object context.
 
@@ -353,7 +355,7 @@ Delete an object by simply calling the managed object context `deleteObject` met
 
 <!--- SAVE -->
 
-## Performing Saves
+### Performing Saves
 
 At some point after inserting, updating, and deleting objects from a managed object context, you will initiate a save which will cause all modified objects to be persisted to the external store.  The external store in this case is StackMob as well as a local cache database, ensuring data is available while the devices is offline.
 
@@ -361,7 +363,7 @@ The StackMob SDK has placed a wrapper around the familiar `save:` core data meth
 
 <!--- ASYNC SAVES -->
 
-### Asynchronous Saves
+#### Asynchronous Saves
 
 Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked. If other events rely on the sucessful save, place them in the callbacks.
 
@@ -390,7 +392,7 @@ The SDK also provides save methods that allow you to pass request options and qu
 
 <!--- SYNC SAVES -->
 
-### Synchronous Saves
+#### Synchronous Saves
 
 Although the SDK synchronous save methods behave like Core Data's native `save:` method, we recommend using them because they follow the child-parent context patterns used internally by the SDK.
 
@@ -412,7 +414,7 @@ BOOL success = [self.managedObjectContext saveAndWait:&error];
 
 <!--- PER REQUEST OPTIONS -->
 
-## Per Request Options
+### Per Request Options
 
 Each type of method (asynchronous/synchronous save/fetch) has an overloaded method declaration with a parameter that takes an instance of <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions</a>. The parameter name in all methods is called options. This allows you to provide a custom `SMRequestOptions` instance that will be applied to all calls in that request. For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific save request to run over SSL i.e. all inserts/updates/deletes for that request will be sent over SSL.
 
@@ -424,7 +426,7 @@ Customizing other options can result in unexpected requests, which can lead to s
 
 <!--- LOWER LEVEL DATASTORE API -->
 
-## Lower Level Data Store API
+### Lower Level Data Store API
 
 If you want to make direct REST-based calls to the Datastore, check out the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMDataStore.html" target="_blank">SMDataStore</a> class.
 
@@ -445,13 +447,13 @@ If you want to make direct REST-based calls to the Datastore, check out the <a h
 	//////////////////
 -->
 
-# Queries
+## Queries
 
 While you will perform fetch requests to do all reading in Core Data, predicates enable you to return a subset of a schema's objects by placing conditions on the read, for example retreiving todos from today, or friends with birthdays this week. The Core Data fetch requests implementation is built on top of the lower level query API. 
 
 <!--- Predicates -->
 
-## Predicates
+### Predicates
 
 In Core Data, every read begins by creating a fetch request. You can then add predicates (conditions), sort descriptiors, offsets (ranges), etc. to return a more granular subset of results. To complete the read you execute the fetch request on a managed object context.
 
@@ -475,7 +477,7 @@ For a list of StackMob supported predicate types, visit the `Predicates` section
 
 <!--- Lower Level Query API -->
 
-## Lower Level Query API
+### Lower Level Query API
 
 To perform queries using the lower level API, you'll first instantiate an instance of `SMQuery`:
 
@@ -519,7 +521,7 @@ Finally, perform the query through the datastore property of your client instanc
 	//////////////////
 -->
 
-# Relationships
+## Relationships
 
 When you create relationships between entities in your Core Data model, they will translate directly to relationships on StackMob.  Here are the important things to note:
 
@@ -529,7 +531,7 @@ When you create relationships between entities in your Core Data model, they wil
 
 <!--- One To One -->
 
-## One to One
+### One to One
 
 Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the singluar version of the entity it points to, like so:
 
@@ -548,7 +550,7 @@ Add a relationship from one entity to another by creating a new entry in the **R
 
 <!--- One To Many -->
 
-## One to Many
+### One to Many
 
 Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the plural version of the entity it points to, like so:
 
@@ -569,7 +571,7 @@ In the data model, be sure to check the box for a To-Many relationship, as shown
 
 <!--- Many To Many -->
 
-## Many to Many
+### Many to Many
 
 You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
 
@@ -579,7 +581,7 @@ You can achieve a many to many relationship by simply creating two relationships
 	//////////////////
 -->
 
-# User Authentication
+## User Authentication
 
 It won't be uncommon for your app to be built around the concept of having users. They'll need to sign up and login to use your service, and depending on their role may have access to certain data not available to others. Luckily for you, StackMob has you covered.
 
@@ -587,7 +589,7 @@ Authentication with StackMob was built based on the Oauth 2.0 protocol.
 
 <!--- The User Schema -->
 
-## The User Schema
+### The User Schema
 
 When you create an application on StackMob, a **user** schema is automatically generated, with **username** as it's primary key field as well as a **password** field. This is the default schema for user objects.
  
@@ -624,7 +626,7 @@ Alternatively, you can set all the properties at once using `initWithAPIVersion:
 
 <!--- Creating User Object -->
 
-## Creating a User Object
+### Creating a User Object
 
 In Core Data, you'll first create an entity which maps to your user schema on StackMob. It's most likely called `user`, so your entity will be called `User`.
 
@@ -684,7 +686,7 @@ The above example assumes an entity `User` with attributes `username` and `age`.
 
 <!--- Login -->
 
-## Logging in to StackMob
+### Logging in to StackMob
 
 Logging into StackMob using the standard username/password pattern is done through the `SMClient` instance:
 
@@ -717,7 +719,7 @@ Logging into StackMob using the standard username/password pattern is done throu
 <!--- Edit User object -->
 
 
-## Retrieve User Managed Object
+### Retrieve User Managed Object
 
 The next time the user logs in to your app, you may need to have a copy of the user object around to make updates. To do this, simply create a fetch request and specify a predicate such that the only result should be your logged in user:
 
@@ -743,7 +745,7 @@ NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 
 <!--- Get logged in user -->
 
-## Retrieve Logged In User Info
+### Retrieve Logged In User Info
 
 At any point in time you can send a request to StackMob to recieve a dictionary representation for the currently logged in user:
 
@@ -769,7 +771,7 @@ At any point in time you can send a request to StackMob to recieve a dictionary 
 
 <!--- Check Status -->
 
-## Check Status
+### Check Status
 
 To see whether your user is logged in, use the `SMClient` `isLoggedIn` and `isLoggedOut` methods.
 
@@ -795,7 +797,7 @@ To see whether your user is logged in, use the `SMClient` `isLoggedIn` and `isLo
 
 <!--- Auto Refresh -->
 
-## Automatic Login Refresh
+### Automatic Login Refresh
 
 The iOS SDK comes built in with automatic login refresh functionality. In order to understand how this works, lets first define the way a user session works:
 
@@ -825,7 +827,7 @@ If a refresh token attempt fails and causes a failure callback to be executed, t
 
 <!--- Logout -->
 
-## Logout of StackMob
+### Logout of StackMob
 
 Here's how to log a user out of StackMob:
 
@@ -856,7 +858,7 @@ Here's how to log a user out of StackMob:
 
 <!--- Reset -->
 
-## Reset Password
+### Reset Password
 
 Developers can easily implement a reset password workflow in their application. A basic example workflow might look like the following:
 
@@ -878,7 +880,7 @@ Developers can easily implement a reset password workflow in their application. 
 
 <!--- Forgot Pass -->
 
-## Forgot Password
+### Forgot Password
 
 Developers can easily implement a forgot password workflow in their application. To do this, your user schema will need to have a field dedicated to users' email addresses, which can be the username field if your users sign in with their emails, for example. Choose the correct field which maps to emails in the **Forgot Password** section on the user schema configuration page. Once you have done this, a basic example workflow might look like the following:
 
@@ -908,13 +910,13 @@ Developers can easily implement a forgot password workflow in their application.
 	//////////////////
 -->
 
-# Geolocation
+## Geolocation
 
 StackMob provides GeoPoint field types which allow you to save objects with latitude and longitude coordinates. Once you have objects that contain geo location data, you can query for a subset of those objects near a particular coordinate pair, within a specific radius, or even within a box formed from coordinates. This makes building apps that show all restaurants around a user's current location, or tracking a user's path as they jog through the city, as simple as ever.
 
 <!--- Add schema field -->
 
-## Add a GeoPoint Schema Field
+### Add a GeoPoint Schema Field
 
 <p class="alert">Geopoint field inference was introduced in iOS SDK v2.0.0+.</p>
 
@@ -922,7 +924,7 @@ In order for a schema to allow for geopoints, it must have a field with the GeoP
 
 <!--- Track Geo-Location -->
 
-## Start Tracking Geo-Location
+### Start Tracking Geo-Location
 
 `SMLocationManager` is a built-in `CLLocationManager` singleton for use in retrieving `CLLocationCoordinate2D` points. 
  
@@ -930,7 +932,7 @@ Many apps make use of geo location data; `SMLocationManager` aides in this proce
 
 <!--- SUB: Using SMLocationManager -->
 
-### Using SMLocationManager
+#### Using SMLocationManager
 
 First, import the class where needed: 
 
@@ -963,7 +965,7 @@ When you are finished, tell the location manager to stop listening for GPS updat
 
 <!--- SUB: Manual lat/lon -->
 
-### Obtaining Latitude/Longitude Values
+#### Obtaining Latitude/Longitude Values
 
 If you wish to pull the latitude and longitude data manually from the location manager, do so with the following:
 
@@ -976,7 +978,7 @@ Often times it may take a few run loops for the location manager to start receiv
 
 <!--- SUB: Subclass SMLocationManager -->
 
-### Subclassing SMLocationManager
+#### Subclassing SMLocationManager
 
 Out of the box, `SMLocationManager` gives you the ability to start/stop pulling GPS location data, as well as retrieve the current latitude and longitude of the device.  If you would like more control and customization, it's recommended you subclass `SMLocationManager`. In the init method of your subclass, you can configure the properties of the `CLLocationManager` as needed.
 
@@ -993,7 +995,7 @@ Out of the box, `SMLocationManager` gives you the ability to start/stop pulling 
 
 <!--- Save Geo Data -->
 
-## Saving Geo-Location Data
+### Saving Geo-Location Data
 
 GeoPoints are stored in Core Data using the `Transformable` attribute type. 
 
@@ -1068,7 +1070,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 
 <!--- Read Geo-Location -->
 
-## Reading Geo-Location Values
+### Reading Geo-Location Values
 
 Because managed object geopoint data will be contained in a `Tranformable` attribute type, it must be unarchived to be properly read:
 
@@ -1080,7 +1082,7 @@ SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
 <!--- Query Geo-Location -->
 
-## Query based on Geo-Location
+### Query based on Geo-Location
 
 To query using `SMGeoPoint`, use the special predicate methods provided by the `SMPredicate` class:
 
@@ -1136,11 +1138,11 @@ All <code>SMPredicate</code> methods to query based on an instance of <code>SMGe
 
 <!--- Geo-Location through DS API -->
 
-## Geo-Location using the Datastore API
+### Geo-Location using the Datastore API
 
 <!--- SUB: Saving -->
 
-### Saving
+#### Saving
 
 You can make an `SMGeoPoint` with a latitude and a longitude:
 
@@ -1178,7 +1180,7 @@ NSDictionary *arguments = [NSDictionary dictionaryWithObjectsAndKeys:@"My Locati
 
 <!--- SUB: Reading -->
 
-### Reading
+#### Reading
 
 You can query geo data by using conditions found in the `SMQuery` class. Here is an example of querying for all people within 5 miles of a given location:
 
@@ -1217,19 +1219,19 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
   //////////////////
 -->
 
-# Binary Data
+## Binary Data
 
 Binary data works by linking StackMob to your personal Amazon S3 account. You'll then declare a Binary type field in your schema and all files, images, etc. that you save will actually be stored in your S3 library, and the value of the field will be the URL that points to that data.
 
 <!--- Add schema field -->
 
-## Add a Binary Schema Field
+### Add a Binary Schema Field
 
 <p class="alert">Binary field inference was introduced in iOS SDK v2.0.0+. This means that, while you still need to maunally configure the S3 module settings if you haven't already, you will not need to manually add a Binary field to your schema.</p>
 
 Follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-Binary-Field-to-Schemas" target="_blank">Adding a Binary Field To Schemas</a> tutorial to get the S3 module and a Binary field in your schema set up.
 
-## Saving Binary Data
+### Saving Binary Data
 
 To save Binary data to StackMob, first create an attribute in your entity of type `String`. This attribute should map to a field on StackMob of type `Binary`.
 
@@ -1279,7 +1281,7 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
   </div>
 </div>
 
-## Working Offline
+### Working Offline
 
 When you save an object with binary data while the device is offline, the value of the attribute will contain a data representation, ready to be saved to StackMob. In order to properly read it at that point, the data must be extracted from the string and decoded.
 
@@ -1307,7 +1309,7 @@ if ([SMBinaryDataConversion stringContainsURL:picString]) {
   </div>
 </div>
 
-## Binary Data using the Datastore API
+### Binary Data using the Datastore API
 
 When saving objects using the datastore API that include binary data, you must format the value of the field correctly so that it can be parsed by Amazon. The correct value format should look like the following:
 
@@ -1333,13 +1335,13 @@ NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234
   //////////////////
 -->
 
-# Network Reachability
+## Network Reachability
 
 The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#OfflineSync">Offline Sync</a>).
 
 <!--- SMNetworkReachability -->
 
-## SMNNetworkReachability Class
+### SMNNetworkReachability Class
 
 `SMNetworkReachability` provides an interface to monitor the network reachability from the device to StackMob.
  
@@ -1349,7 +1351,7 @@ An instance of `SMNetworkReachability` is created during the initialization of a
 
 A shorthand is available through the `SMClient` instance: `client.networkMonitor`.
 
-## Checking the Current Network Status
+### Checking the Current Network Status
 
 To manually check the current network status, use the `currentNetworkStatus` method:
 
@@ -1399,7 +1401,7 @@ switch([client.session.networkMonitor currentNetworkStatus]) {
 
 <!--- Status Change Notifications -->
 
-## Status Change Notifications
+### Status Change Notifications
 
 You can register to receive notifications when the network status changes by simply adding an observer for the notification name `SMNetworkStatusDidChangeNotification`.  The notification will have a `userInfo` dictionary containing one entry with key `SMCurrentNetworkStatusKey` and `NSNumber` representing the `SMNetworkStatus` value.
 
@@ -1414,7 +1416,7 @@ if ([[[notification userInfo] objectForKey:SMCurrentNetworkStatusKey] intValue] 
 <p class="alert">Remember to remove your notification observer before the application terminates.</p>
  
  
-## Status Changes Blocks 
+### Status Changes Blocks 
 
 Often times you may want to change the cache policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
 
@@ -1461,7 +1463,7 @@ Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:
   //////////////////
 -->
 
-# Offline Sync
+## Offline Sync
 
 Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
 
@@ -1473,17 +1475,17 @@ Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-gu
 	//////////////////
 -->
 
-# Social Integration
+## Social Integration
 
 StackMob provides integrations with Facebook and Twitter to allow users to login to StackMob using pre-existing credentials, as well as features interfaces to post status updates. 
 
 <!--- Facebook -->
 
-## Facebook
+### Facebook
 
 <!--- SUB: FB Login Workflow -->
 
-### Implement Facebook Login Workflow
+#### Implement Facebook Login Workflow
 
 You will need to download the Facebook SDK and follow their tutorials to get login working in your application. Once you have a Facebook session open you will direct the application in the `sessionStateChanged:state:error` Facebook method to login to StackMob using the provided Facebook access token.
 
@@ -1491,7 +1493,7 @@ All the implementation details for Facebook's SDK can be found in our <a href="h
 
 <!--- SUB: Login with Facebook -->
 
-### StackMob Login Using Facebook
+#### StackMob Login Using Facebook
 
 Logging into StackMob using Facebook credentials requires that a StackMob user object already exists and is linked to the user's Facebook access token. Fortunately, you can do all of that with one method.
 
@@ -1539,7 +1541,7 @@ Alternatively, you can implement a more manual workflow using the methods listed
 
 <!--- SUB: Create User -->
 
-### Create a User Object
+#### Create a User Object
 
 You can create a new StackMob user object and link a Facebook access token for future login using Facebook credentials:
 
@@ -1562,7 +1564,7 @@ You can create a new StackMob user object and link a Facebook access token for f
   </div>
 </div>
 
-### Link/Unlink Facebook Tokens
+#### Link/Unlink Facebook Tokens
 
 If you have an existing StackMob user object and you want to link that object with a Facebook token to enable future login using Facebook credentials, use the link token method:
 
@@ -1597,7 +1599,7 @@ You can also unlink a logged in user object from a token at any time:
   </div>
 </div>
 
-### Update Facebook Status
+#### Update Facebook Status
 
 The logged in user can post a new Facebook status like so:
 
@@ -1621,7 +1623,7 @@ The logged in user can post a new Facebook status like so:
 </div>
 
 
-### Get Facebook User Info
+#### Get Facebook User Info
 
 Sometimes you may want to get the logged in user's Facebook info, either for UI purposes or to update the StackMob user object. You can use the `[FBRequest requestForMe]` method from the Facebook SDK. Alternatively, StackMob also provides an equivalent method:
 
@@ -1646,11 +1648,11 @@ Sometimes you may want to get the logged in user's Facebook info, either for UI 
 
 <!--- Twitter -->
 
-## Twitter
+### Twitter
 
 <!--- SUB: Twitter Login Workflow -->
 
-### Implement Twitter Login Workflow
+#### Implement Twitter Login Workflow
 
 You will need to download the Twitter SDK and follow their tutorials to get login working in your application. Once you have a Twitter session open you will direct the application to login to StackMob using the provided Twitter access token.
 
@@ -1806,17 +1808,17 @@ Sometimes you may want to get the logged in user's Twitter info, either for UI p
   //////////////////
 -->
 
-# Custom Code
+## Custom Code
 
 StackMob's Custom Code offering provides an interface to execute sever side methods.
 
-## Write Custom Code
+### Write Custom Code
 
 The first step to performing custom code methods on the server is... writing them!
 
 Head to the <a href="https://developer.stackmob.com/customcode-sdk/developer-guide" target="_blank">Custom Code Developer Guide</a> to get started with writing your server side logic and getting up uploaded to StackMob.
 
-## Performing Custom Code Requests
+### Performing Custom Code Requests
 
 Once you have your custom code methods uploaded to the StackMob server, you'll perform client side requests to execute those methods.
 
@@ -1864,7 +1866,7 @@ You can expect the `responseBody` parameter of the success callback to be in the
   </div>
 </div>
 
-## Setting Request Headers
+### Setting Request Headers
 
 To set request headers for your custom code request, instantiate an instance of `SMRequestOptions` using the `optionsWithHeaders:` class method:
 
@@ -1895,7 +1897,7 @@ When you go to perform your custom code request, use the method which includes t
   </div>
 </div>
 
-## Setting Response Content Types
+### Setting Response Content Types
 
 The default whitelisted response content types are:
 
@@ -1923,7 +1925,7 @@ ccRequest.responseContentType = @"image/jpeg";
 </div>
 
 
-## Custom Retry Blocks
+### Custom Retry Blocks
 
 If you make a custom code request has hasn't been executed recently, the server needs a few seconds to activate your environment. The request will return a 503 reponse code with a header specifying when to retry. <b>The iOS SDK reads this header and retries the request automatically.</b> As the developer you have the option to specify a retry block, so in the case of a 503 reponse, the SDK will call your retry block instead of automatically retrying the request.
 
@@ -1967,27 +1969,23 @@ As you can see, you have the option at the end of the block to retry the custom 
   //////////////////
 -->
 
-# Push Notifications
+## Push Notifications
 
+### The Push Module
 
+### Initalizing a Push Client
 
-## The Push Module
+### Registering the Device
 
+### Broadcasting Messages
 
+### Sending Messages to Users
 
-## Initalizing a Push Client
+### Sending Messages to Tokens
 
-## Registering the Device
+### Getting Tokens For Users
 
-## Broadcasting Messages
-
-## Sending Messages to Users
-
-## Sending Messages to Tokens
-
-## Getting Tokens For Users
-
-## Deleting Tokens
+### Deleting Tokens
 
 <!---
   ///////////////////
@@ -1995,11 +1993,11 @@ As you can see, you have the option at the end of the block to retry the custom 
   //////////////////
 -->
 
-# Error Handling
+## Error Handling
 
 When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occured.
 
-## Core Data Save Failure Errors
+### Core Data Save Failure Errors
 
 When a Core Data save fails because objects could not be inserted/updated/deleted on StackMob, the error returned is formatted in the following way:
 
@@ -2024,7 +2022,7 @@ Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError 
 }
 ```
 
-## StackMob Specific Errors
+### StackMob Specific Errors
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -2073,7 +2071,7 @@ Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError 
     </tr>
 </table>
 
-## General HTTP Errors
+### General HTTP Errors
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -2126,7 +2124,7 @@ Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError 
     </tr> 
 </table>
 
-## String Constants
+### String Constants
 
 The following is a list of string contants used for the domains of errors and names of exceptions.
 
@@ -2179,7 +2177,7 @@ The following is a list of string contants used for the domains of errors and na
   //////////////////
 -->
 
-# Debugging
+## Debugging
 
 The iOS SDK gives developers access to two global variables that will enable additional logging statements when using the Core Data integration:
 
@@ -2192,18 +2190,18 @@ The iOS SDK gives developers access to two global variables that will enable add
   //////////////////
 -->
 
-# SDK Deprecations
+## SDK Deprecations
 
 As we improve the SDK, sometimes that means we need to deprecate methods or properties.
 
-## v2.0.0
+### v2.0.0
 
 * <b>(SMCoreDataStore)</b> <i>setDefaultMergePolicy: applyToMainThreadContextAndParent:</i>
     * Use <i>setDefault<b>CoreData</b>MergePolicy: applyToMainThreadContextAndParent:</i>
 * <b>(SMNetworkReachability)</b> <i>SMNetworkStatus</i> options
     * Use <b>SMNetworkStatusUnknown</b>, <b>SMNetworkStatusNotReachable</b>, <b>SMNetworkStatusReachable</b>
 
-## v1.4.0
+### v1.4.0
 
 * <b>(SMClient)</b> <i>loginWithFacebookToken: options: onSuccess: onFailure:</i>
     * Use <i>loginWithFacebookToken: <b>createUserIfNeeded: </b>options: <b>successCallbackQueue: failureCallbackQueue: </b>onSuccess: onFailure:</i>
@@ -2212,7 +2210,7 @@ As we improve the SDK, sometimes that means we need to deprecate methods or prop
 * <b>(SMClient)</b> <i>loginWithGigyaUID: uidSignature: signatureTimestamp: options: onSuccess: onFailure:</i>
     * Use <i>loginWithGigyaUID: uidSignature: signatureTimestamp: options: <b>successCallbackQueue: failureCallbackQueue:</b> onSuccess: onFailure:</i>
 
-## v1.2.0
+### v1.2.0
 
 * <b>(SMCoreDataStore)</b> <i>managedObjectContext</i> property
     * Use <i>contextForCurrentThread</i>

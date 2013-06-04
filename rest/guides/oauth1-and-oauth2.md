@@ -1,4 +1,7 @@
-<h2>StackMob and OAuth</h2>
+StackMob and OAuth
+==================
+
+## Introduction
 
 StackMob has two ways of authorizing API calls to our servers:  OAuth 1.0 and OAuth 2.0.  Our Dashboard and SDKs use OAuth and take care of the OAuth implementation details for you.  OAuth 1.0 and 2.0 make use of the <a href="https://dashboard.stackmob.com/settings" target="_blank">application keys</a> so that our server knows what app to direct the requests to, and in OAuth 2.0's case, who the request is coming from.
 
