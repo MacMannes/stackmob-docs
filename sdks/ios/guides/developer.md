@@ -1647,7 +1647,7 @@ Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError 
 
 ## StackMob Specific Errors
 
-<table cellpadding="8px" width="600px">
+<table class="table table-bordered table-pretty-header">
     <tr align="center">
         <th>Error Code</th>
         <th>Typedef</th>
@@ -1696,7 +1696,7 @@ Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError 
 
 ## General HTTP Errors
 
-<table cellpadding="8px" width="600px">
+<table class="table table-bordered table-pretty-header">
     <tr align="center">
         <th>Error Code</th>
         <th>Typedef</th>
@@ -1751,7 +1751,7 @@ Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError 
 
 The following is a list of string contants used for the domains of errors and names of exceptions.
 
-<table cellpadding="8px" width="600px">
+<table class="table table-bordered table-pretty-header">
     <tr align="center">
         <th>Constant</th>
         <th>String Value</th>
