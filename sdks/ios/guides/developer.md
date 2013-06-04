@@ -173,6 +173,8 @@ If you want to do your own context creation, use the `persistentStoreCoordinator
 
 # Datastore
 
+The following sections include everything you need to know about creating, reading, updating and deleting objects. When you use Core Data you'll perform your write operations on your managed object context, kind of like a scratch pad, and persist the changes by performing a save operation.
+
 <!--- INSERT OBJECT -->
 
 ## Creating an Object
@@ -445,6 +447,8 @@ If you want to make direct REST-based calls to the Datastore, check out the <a h
 
 # Queries
 
+While you will perform fetch requests to do all reading in Core Data, predicates enable you to return a subset of a schema's objects by placing conditions on the read, for example retreiving todos from today, or friends with birthdays this week. The Core Data fetch requests implementation is built on top of the lower level query API. 
+
 <!--- Predicates -->
 
 ## Predicates
@@ -576,6 +580,10 @@ You can achieve a many to many relationship by simply creating two relationships
 -->
 
 # User Authentication
+
+It won't be uncommon for your app to be built around the concept of having users. They'll need to sign up and login to use your service, and depending on their role may have access to certain data not available to others. Luckily for you, StackMob has you covered.
+
+Authentication with StackMob was built based on the Oauth 2.0 protocol.
 
 <!--- The User Schema -->
 
@@ -1327,6 +1335,8 @@ NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234
 
 # Network Reachability
 
+The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#OfflineSync">Offline Sync</a>).
+
 <!--- SMNetworkReachability -->
 
 ## SMNNetworkReachability Class
@@ -1465,7 +1475,7 @@ Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-gu
 
 # Social Integration
 
-StackMob provides integrations with Facebook, Twitter and Gigya to allow users to login to StackMob using pre-existing credentials. The Facebook and Twitter integration also feature interfaces to post status updates. 
+StackMob provides integrations with Facebook and Twitter to allow users to login to StackMob using pre-existing credentials, as well as features interfaces to post status updates. 
 
 <!--- Facebook -->
 
@@ -1487,7 +1497,7 @@ Logging into StackMob using Facebook credentials requires that a StackMob user o
 
 Assuming you have opened a Facebook session and have initiated a custom method from the Facebook `sessionStateChanged:state:error` method, you would login to StackMob like so:
 
-```obj-c,3-13
+```obj-c,3-8
 [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection,NSDictionary<FBGraphUser> *user, NSError *error) {
  if (!error) {
      [[SMClient defaultClient] loginWithFacebookToken:FBSession.activeSession.accessTokenData.accessToken createUserIfNeeded:YES usernameForCreate:user.username onSuccess:^(NSDictionary *result) {
@@ -1500,6 +1510,7 @@ Assuming you have opened a Facebook session and have initiated a custom method f
      // Handle error accordingly
      NSLog(@"Error getting current Facebook user data, %@", error);
  }
+}
 }];
 ```
 
@@ -1507,7 +1518,24 @@ Assuming you have opened a Facebook session and have initiated a custom method f
 
 This login method will create a StackMob user object and link them to the provided Facebook token if one does not already exist.
 
-Alternatively, you can implement a more manual workflow using the methods listed in LINK TO CREATE A STACKMOB USER and LINK/UNLINK FB TOKEN.
+Alternatively, you can implement a more manual workflow using the methods listed in the <b>Create a User Object</b> and <b>Link/Unlink Facebook Tokens sections</b>.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Login with Facebook" target="_blank">SMClient: Login With Facebook</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Facebook" target="_blank">Integrating With Facebook Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!--- SUB: Create User -->
 
@@ -1522,6 +1550,17 @@ You can create a new StackMob user object and link a Facebook access token for f
   // Error
 }];
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Create a User with Facebook" target="_blank">SMClient: Create a User With Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ### Link/Unlink Facebook Tokens
 
@@ -1547,15 +1586,69 @@ You can also unlink a logged in user object from a token at any time:
 }];
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Link/Unlink a User From Facebook" target="_blank">SMClient: Link/Unlink a User From Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ### Update Facebook Status
 
+The logged in user can post a new Facebook status like so:
+
+```obj-c
+[[SMClient defaultClient] updateFacebookStatusWithMessage:@"Can't wait for the weekend!" onSuccess:^(NSDictionary *result) {
+  // Success
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Update Facebook Status" target="_blank">SMClient: Update Facebook Status</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 ### Get Facebook User Info
 
+Sometimes you may want to get the logged in user's Facebook info, either for UI purposes or to update the StackMob user object. You can use the `[FBRequest requestForMe]` method from the Facebook SDK. Alternatively, StackMob also provides an equivalent method:
+
+```obj-c
+[[SMClient defaultClient] getLoggedInUserFacebookInfoWithOnSuccess:^(NSDictionary *result) {
+  // Result contains dictionary of Facebook user info
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Get Facebook User Info" target="_blank">SMClient: Get Facebook User Info</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <!--- Twitter -->
 
 ## Twitter
+
+<!--- SUB: Twitter Login Workflow -->
 
 ### Implement Twitter Login Workflow
 
@@ -1563,9 +1656,149 @@ You will need to download the Twitter SDK and follow their tutorials to get logi
 
 All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Twitter" target="_blank">Twitter Tutorial</a>.
 
-<!--- Gigya -->
+<!--- SUB: Login with Facebook -->
 
-## Gigya
+### StackMob Login Using Twitter
+
+Logging into StackMob using Twitter credentials requires that a StackMob user object already exists and is linked to the user's Twitter access token and secret. Fortunately, you can do all of that with one method.
+
+Assuming you have opened a Twitter session which probably triggered a custom method, you would login to StackMob like so:
+
+```obj-c
+[[self.appDelegate client] loginWithTwitterToken:oauthToken twitterSecret:oauthTokenSecret createUserIfNeeded:YES usernameForCreate:@"Joe Schmoe" onSuccess:^(NSDictionary *result) {
+  // Successful Login
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+This login method will create a StackMob user object and link them to the provided Twitter tokens if one does not already exist.
+
+Alternatively, you can implement a more manual workflow using the methods listed in the <b>Create a User Object</b> and <b>Link/Unlink Twitter Tokens sections</b>.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Login With Twitter" target="_blank">SMClient: Login With Twitter</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Twitter" target="_blank">Integrating With Twitter Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Create User -->
+
+### Create a User Object
+
+You can create a new StackMob user object and link a Twitter access token and secret for future login using Twitter credentials:
+
+```obj-c
+[[SMClient defaultClient] createUserWithTwitterToken:oauthToken twitterSecret:oauthTokenSecret onSuccess:^(NSDictionary *result) {
+  // New user created
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Create a User With Twitter" target="_blank">SMClient: Create a User With Twitter</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+### Link/Unlink Twitter Tokens
+
+If you have an existing StackMob user object and you want to link that object with a Twitter tokens to enable future login using Twitter credentials, use the link token method:
+
+<p class="alert">The user must be logged in for the link to work.</p>
+
+```obj-c
+[[SMClient defaultClient] linkLoggedInUserWithTwitterToken:oauthToken twitterSecret:oauthTokenSecret onSuccess:^(NSDictionary *result) {
+  // Succssful link
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+You can also unlink a logged in user object from a token at any time:
+
+```obj-c
+[[SMClient defaultClient] unlinkLoggedInUserFromTwitterOnSuccess:^{
+  // Successful unlink
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Link/Unlink a User From Twitter" target="_blank">SMClient: Link/Unlink a User From Twitter</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+### Update Twitter Status
+
+The logged in user can post a new Twitter status like so:
+
+```obj-c
+[[SMClient defaultClient] updateTwitterStatusWithMessage:@"Can't wait for the weekend!" onSuccess:^(NSDictionary *result) {
+  // Success
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Update Twitter Status" target="_blank">SMClient: Update Twitter Status</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+### Get Twitter User Info
+
+Sometimes you may want to get the logged in user's Twitter info, either for UI purposes or to update the StackMob user object:
+
+```obj-c
+[[SMClient defaultClient] getLoggedInUserTwitterInfoWithOnSuccess:^(NSDictionary *result) {
+  // Result contains dictionary of Facebook user info
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Get Twitter User Info" target="_blank">SMClient: Get Twitter User Info</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!---
   ///////////////////
@@ -1575,15 +1808,158 @@ All the implementation details on Twitter's end can be found in our <a href="htt
 
 # Custom Code
 
+StackMob's Custom Code offering provides an interface to execute sever side methods.
+
 ## Write Custom Code
 
-LINK TO CUSTOM CODE DOCS
+The first step to performing custom code methods on the server is... writing them!
+
+Head to the <a href="https://developer.stackmob.com/customcode-sdk/developer-guide" target="_blank">Custom Code Developer Guide</a> to get started with writing your server side logic and getting up uploaded to StackMob.
 
 ## Performing Custom Code Requests
 
+Once you have your custom code methods uploaded to the StackMob server, you'll perform client side requests to execute those methods.
+
+First, you'll initialize an instance of `SMCustomCodeRequest`, passing it the name of your custom code method. Equivalent methods exist for initializing POST, GET, PUT, and DELETE requests. Let's initiate a GET request for a custom code method named `aggregate_tasks`:
+
+```obj-c
+SMCustomCodeRequest *ccRequest = [[SMCustomCodeRequest alloc] initGetRequestWithMethod:@"aggreate_tasks"];
+```
+
+In the case of a GET request, we can set query string parameters using the `addQueryStringParameterWhere:equals:` method.
+
+In the case of a POST or PUT request, we can set a request body if we need to using the `requestBody` property.
+
+When we are ready to send our request to execute our custom code method, we will use the `SMDataStore` instance provided by our client:
+
+```obj-c
+[[[SMClient defaultClient] dataStore] performCustomCodeRequest:ccRequest onSuccess:^(NSURLRequest *request, NSHTTPURLResponse *response, id responseBody) {
+  // Success
+} onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id responseBody){
+  // Failure
+}];
+```
+
+You can expect the `responseBody` parameter of the success callback to be in the form of:
+
+* Serialized JSON (NSDictionary/NSArray) if the content type of the response is application/vnd.stackmob+json or application/json, which it will be if you use the map response type in your custom code method.
+* A string (NSString) if the content type of the response is text/plain, which it will be if you use the string response type in your custom code method..
+* Raw data (NSData) for any other response content type, including if you use the byte array response type in your custom code method.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCustomCodeRequest.html" target="_blank">SMCustomCodeRequest Class Reference</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Custom Code Methods" target="_blank">SMDataStore: Performing Custom Code Methods</a>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Custom-Code-Requests" target="_blank">Custom Code Requests Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Setting Request Headers
 
+To set request headers for your custom code request, instantiate an instance of `SMRequestOptions` using the `optionsWithHeaders:` class method:
+
+```obj-c
+NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:@"valueOfHeader", @"headerName", nil];
+SMRequestOptions *options = [SMRequestOptions optionsWithHeaders:headers];
+```
+
+When you go to perform your custom code request, use the method which includes the `options:` parameter:
+
+```obj-c
+[[[SMClient defaultClient] dataStore] performCustomCodeRequest:ccRequest options:options onSuccess:^(NSURLRequest *request, NSHTTPURLResponse *response, id responseBody) {
+  // Success
+} onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id responseBody){
+  // Failure
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions Class Reference</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Custom Code Methods" target="_blank">SMDataStore: Performing Custom Code Methods</a>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Setting Response Content Types
+
+The default whitelisted response content types are:
+
+* application/vnd.stackmob+json (StackMob vendor specific)
+* application/json
+* text/plain
+* application/octet-stream
+
+Set the `responseContentType` property custom code request if you expect the content type to be something other than the default, for example `image/jpeg`. If you do not do this, the response will be rejected and the failure callback will be executed.
+
+```obj-c,2
+SMCustomCodeRequest *ccRequest = [[SMCustomCodeRequest alloc] initGetRequestWithMethod:@"random_pic"];
+ccRequest.responseContentType = @"image/jpeg";
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCustomCodeRequest.html#//api/name/responseContentType" target="_blank">responseContentType property</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+## Custom Retry Blocks
+
+If you make a custom code request has hasn't been executed recently, the server needs a few seconds to activate your environment. The request will return a 503 reponse code with a header specifying when to retry. <b>The iOS SDK reads this header and retries the request automatically.</b> As the developer you have the option to specify a retry block, so in the case of a 503 reponse, the SDK will call your retry block instead of automatically retrying the request.
+
+The first step is to define an instance of `SMRequestOptions` that you'll pass to your `performCustomCodeRequest:` method. Next you'll define a service unavailable retry block:
+
+```obj-c
+SMRequestOptions *options = [SMRequestOptions options];
+
+[options addSMErrorServiceUnavailableRetryBlock:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id responseBody, SMRequestOptions *options, SMFullResponseSuccessBlock successBlock, SMFullResponseFailureBlock failureBlock) {
+  
+  // Make changes and updates to parameters
+
+  // If you choose to do so, execute the retry method:
+  [[[SMClient defaultClient] dataStore] retryCustomCodeRequest:request options:options onSuccess:successBlock onFailure:failureBlock];
+}];
+```
+
+The retry blocks takes an instance of `SMFailureRetryBlock`, defined as:
+
+```obj-c
+typedef void (^SMFailureRetryBlock)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON, SMRequestOptions *options, SMFullResponseSuccessBlock successBlock, SMFullResponseFailureBlock failureBlock);
+```
+
+As you can see, you have the option at the end of the block to retry the custom code request with the `retryCustomCodeRequest:` method.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/addSMErrorServiceUnavailableRetryBlock:" target="_blank">addSMErrorServiceUnavailableRetryBlock:</a>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#//api/name/retryCustomCodeRequest:options:onSuccess:onFailure:" target="_blank">retryCustomCodeRequest:options:onSuccess:onFailure:</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!---
   ///////////////////
@@ -1591,10 +1967,13 @@ LINK TO CUSTOM CODE DOCS
   //////////////////
 -->
 
-
 # Push Notifications
 
+
+
 ## The Push Module
+
+
 
 ## Initalizing a Push Client
 
