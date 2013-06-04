@@ -1,16 +1,21 @@
+Basic Queries
+=============
+
+## Overview
+
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/basic-query.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Query your data and display results in a table view.
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~5 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -18,11 +23,9 @@ Beginner
 
 * [Download StackMob Read into Table View App](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read-into-table.zip)
 
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+### Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
-
-<h1>Let's get started!</h1>
 
 <h2>Open the StackMob Read to TableView</h2>
 

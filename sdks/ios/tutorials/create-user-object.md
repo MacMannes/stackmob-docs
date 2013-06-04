@@ -1,3 +1,8 @@
+Create a User Object
+====================
+
+## Overview
+
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/user-object.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
 <h3>Objective</h3>
@@ -21,8 +26,6 @@ Beginner
 <h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
-
-<h1>Let's get started!</h1>
 
 <h2>Open the Base Xcode Project</h2>
 
@@ -95,7 +98,7 @@ Check the box next to **User** and click **Next**.
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/user-object/user-object-06.png">
 <br/>
 <br/>
-<h3>User.h</h3>
+<h2>User.h</h2>
 Add the following **highlighted code** to your User.h file:<br>
 
 ```obj-c,5-9,13-16
@@ -120,7 +123,7 @@ Add the following **highlighted code** to your User.h file:<br>
 @end
 ```
 
-<h3>User.m</h3>
+<h2>User.m</h2>
 Add the following **highlighted code** to your User.m file:<br>      
 
 ```obj-c,7-19
