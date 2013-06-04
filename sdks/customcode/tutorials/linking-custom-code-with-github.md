@@ -21,13 +21,21 @@ For you sbt fans, sbt support is on the way!
 
 # Setting up GitHub with StackMob
 
-Once you have a repo set up, it's time to link StackMob to your GitHub repository. Linking the two means we can build and deploy your code automatically when you push new code, rather than having to manually builda dn upload a JAR file yourself.
+Once you have a repo set up, it's time to link StackMob to your GitHub repository. Linking the two means we can build and deploy your code automatically when you push new code, rather than having to manually build and upload a JAR file yourself.
 
 First, go to the <a href="https://dashboard.stackmob.com/module/customcode/view" target="_blank">Custom Code GitHub</a> page and click on "Link StackMob with GitHub".
 
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-link-with-github-1.png" alt=""/></p>
+
 A StackMob prompt will appear asking if you want to link StackMob with GitHub.  Accept the StackMob prompt's confirmation and you'll be redirect to GitHub site, where GitHub will ask permissions on its behalf.  Confirm there as well.
 
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-authorize-with-github.png" alt=""/></p>
+
 Upon successfully authenticating, you'll be shown your GitHub details:  your organization and your repositories.  Your organization is likely just your username.  Your repositories are the projects you've created on GitHub. Select your organization and the repo you created for your custom code and hit "Save".
+
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-link-with-github-2.png" alt=""/></p>
+
+
 
 Your StackMob account is now linked to GitHub!
 
@@ -37,10 +45,14 @@ As you continue to develop and commit your code to GitHub, you can either manual
 
 To manually refresh your site after a fresh commit to GitHub, go to the <a href="https://dashboard.stackmob.com/module/customcode/view" target="_blank">Custom Code GitHub</a> page and click on "Deploy Latest to Development". That's it!
 
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-deploy-latest.png" alt=""/></p>
+
 
 Upon clicking, StackMob fetches your files from GitHub.  It takes a short while to deploy, however in a few seconds you'll be able to start using your updated API methods.
 
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-deploy-history.png" alt=""/></p>
 
-To make things even easier, you can set your application to automatically update the development site anytime time code is pushed to the master branch of the connected repo. To do this, copy the token listed under "Enable Automatic Updating From Github" on the <a href="https://dashboard.stackmob.com/module/customcode/view" target="_blank">Custom Code GitHub</a> page.
 
-On the GitHub site, navigate to the front page of the repo you've connected to your app. Click on "Admin" to the right of the repo name and then "Service Hooks" on the Repository Administration page. Select "StackMob" and enter your token in the "Token" field and check "Active", then update the settings. Now every time you push to the repo, your development app will automatically be updated to serve the latest files.
+To make things even easier, you can set your application to automatically update the development site anytime time code is pushed to the master branch of the connected repo. Just click the "Enable [Service Hook]" button to do so!
+
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-enable-service-hook.png" alt=""/></p>
