@@ -1,7 +1,7 @@
 Developer Guide
 ==========================================
 
-To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to all.  You can always find <a href="https://github.com/stackmob/stackmob-customcode-example" rel="nofollow">Scala and Clojure Custom Code examples</a> in our GitHub collection.  Plenty of working Java examples are available at <a href="https://github.com/stackmob/stackmob-customcode-java-examples">https://github.com/stackmob/stackmob-customcode-java-examples</a>.
+To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to each supported language of Scala and Clojure as well.  You can always find <a href="https://github.com/stackmob/stackmob-customcode-example" rel="nofollow">Scala and Clojure Custom Code examples</a> in our GitHub collection.  Plenty of working Java examples are available at <a href="https://github.com/stackmob/stackmob-customcode-java-examples">https://github.com/stackmob/stackmob-customcode-java-examples</a>.
 
 # Introduction
 
@@ -132,6 +132,17 @@ public class EntryPointExtender extends JarEntryObject {
 }
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/core/customcode/CustomCodeMethod.html" target="_blank">CustomCodeMethod</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 # Datastore
 
 Custom Code can access your datastore via the Custom Code SDK (included in your project via Maven's `pom.xml` automatically).
@@ -141,6 +152,17 @@ Custom Code can access your datastore via the Custom Code SDK (included in your 
 </p>
 
 You'll be accessing the datastore via `DataService`.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>Examples</strong>
+      <ul>
+        <li>There are several <a href="https://github.com/stackmob/stackmob-customcode-java-examples/tree/master/src/main/java/com/stackmob/example/CRUD" target="_blank" rel="nofollow">fully working Custom Code Datastore examples</a> available.</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Create
 
@@ -164,6 +186,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 	} catch (DatastoreException dse) {}
 }
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#createObject(java.lang.String, com.stackmob.sdkapi.SMObject)" target="_blank">DataService#createObject</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/CreateObject.java" target="_blank">Create Object Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Read
 
@@ -192,6 +231,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 }		
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List)" target="_blank">DataService#readObjects</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/ReadObject.java" target="_blank">Read Object Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Update
 
 Let's update an object.
@@ -217,6 +273,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 }
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#updateObject(java.lang.String, com.stackmob.sdkapi.SMValue, java.util.List, java.util.List)" target="_blank">DataService#updateObject</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/UpdateObject.java" target="_blank">Update Object Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Delete
 
 Let's delete an object.
@@ -237,9 +310,22 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 }
 ```
 
-<p class="alert alert-info">
-	There are plenty of <a href="https://github.com/stackmob/stackmob-customcode-java-examples/tree/master/src/main/java/com/stackmob/example/CRUD" target="_blank" rel="nofollow">fully working Custom Code Datastore examples</a> available.  You can fork the repo and link it to your StackMob account.
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#deleteObject(java.lang.String, com.stackmob.sdkapi.SMValue)" target="_blank">DataService#deleteObject</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/DeleteObject.java" target="_blank">Delete Object Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 # Queries
@@ -316,7 +402,7 @@ Perhaps you're sending up JSON.  Let's do that with the client SDKs.
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 	initGetRequestWithMethod:@"hello_world"];
-         
+
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
   			  NSHTTPURLResponse *response, 
@@ -390,9 +476,16 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 	StackMob returns <code>request.getBody()</code> as a plain String, so you'll need to mold it into the format you want - in this case JSON.
 </p>
 
-<p class="alert alert-info">
-	Here's a full custom code class example of <a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/ReadParams.java" rel="nofollow">extracting JSON out of the request body</a>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span12">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/ReadParams.java" target="_blank">Extracting JSON out of the request body example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 ## Fetching Multiple Results
@@ -417,12 +510,31 @@ List<SMObject> readObjects(String schema,
                            throws InvalidSchemaException,
                                   DatastoreException
 ```
+
 We'll cover each of the parameters in more detail below, but here's an overview:
 
 * `schema` - the name of schema you're querying
 * `conditions` - the list of conditions which comprise the query (less than, greater than)
-* `expandDepth` - the depth to which a query should be expanded for relationships (return full objects X levels deep)
+* `expandDepth` - the depth to which a query should be expanded for relationships (return full objects X levels deep) - we'll cover this later in the Relationships section.  For now, you can assume this value can be 0.
 * `resultFilters` - the options to be used when filtering the resultset (pagination, ordering)
+
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List, int)" target="_blank">DataService#readObjects</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/ReadAllObjects.java" target="_blank">Read All Objects Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Equality
 
@@ -446,6 +558,18 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+      	<li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List)" target="_blank">DataService#readObjects</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMEquals.html" target="_blank">SMEquals</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Comparison
 
 You can query for greater than/less than.  Let's get all users with a `birthyear` field greater or equal to the year 2000.
@@ -468,6 +592,29 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
 }
 ```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+      	<li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List)" target="_blank">DataService#readObjects</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMGreater.html" target="_blank">SMGreater</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMGreaterOrEqual.html" target="_blank">SMGreaterOrEqual</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMLess.html" target="_blank">SMLess</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMLessOrEqual.html" target="_blank">SMLessOrEqual</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMNotEqual.html" target="_blank">SMNotEqual</a></li>
+        <li>there are more in the docs!</li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/QueryByEquality.java" target="_blank">Comparison Query Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Array Queries
 
@@ -498,6 +645,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 This works for both array and relationship fields.
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+      	<li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List)" target="_blank">DataService#readObjects</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMIn.html" target="_blank">SMIn</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMValue.html" target="_blank">SMValue</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMInt.html" target="_blank">SMInt</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMLong.html" target="_blank">SMLong</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMString.html" target="_blank">SMString</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMBoolean.html" target="_blank">SMBoolean</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## Pagination Queries
 
 Fetch a few results at a time.  Let's return items 5 through 9.
@@ -519,11 +683,27 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-
-
 <p class="alert alert-info">
 	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/PaginateResults.java" rel="nofollow">Pagination Example</a>
 </p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/ResultFilters.html" target="_blank">ResultFilters</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List)" target="_blank">DataService#readObjects</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/PaginateResults.java" target="_blank">Pagination Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Ordering
 
@@ -552,6 +732,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMOrdering.html" target="_blank">SMOrdering</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List)" target="_blank">DataService#readObjects</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/QueryByEquality.java" target="_blank">Equality Query with Ordering Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # Relationships
 
@@ -584,6 +781,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 ```
 
 No new objects are created in the datastores.  We're just linking existing objects with each other.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#addRelatedObjects(java.lang.String, com.stackmob.sdkapi.SMValue, java.lang.String, java.util.List)" target="_blank">DataService#addRelatedObjects</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/relations/RelateToParent.java" target="_blank">Add Existing Object to Parent Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 **New Objects**
 
@@ -633,7 +847,22 @@ The user should now look something like:
 }
 ```
 
-[Talk about the difference between BulkResult and List<SMObject> ]]
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#createRelatedObjects(java.lang.String, com.stackmob.sdkapi.SMValue, java.lang.String, java.util.List)" target="_blank">DataService#createRelatedObjects</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/relations/OneStepCreateRelate.java" target="_blank">Create and Add New Object to Parent Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Fetching related objects
 
@@ -678,6 +907,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List, int)" target="_blank">DataService#readObjects</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/relations/FetchExpand.java" target="_blank">Expanded Fetch Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 # Authentication
 
 The StackMob client SDKs support OAuth 2.0 login.  When they make a request to custom code, custom code is aware of the logged in user.
@@ -691,7 +937,16 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-* We currently don't have a way in custom code to generate OAuth 2.0 tokens at this time.
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/core/rest/ProcessedAPIRequest.html#getLoggedInUser()" target="_blank">ProcessedAPIRequest#getLoggedInUser</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # Geolocation
 
@@ -721,9 +976,25 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-<p class="alert alert-info">
-	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/geopoints/WriteGeo.java">Write Geo</a>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMDouble.html" target="_blank
+        	">SMDouble</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMSet.html" target="_blank">SMSet</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#updateObject(java.lang.String, com.stackmob.sdkapi.SMValue, java.util.List, java.util.List)" target="_blank">DataService#updateObject</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/geopoints/WriteGeo.java" target="_blank">Saving GeoPoints</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 
@@ -765,9 +1036,26 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 	StackMob geolocation distances are in radians.  .0025 radians is around 62.25 miles.
 </p>
 
-<p class="alert alert-info">
-	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/geopoints/ReadGeo.java">Reading Geo</a>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+      	<li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/DataService.html#readObjects(java.lang.String, java.util.List)" target="_blank">DataService#readObjects</a></li>
+      	<li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMCondition.html" target="_blank">SMCondition</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMWithin.html" target="_blank">SMWithin</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMWithinBox.html" target="_blank">SMWithinBox</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMNear.html" target="_blank">SMNear</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/geopoints/ReadGeo.java" target="_blank">Querying GeoPoints</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 # Push
@@ -799,7 +1087,22 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 You've now registered the device token so that StackMob can send messages to it.
 
-<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/SMPushRegisterDevice.java" rel="nofollow">Register Device example</a>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/PushService.html#registerTokenForUser(java.lang.String, com.stackmob.sdkapi.PushService.TokenAndType)" target="_blank">PushService#registerTokenForUser</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/SMPushRegisterDevice.java" target="_blank">Register Push Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Broadcast Messages
 
@@ -822,7 +1125,22 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/BroadcastPushNotification.java
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/PushService.html#broadcastPush(java.util.Map)" target="_blank">PushService#broadcastPush</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/BroadcastPushNotification.java" target="_blank">Broadcast Push Notification Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ## Direct Messages
 
@@ -846,8 +1164,23 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/DirectPushNotification.java
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/PushService.html#sendPushToUsers(java.util.List, java.util.Map)" target="_blank">PushService#sendPushToUsers</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/push/DirectPushNotification.java" target="_blank">Send Direct Push Notifications to Users Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 # Logging
@@ -867,9 +1200,16 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-<p class="alert alert-info">
-	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/Logging.java" rel="nofollow">A full example of writing logs.</a>
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/Logging.java" target="_blank">Logging Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # External HTTP Calls
 
@@ -906,9 +1246,26 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-<p class="alert alert-info">
-	Here's a basic <a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/HttpRequest.java" rel="nofollow">custom code class example of making an external API call</a>.
-</p>
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/http/HttpService.html" target="_blank">HttpService</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/http/request/GetRequest.html" target="_blank">GetRequest</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/http/request/PostRequest.html" target="_blank">PostRequest</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/http/request/PutRequest.html" target="_blank">PutRequest</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/http/request/DeleteRequest.html" target="_blank">DeleteRequest</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/util/HttpRequest.java" target="_blank">Making an External HTTP Call</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # Custom Headers and Response
 
@@ -935,8 +1292,6 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-[See the CachingService JavaDoc](http://stackmob.github.com/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/caching/CachingService.html)
-
 A few more notes:
 
 * The above pattern works if the datastore query can be up to 1 second stale. We recommend that you cache as much as possible and query only the parts that need to be fresh.
@@ -945,6 +1300,16 @@ A few more notes:
 * `CachingService` limits the size of each key and value, and rate limits the number of `get` and `set` calls your app can make.
 * `CachingService` `get`s and `set`s are almost always faster than `DatastoreService` operations
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.com/stackmob-customcode-sdk/0.5.6/apidocs/com/stackmob/sdkapi/caching/CachingService.html" target="_blank">CachingService</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 # External Dependencies
 
