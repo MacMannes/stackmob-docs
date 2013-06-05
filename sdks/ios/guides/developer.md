@@ -9,7 +9,7 @@ In each section of this guide you may see colored boxes which are meant to highl
 
 <p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
 
-<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p> 
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
 
 <!---
 	///////////////////
@@ -18,6 +18,17 @@ In each section of this guide you may see colored boxes which are meant to highl
 -->
 
 ## Setup
+
+<!--- Download & Configure -->
+
+### Download and Configure
+
+First things first, download the SDK files and configure them into your Xcode project.
+
+Come back to this page when you're finished.
+
+<a href="https://dashboard.stackmob.com/sdks/ios/config" target="_blank">Download and Configure the iOS SDK.</a>
+
 
 <!--- INITIALIZE -->
 
@@ -52,7 +63,7 @@ From then on you can either pass your client instance around, or use `[SMClient 
 
 ### Using Core Data
 
-StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
+StackMob recommends using Core Data for data persistence. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
 
 We've created a separate guide on using StackMob with Core Data, which contains everything from Core Data basics to Coding Practices to Specifications on what is supported by the StackMob integration.
 
@@ -66,7 +77,7 @@ We've created a separate guide on using StackMob with Core Data, which contains 
 
 To use Core Data you will define an `NSManagedObjectModel` instance which points to your local object graph, a `.xcdatamodeld` file. This file defines a local representation of your database, using Entities which have attributes and relationships.
 
-Your Core Data model should replicate your StackMob schemas. The <a href="http://stackmob.github.io/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">StackMob - Core Data Support Specifications</a> page details the mappings between StackMob field types and Core Data atrribute types, ensuring proper translations to and from Core Data.
+Your Core Data model should replicate your StackMob schemas. The <a href="http://stackmob.github.io/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">StackMob - Core Data Support Specifications</a> page details the mappings between StackMob field types and Core Data attribute types, ensuring proper translations to and from Core Data.
 
 Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, declare a property called `managedObjectModel` of type `NSManagedObjectModel` and include the following method in your implementation file:
 
@@ -96,7 +107,7 @@ Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, dec
 
 ### Creating `NSManagedObject` Subclasses
 
-Creating classes for each one of your entities provides a lot of convience around constructors, accessors, validation, formatting, etc. for when you work with managed objects. We recommend you create these custom classes, which you can do by selecting an Entity in the Model Editor and going to `Editor -> Create NSManagedObject Subclass`:
+Creating classes for each one of your entities provides a lot of convenience around constructors, accessors, validation, formatting, etc. for when you work with managed objects. We recommend you create these custom classes, which you can do by selecting an Entity in the Model Editor and going to `Editor -> Create NSManagedObject Subclass`:
 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/coredata/nsmanagedobjectsubclass.png" /> 
 
@@ -115,7 +126,7 @@ Creating classes for each one of your entities provides a lot of convience aroun
 
 ### Initialize a Core Data Store
 
-A Core Data store instance gives you everything you need to work with StackMob's Core Data integration. With your `SMCoreDataStore` object you can retrieve a managed object context configured with a `SMIncrementalStore` as it’s persistent store to allow communication to StackMob from Core Data.  
+A Core Data store instance gives you everything you need to work with StackMob's Core Data integration. With your `SMCoreDataStore` object you can retrieve a managed object context configured with a `SMIncrementalStore` as its persistent store to allow communication to StackMob from Core Data.  
 
 You can create an `SMCoreDataStore` instance like so:
 
@@ -175,11 +186,13 @@ If you want to do your own context creation, use the `persistentStoreCoordinator
 
 ## Datastore
 
+The following sections include everything you need to know about creating, reading, updating and deleting objects. When you use Core Data you'll perform your write operations on your managed object context, kind of like a scratch pad, and persist the changes by performing a save operation.
+
 <!--- INSERT OBJECT -->
 
 ### Creating an Object
 
-Typically you will create an `NSManagedObject` subclass for each of your Core Data entities, giving you convience methods, accessors, etc. You might also find it valuable to define a custom init method. The easiest way to declare a new instance of an entity and fill in its values is like so:
+Typically you will create an `NSManagedObject` subclass for each of your Core Data entities, giving you convenience methods, accessors, etc. You might also find it valuable to define a custom init method. The easiest way to declare a new instance of an entity and fill in its values is like so:
 
 ```obj-c
 Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.manangedObjectContext];
@@ -189,7 +202,7 @@ Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inM
 [newTodo setTodoId:[newManagedObject assignObjectId]];
 ```
 
-The `assignObjectId` method is provided by the SDK to assign an arbitrary ID to the attribute which maps to the primary key field on StackMob. Object IDs must be assigned to a managed object before it is persisted. This keeps Core Data IDs and StackMob objects in sync. You are free to assign your own IDs if you wish, `assignObjectId` is simply a convience method which masks a random UUID generation algorithm.
+The `assignObjectId` method is provided by the SDK to assign an arbitrary ID to the attribute which maps to the primary key field on StackMob. Object IDs must be assigned to a managed object before it is persisted. This keeps Core Data IDs and StackMob objects in sync. You are free to assign your own IDs if you wish, `assignObjectId` is simply a convenience method which masks a random UUID generation algorithm.
 
 <b>Without Subclasses</b>
 
@@ -202,7 +215,7 @@ NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntit
 [newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
 ```
 
-The `primaryKeyField` method is provided by the SDK for convience to return the attribute which maps to the primary key field on StackMob. The SDK knows which attribute is the primary key field because of its format. The format is defined in the <a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#coding_practices" target="_blank">StackMob - Core Data Coding Practices</a>. 
+The `primaryKeyField` method is provided by the SDK for convenience to return the attribute which maps to the primary key field on StackMob. The SDK knows which attribute is the primary key field because of its format. The format is defined in the <a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#coding_practices" target="_blank">StackMob - Core Data Coding Practices</a>. 
 
 <p class="alert">
 The newly created object is not persisted until you <a href="#PerformingSaves">save the managed object context</a>.
@@ -317,7 +330,7 @@ NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRe
 
 ### Updating an Object
 
-After fetching an existing mananged object, update it by simply changing the object's values. The updated values are not persisted until the managed object context is saved.
+After fetching an existing managed object, update it by simply changing the object's values. The updated values are not persisted until the managed object context is saved.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -334,7 +347,7 @@ After fetching an existing mananged object, update it by simply changing the obj
 
 ### Deleting an Object
 
-Delete an object by simply calling the managed object context `deleteObject` method and passing the manage object you wish to delete. The delete will not be finalized until you sve the managed object context.
+Delete an object by simply calling the managed object context `deleteObject` method and passing the manage object you wish to delete. The delete will not be finalized until you save the managed object context.
 
 ```obj-c
 [self.manangedObjectContext deleteObject:aManagedObject];
@@ -363,7 +376,7 @@ The StackMob SDK has placed a wrapper around the familiar `save:` core data meth
 
 #### Asynchronous Saves
 
-Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked. If other events rely on the sucessful save, place them in the callbacks.
+Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked. If other events rely on the successful save, place them in the callbacks.
 
 ```obj-c
 [self.managedObjectContext saveOnSuccess:^{
@@ -373,7 +386,7 @@ Asynchronous saves are great for executing a save off the main thread, ensuring 
 }];
 ```
 
-Use the callbacks to update the UI, notifiy other dependent files, etc.
+Use the callbacks to update the UI, notify other dependent files, etc.
 
 The SDK also provides save methods that allow you to pass request options and queues to perform the callbacks on. Check out the link below.
 
@@ -447,11 +460,13 @@ If you want to make direct REST-based calls to the Datastore, check out the <a h
 
 ## Queries
 
+While you will perform fetch requests to do all reading in Core Data, predicates enable you to return a subset of a schema's objects by placing conditions on the read, for example retrieving todos from today, or friends with birthdays this week. The Core Data fetch requests implementation is built on top of the lower level query API. 
+
 <!--- Predicates -->
 
 ### Predicates
 
-In Core Data, every read begins by creating a fetch request. You can then add predicates (conditions), sort descriptiors, offsets (ranges), etc. to return a more granular subset of results. To complete the read you execute the fetch request on a managed object context.
+In Core Data, every read begins by creating a fetch request. You can then add predicates (conditions), sort descriptors, offsets (ranges), etc. to return a more granular subset of results. To complete the read you execute the fetch request on a managed object context.
 
 See the <a href="#ReadingObjects">Reading Objects</a> section for information on creating/executing a fetch request.
 
@@ -522,14 +537,14 @@ Finally, perform the query through the datastore property of your client instanc
 When you create relationships between entities in your Core Data model, they will translate directly to relationships on StackMob.  Here are the important things to note:
 
 * Core Data recommends creating inverse relationships to maintain referential integrity. This ensures that when you delete one object, any related objects are updated as well.
-* Core Data supports <a href="http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/coredata/Articles/cdRelationships.html">Delete Rules</a>. Take this into considertation if you are building cross-platform.
+* Core Data supports <a href="http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/coredata/Articles/cdRelationships.html">Delete Rules</a>. Take this into consideration if you are building cross-platform.
 * The great thing about Core Data handling relationship logic is that it will all translate from the client to StackMob, so no extra work is necessary.
 
 <!--- One To One -->
 
 ### One to One
 
-Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the singluar version of the entity it points to, like so:
+Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the singular version of the entity it points to, like so:
 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/one-to-one-guide.png" />
 
@@ -579,6 +594,10 @@ You can achieve a many to many relationship by simply creating two relationships
 
 ## User Authentication
 
+It won't be uncommon for your app to be built around the concept of having users. They'll need to sign up and login to use your service, and depending on their role may have access to certain data not available to others. Luckily for you, StackMob has you covered.
+
+Authentication with StackMob was built based on the Oauth 2.0 protocol.
+
 <!--- The User Schema -->
 
 ### The User Schema
@@ -626,7 +645,7 @@ In Core Data, you'll first create an entity which maps to your user schema on St
 
 After creating a managed object subclass for the entity, you'll change the inherited class from `NSManagedObject` to `SMUserManagedObject`. This class provides methods to properly initialize a user object by linking to the `SMClient` instance. It also provides methods to set the user's password during creation.
 
-In your entity subclass implementation file, we recommend creating a custom init method which calls the `SMUserManagedObject` `initWithEntityName:insertIntoManagedObjectContext` method. We have overriden this method to store a reference to `[SMClient defaultClient]`. This ensures that the SDK knows the primary key, etc of the user schema. Your init method might look something like:
+In your entity subclass implementation file, we recommend creating a custom init method which calls the `SMUserManagedObject` `initWithEntityName:insertIntoManagedObjectContext` method. We have overridden this method to store a reference to `[SMClient defaultClient]`. This ensures that the SDK knows the primary key, etc of the user schema. Your init method might look something like:
 
 ```obj-c
 - (id)initNewUserInContext:(NSManagedObjectContext *)context {
@@ -657,7 +676,7 @@ User *newUser = [[User alloc] initNewUserInContext:context];
 }];
 ```
 
-The above example assumes an entity `User` with attributes `username` and `age`. The `setPassword` method is provided by the `SMUserManagedObject` class to securly set a password for your user which is persisted to StackMob but never saved locally on the device. 
+The above example assumes an entity `User` with attributes `username` and `age`. The `setPassword` method is provided by the `SMUserManagedObject` class to securely set a password for your user which is persisted to StackMob but never saved locally on the device. 
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -739,7 +758,7 @@ NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 
 ### Retrieve Logged In User Info
 
-At any point in time you can send a request to StackMob to recieve a dictionary representation for the currently logged in user:
+At any point in time you can send a request to StackMob to receive a dictionary representation for the currently logged in user:
 
 ```obj-c
 [[SMClient defaultClient] getLoggedInUserOnSuccess:^(NSDictionary *result){
@@ -874,11 +893,11 @@ Developers can easily implement a reset password workflow in their application. 
 
 ### Forgot Password
 
-Developers can easily implement a forgot password workflow in their application. To do this, your user schema will need to have a field dedicated to users' email addresses, which can be the username field if your users sign in with their emails, for example. Choose the correct field which maps to emails in the **Forgot Password** section on the user schema configuration page. Once you have done this, a basic example workflow might look like the following:
+Developers can easily implement a forgot password workflow in their application. To do this, your user schema will need to have a field dedicated to users' email addresses, which can be the username field if your users sign in with their emails, for example. Choose the correct field which maps to emails in the **Forgot Password** section on the user schema configuration page. Once you have done this, a basic example work-flow might look like the following:
 
 1. Have a button on the login screen which maps to a forgot password method.
-2. When the user presses the button they are propmpted to enter their username.
-3. This should trigger the `SMClient` `sendForgotPaswordEmailForUser:onSuccess:onFailure:` method. The user wull receive an email with a temporary password.
+2. When the user presses the button they are prompted to enter their username.
+3. This should trigger the `SMClient` `sendForgotPaswordEmailForUser:onSuccess:onFailure:` method. The user will receive an email with a temporary password.
 4. When they come back to your app, they enter their username and temp password and are prompted to enter a new password.
 5. Developers complete the workflow by logging in the user with the `SMClient` `loginWithUsername:temporaryPassword:settingNewPassword:onSuccess:onFailure:` method.
 6. The logged in user's password is reset!
@@ -895,6 +914,23 @@ Developers can easily implement a forgot password workflow in their application.
   </div>
 </div>
 
+<!---
+  ///////////////////
+  ACCESS CONTROLS
+  //////////////////
+-->
+
+## Security
+
+StackMob provides the ability to lock down access to your data with Access Controls.  You can disallow access to Create, Read, Update or Delete.  With user authentication, you can even restrict permissions at a user level.
+
+Here, we set it so that only logged in users can create objects for this schema.
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/Scrumptious/dashboard-acl.png" alt=""/>
+
+If a user who was not logged in then attempted to create an object, the response would return a 401 Unauthorized error.  Because the logic is handled server-side, access controls cannot be tampered with from client side code.
+
+Find which access controls work best for your app's use case. <a href="https://developer.stackmob.com/modules/acl/docs" target="_blank">Read about all the Access Control options.</a> 
 
 <!---
 	///////////////////
@@ -904,7 +940,7 @@ Developers can easily implement a forgot password workflow in their application.
 
 ## Geolocation
 
-StackMob provides GeoPoint field types which allow you to save objects with latitude and longitude coordinates. Once you have objects that contain geo location data, you can query for a subset of those objects near a particular coordinate pair, within a specific radius, or even within a box formed from coordinates. This makes building apps that show all restaurants around a user's current location, or tracking a user's path as they jog through the city, as simple as ever.
+StackMob provides GeoPoint field types which allow you to save objects with latitude and longitude coordinates. Once you have objects that contain geolocation data, you can query for a subset of those objects near a particular coordinate pair, within a specific radius, or even within a box formed from coordinates. This makes building apps that show all restaurants around a user's current location, or tracking a user's path as they jog through the city, as simple as ever.
 
 <!--- Add schema field -->
 
@@ -916,11 +952,11 @@ In order for a schema to allow for geopoints, it must have a field with the GeoP
 
 <!--- Track Geo-Location -->
 
-### Start Tracking Geo-Location
+### Start Tracking Geolocation
 
 `SMLocationManager` is a built-in `CLLocationManager` singleton for use in retrieving `CLLocationCoordinate2D` points. 
  
-Many apps make use of geo location data; `SMLocationManager` aides in this process by eliminating the boilerplate code needed to build a `CLLocationManager` singleton.
+Many apps make use of geolocation data; `SMLocationManager` aides in this process by eliminating the boilerplate code needed to build a `CLLocationManager` singleton.
 
 <!--- SUB: Using SMLocationManager -->
 
@@ -987,7 +1023,7 @@ Out of the box, `SMLocationManager` gives you the ability to start/stop pulling 
 
 <!--- Save Geo Data -->
 
-### Saving Geo-Location Data
+### Saving Geolocation Data
 
 GeoPoints are stored in Core Data using the `Transformable` attribute type. 
 
@@ -1037,7 +1073,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
   }];
      
 } onFailure:^(NSError *error) {
-  NSLog(@"Error getting SMGeoPoint: %@", error);
+  // Error
 }];
 ```
 
@@ -1100,8 +1136,7 @@ SMPredicate *predicate = [SMPredicate predicateWhere:@"geopoint" isWithin:3.5 mi
     SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
 } onFailure:^(NSError *error) {
-
-        NSLog(@"Error: %@", error);
+        // Error
 }];
 ```
 
@@ -1109,7 +1144,7 @@ The `SMPredicate` class provides method to query based on range in miles or kilo
 
 All <code>SMPredicate</code> methods to query based on an instance of <code>SMGeoPoint</code> have an equivalent method to query based on an instance of <code>CLLocationCoordinate2D</code>.
 
-<p class="alert">Fetching from the cache using <code>SMPredicate</code> is not supported, and will return an empty array of results. Similarly, when a fetch is performed from the network (StackMob), any results are not cached.</br></br>Fetched Results Controllers that use fetch requests with conditions around geo-location is not supported. Use refresh controls instead.</p>
+<p class="alert">Fetching from the cache using <code>SMPredicate</code> is not supported, and will return an empty array of results. Similarly, when a fetch is performed from the network (StackMob), any results are not cached.</br></br>Fetched Results Controllers that use fetch requests with conditions around geolocation is not supported. Use refresh controls instead.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -1211,15 +1246,15 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
   //////////////////
 -->
 
-## Binary Data
+## File Storage
 
-Binary data works by linking StackMob to your personal Amazon S3 account. You'll then declare a Binary type field in your schema and all files, images, etc. that you save will actually be stored in your S3 library, and the value of the field will be the URL that points to that data.
+Files and images in the form binary data works by linking StackMob to your personal Amazon S3 account. You'll then declare a Binary type field in your schema and all files, images, etc. that you save will actually be stored in your S3 library, and the value of the field will be the URL that points to that data.
 
 <!--- Add schema field -->
 
 ### Add a Binary Schema Field
 
-<p class="alert">Binary field inference was introduced in iOS SDK v2.0.0+. This means that, while you still need to maunally configure the S3 module settings if you haven't already, you will not need to manually add a Binary field to your schema.</p>
+<p class="alert">Binary field inference was introduced in iOS SDK v2.0.0+. This means that, while you still need to manually configure the S3 module settings if you haven't already, you will not need to manually add a Binary field to your schema.</p>
 
 Follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-Binary-Field-to-Schemas" target="_blank">Adding a Binary Field To Schemas</a> tutorial to get the S3 module and a Binary field in your schema set up.
 
@@ -1229,7 +1264,7 @@ To save Binary data to StackMob, first create an attribute in your entity of typ
 
 Next, you will use the `SMBinaryDataConversion` class to convert instances of `NSData` into strings ready to be saved to StackMob.
 
-`SMBinaryDataConversion` offers a class method `stringForBinaryData:name:contentType:` to decode binary data into a string. This is then used to send to StackMob as the value for a field with type `Binary`. The contents of the string will be parsed and the content will be stored on S3. StackMob will then store the url as the value. A call to `refreshObject:mergeChanges:` on the managed object context will update the in-memory value to the url in the persistent store.
+`SMBinaryDataConversion` offers a class method `stringForBinaryData:name:contentType:` to decode binary data into a string. This is then used to send to StackMob as the value for a field with type `Binary`. The contents of the string will be parsed and the content will be stored on S3. StackMob will then store the URL as the value. A call to `refreshObject:mergeChanges:` on the managed object context will update the in-memory value to the URL in the persistent store.
 
 Here's an example of converting a picture stored in the app's bundle:
 
@@ -1254,7 +1289,7 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
 }];
 ```
 
-`[newManagedObject valueForKey:@"pic"]` now returns the S3 url for the binary data.
+`[newManagedObject valueForKey:@"pic"]` now returns the S3 URL for the binary data.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -1277,13 +1312,13 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
 
 When you save an object with binary data while the device is offline, the value of the attribute will contain a data representation, ready to be saved to StackMob. In order to properly read it at that point, the data must be extracted from the string and decoded.
 
-In order to check if the attribute value is a url or not, use the `stringContainsURL:` method. To convert the string value back to data, use the `dataForString:` method:
+In order to check if the attribute value is a URL or not, use the `stringContainsURL:` method. To convert the string value back to data, use the `dataForString:` method:
 
 ```obj-c
 NSString *picString = [newManagedObject valueForKey:@"pic"];
 if ([SMBinaryDataConversion stringContainsURL:picString]) {
   NSURL *urlForPic = [NSURL URLForString:picString];
-  // Set image from url
+  // Set image from URL
 } else {
   UIImage *image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
   // Set image directly
@@ -1301,7 +1336,7 @@ if ([SMBinaryDataConversion stringContainsURL:picString]) {
   </div>
 </div>
 
-### Binary Data using the Datastore API
+### File Storage using the Datastore API
 
 When saving objects using the datastore API that include binary data, you must format the value of the field correctly so that it can be parsed by Amazon. The correct value format should look like the following:
 
@@ -1328,6 +1363,8 @@ NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234
 -->
 
 ## Network Reachability
+
+The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#OfflineSync">Offline Sync</a>).
 
 <!--- SMNetworkReachability -->
 
@@ -1467,7 +1504,7 @@ Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-gu
 
 ## Social Integration
 
-StackMob provides integrations with Facebook, Twitter and Gigya to allow users to login to StackMob using pre-existing credentials. The Facebook and Twitter integration also feature interfaces to post status updates. 
+StackMob provides integrations with Facebook and Twitter to allow users to login to StackMob using preexisting credentials, as well as features interfaces to post status updates. 
 
 <!--- Facebook -->
 
@@ -1475,7 +1512,7 @@ StackMob provides integrations with Facebook, Twitter and Gigya to allow users t
 
 <!--- SUB: FB Login Workflow -->
 
-#### Implement Facebook Login Workflow
+#### Facebook Login Workflow
 
 You will need to download the Facebook SDK and follow their tutorials to get login working in your application. Once you have a Facebook session open you will direct the application in the `sessionStateChanged:state:error` Facebook method to login to StackMob using the provided Facebook access token.
 
@@ -1489,7 +1526,7 @@ Logging into StackMob using Facebook credentials requires that a StackMob user o
 
 Assuming you have opened a Facebook session and have initiated a custom method from the Facebook `sessionStateChanged:state:error` method, you would login to StackMob like so:
 
-```obj-c,3-13
+```obj-c,3-8
 [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection,NSDictionary<FBGraphUser> *user, NSError *error) {
  if (!error) {
      [[SMClient defaultClient] loginWithFacebookToken:FBSession.activeSession.accessTokenData.accessToken createUserIfNeeded:YES usernameForCreate:user.username onSuccess:^(NSDictionary *result) {
@@ -1502,6 +1539,7 @@ Assuming you have opened a Facebook session and have initiated a custom method f
      // Handle error accordingly
      NSLog(@"Error getting current Facebook user data, %@", error);
  }
+}
 }];
 ```
 
@@ -1509,7 +1547,24 @@ Assuming you have opened a Facebook session and have initiated a custom method f
 
 This login method will create a StackMob user object and link them to the provided Facebook token if one does not already exist.
 
-Alternatively, you can implement a more manual workflow using the methods listed in LINK TO CREATE A STACKMOB USER and LINK/UNLINK FB TOKEN.
+Alternatively, you can implement a more manual workflow using the methods listed in the <b>Create a User Object</b> and <b>Link/Unlink Facebook Tokens sections</b>.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Login with Facebook" target="_blank">SMClient: Login With Facebook</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Facebook" target="_blank">Integrating With Facebook Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!--- SUB: Create User -->
 
@@ -1525,6 +1580,19 @@ You can create a new StackMob user object and link a Facebook access token for f
 }];
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Create a User with Facebook" target="_blank">SMClient: Create a User With Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Link/Unlink Token -->
+
 #### Link/Unlink Facebook Tokens
 
 If you have an existing StackMob user object and you want to link that object with a Facebook token to enable future login using Facebook credentials, use the link token method:
@@ -1533,7 +1601,7 @@ If you have an existing StackMob user object and you want to link that object wi
 
 ```obj-c
 [[SMClient defaultClient] linkLoggedInUserWithFacebookToken:activeSession.aceessTokenData.accessToken onSuccess:^(NSDictionary *result) {
-  // Succssful link
+  // Successful link
 } onFailure:^(NSError *error) {
   // Error
 }];
@@ -1549,25 +1617,227 @@ You can also unlink a logged in user object from a token at any time:
 }];
 ```
 
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Link/Unlink a User From Facebook" target="_blank">SMClient: Link/Unlink a User From Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Update Status -->
+
 #### Update Facebook Status
 
+The logged in user can post a new Facebook status like so:
 
+```obj-c
+[[SMClient defaultClient] updateFacebookStatusWithMessage:@"Can't wait for the weekend!" onSuccess:^(NSDictionary *result) {
+  // Success
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Update Facebook Status" target="_blank">SMClient: Update Facebook Status</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Get User Info -->
 
 #### Get Facebook User Info
+
+Sometimes you may want to get the logged in user's Facebook info, either for UI purposes or to update the StackMob user object. You can use the `[FBRequest requestForMe]` method from the Facebook SDK. Alternatively, StackMob also provides an equivalent method:
+
+```obj-c
+[[SMClient defaultClient] getLoggedInUserFacebookInfoWithOnSuccess:^(NSDictionary *result) {
+  // Result contains dictionary of Facebook user info
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Get Facebook User Info" target="_blank">SMClient: Get Facebook User Info</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!--- Twitter -->
 
 ### Twitter
 
-#### Implement Twitter Login Workflow
+<!--- SUB: Twitter Login Workflow -->
+
+#### Twitter Login Workflow
 
 You will need to download the Twitter SDK and follow their tutorials to get login working in your application. Once you have a Twitter session open you will direct the application to login to StackMob using the provided Twitter access token.
 
 All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Twitter" target="_blank">Twitter Tutorial</a>.
 
-<!--- Gigya -->
+<!--- SUB: Login with Facebook -->
 
-### Gigya
+#### StackMob Login Using Twitter
+
+Logging into StackMob using Twitter credentials requires that a StackMob user object already exists and is linked to the user's Twitter access token and secret. Fortunately, you can do all of that with one method.
+
+Assuming you have opened a Twitter session which probably triggered a custom method, you would login to StackMob like so:
+
+```obj-c
+[[self.appDelegate client] loginWithTwitterToken:oauthToken twitterSecret:oauthTokenSecret createUserIfNeeded:YES usernameForCreate:@"Joe Schmoe" onSuccess:^(NSDictionary *result) {
+  // Successful Login
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+This login method will create a StackMob user object and link them to the provided Twitter tokens if one does not already exist.
+
+Alternatively, you can implement a more manual workflow using the methods listed in the <b>Create a User Object</b> and <b>Link/Unlink Twitter Tokens sections</b>.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Login With Twitter" target="_blank">SMClient: Login With Twitter</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Twitter" target="_blank">Integrating With Twitter Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Create User -->
+
+#### Create a User Object
+
+You can create a new StackMob user object and link a Twitter access token and secret for future login using Twitter credentials:
+
+```obj-c
+[[SMClient defaultClient] createUserWithTwitterToken:oauthToken twitterSecret:oauthTokenSecret onSuccess:^(NSDictionary *result) {
+  // New user created
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Create a User With Twitter" target="_blank">SMClient: Create a User With Twitter</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Link/Unlink -->
+
+#### Link/Unlink Twitter Tokens
+
+If you have an existing StackMob user object and you want to link that object with a Twitter tokens to enable future login using Twitter credentials, use the link token method:
+
+<p class="alert">The user must be logged in for the link to work.</p>
+
+```obj-c
+[[SMClient defaultClient] linkLoggedInUserWithTwitterToken:oauthToken twitterSecret:oauthTokenSecret onSuccess:^(NSDictionary *result) {
+  // Successful link
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+You can also unlink a logged in user object from a token at any time:
+
+```obj-c
+[[SMClient defaultClient] unlinkLoggedInUserFromTwitterOnSuccess:^{
+  // Successful unlink
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Link/Unlink a User From Twitter" target="_blank">SMClient: Link/Unlink a User From Twitter</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Update Status -->
+
+#### Update Twitter Status
+
+The logged in user can post a new Twitter status like so:
+
+```obj-c
+[[SMClient defaultClient] updateTwitterStatusWithMessage:@"Can't wait for the weekend!" onSuccess:^(NSDictionary *result) {
+  // Success
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Update Twitter Status" target="_blank">SMClient: Update Twitter Status</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Get User Info -->
+
+#### Get Twitter User Info
+
+Sometimes you may want to get the logged in user's Twitter info, either for UI purposes or to update the StackMob user object:
+
+```obj-c
+[[SMClient defaultClient] getLoggedInUserTwitterInfoWithOnSuccess:^(NSDictionary *result) {
+  // Result contains dictionary of Facebook user info
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Get Twitter User Info" target="_blank">SMClient: Get Twitter User Info</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!---
   ///////////////////
@@ -1577,15 +1847,167 @@ All the implementation details on Twitter's end can be found in our <a href="htt
 
 ## Custom Code
 
+With the Custom Code module, StackMob lets you write code that runs and executes on the server. Sending batch push messages? Running some jobs? Write it in Custom Code and call it from the SDK or anything that can hit a REST API. You can define custom JSON responses so that your server can also notify the client of the result.
+
+<!--- Write Custom Code -->
+
 ### Write Custom Code
 
-LINK TO CUSTOM CODE DOCS
+The first step to performing custom code requests from the client is... writing and uploading them to the server!
+
+Head to the <a href="https://developer.stackmob.com/customcode-sdk/developer-guide" target="_blank">Custom Code Developer Guide</a> to get started with writing your server side logic and getting up uploaded to StackMob.
+
+<!--- Perform Custom Code Requests -->
 
 ### Performing Custom Code Requests
 
+Once you have your custom code methods uploaded to the StackMob server, you'll perform client side requests to execute those methods.
+
+First, you'll initialize an instance of `SMCustomCodeRequest`, passing it the name of your custom code method. Equivalent methods exist for initializing POST, GET, PUT, and DELETE requests. Let's initiate a GET request for a custom code method named `aggregate_tasks`:
+
+```obj-c
+SMCustomCodeRequest *ccRequest = [[SMCustomCodeRequest alloc] initGetRequestWithMethod:@"aggreate_tasks"];
+```
+
+In the case of a GET request, we can set query string parameters using the `addQueryStringParameterWhere:equals:` method.
+
+In the case of a POST or PUT request, we can set a request body if we need to using the `requestBody` property.
+
+When we are ready to send our request to execute our custom code method, we will use the `SMDataStore` instance provided by our client:
+
+```obj-c
+[[[SMClient defaultClient] dataStore] performCustomCodeRequest:ccRequest onSuccess:^(NSURLRequest *request, NSHTTPURLResponse *response, id responseBody) {
+  // Success
+} onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id responseBody){
+  // Failure
+}];
+```
+
+You can expect the `responseBody` parameter of the success callback to be in the form of:
+
+* Serialized JSON (NSDictionary/NSArray) if the content type of the response is application/vnd.stackmob+json or application/json, which it will be if you use the map response type in your custom code method.
+* A string (NSString) if the content type of the response is text/plain, which it will be if you use the string response type in your custom code method..
+* Raw data (NSData) for any other response content type, including if you use the byte array response type in your custom code method.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCustomCodeRequest.html" target="_blank">SMCustomCodeRequest Class Reference</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Custom Code Methods" target="_blank">SMDataStore: Performing Custom Code Methods</a>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Custom-Code-Requests" target="_blank">Custom Code Requests Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Setting Request Headers -->
+
 ### Setting Request Headers
 
+To set request headers for your custom code request, instantiate an instance of `SMRequestOptions` using the `optionsWithHeaders:` class method:
+
+```obj-c
+NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:@"valueOfHeader", @"headerName", nil];
+SMRequestOptions *options = [SMRequestOptions optionsWithHeaders:headers];
+```
+
+When you go to perform your custom code request, use the method which includes the `options:` parameter:
+
+```obj-c
+[[[SMClient defaultClient] dataStore] performCustomCodeRequest:ccRequest options:options onSuccess:^(NSURLRequest *request, NSHTTPURLResponse *response, id responseBody) {
+  // Success
+} onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id responseBody){
+  // Failure
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions Class Reference</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Custom Code Methods" target="_blank">SMDataStore: Performing Custom Code Methods</a>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Setting Content Types -->
+
 ### Setting Response Content Types
+
+The default whitelisted response content types are:
+
+* application/vnd.stackmob+json (StackMob vendor specific)
+* application/json
+* text/plain
+* application/octet-stream
+
+Set the `responseContentType` property custom code request if you expect the content type to be something other than the default, for example `image/jpeg`. If you do not do this, the response will be rejected and the failure callback will be executed.
+
+```obj-c,2
+SMCustomCodeRequest *ccRequest = [[SMCustomCodeRequest alloc] initGetRequestWithMethod:@"random_pic"];
+ccRequest.responseContentType = @"image/jpeg";
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCustomCodeRequest.html#//api/name/responseContentType" target="_blank">responseContentType property</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Retry Blocks -->
+
+### Custom Retry Blocks
+
+If you make a custom code request has hasn't been executed recently, the server needs a few seconds to activate your environment. The request will return a 503 response code with a header specifying when to retry. <b>The iOS SDK reads this header and retries the request automatically.</b> As the developer you have the option to specify a retry block, so in the case of a 503 response, the SDK will call your retry block instead of automatically retrying the request.
+
+The first step is to define an instance of `SMRequestOptions` that you'll pass to your `performCustomCodeRequest:` method. Next you'll define a service unavailable retry block:
+
+```obj-c
+SMRequestOptions *options = [SMRequestOptions options];
+
+[options addSMErrorServiceUnavailableRetryBlock:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id responseBody, SMRequestOptions *options, SMFullResponseSuccessBlock successBlock, SMFullResponseFailureBlock failureBlock) {
+  
+  // Make changes and updates to parameters
+
+  // If you choose to do so, execute the retry method:
+  [[[SMClient defaultClient] dataStore] retryCustomCodeRequest:request options:options onSuccess:successBlock onFailure:failureBlock];
+}];
+```
+
+The retry blocks takes an instance of `SMFailureRetryBlock`, defined as:
+
+```obj-c
+typedef void (^SMFailureRetryBlock)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON, SMRequestOptions *options, SMFullResponseSuccessBlock successBlock, SMFullResponseFailureBlock failureBlock);
+```
+
+As you can see, you have the option at the end of the block to retry the custom code request with the `retryCustomCodeRequest:` method.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/addSMErrorServiceUnavailableRetryBlock:" target="_blank">addSMErrorServiceUnavailableRetryBlock:</a>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#//api/name/retryCustomCodeRequest:options:onSuccess:onFailure:" target="_blank">retryCustomCodeRequest:options:onSuccess:onFailure:</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!---
   ///////////////////
@@ -1593,24 +2015,293 @@ LINK TO CUSTOM CODE DOCS
   //////////////////
 -->
 
-
 ## Push Notifications
+
+StackMob integrates with Apple's APNS service for push notifications on iOS. Before you start using push notifications, you should familiarize yourself with the client-side aspects of APNS by reading the <a href="" target="_blank">Google Cloud Messaging Framework</a>. Don't worry about the server-side aspects of push - that's what we're here for.
+
+<!--- Module -->
 
 ### The Push Module
 
-### Initalizing a Push Client
+The first step in getting push notifications working is to set up the Push Module for you StackMob application.
 
-### Registering the Device
+Work through the <a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a>, which will walk you through the steps of setting up Apple Push certs, uploading them to the Push Module settings, writing the code to register your device, and finally broadcasting to your device from the dashboard push console.
+
+When you're finished come back here to learn how to send pushes from a device.
+
+<!--- Init -->
+
+### Initializing a Push Client
+
+The StackMob push notification API is accessed through an instance of `SMPushClient`. It's best to initialize an instance of this class at the same time you initialize an `SMClient` instance:
+
+```obj-c
+SMPushClient *pushClient = [[SMPushClient alloc] initWithAPIVersion:@"0" publicKey:@"YOUR_PUBLIC_KEY" privateKey:@"YOUR_PRIVATE_KEY"];
+```
+
+<p class="alert">You supply your private key to the init methods because Push Notifications on StackMob use the Oauth 1 protocol.</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPushClient.html#task_Initialize" target="_blank">SMPushClient: Initialize</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Register -->
+
+### Registering Devices
+
+To register a device, call the `registerRemoteNotificationTypes:` method:
+
+```obj-c
+[[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
+```
+
+Next, implement the delegate methods for remote notifications. 
+
+Inside `didRegisterForRemoteNotificationsWithDeviceToken:`, register the device token on StackMob with the `registerDeviceToken:` method:
+
+```obj-c,9-14
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  
+    NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    token = [[token componentsSeparatedByString:@" "] componentsJoinedByString:@""];
+     
+    // Persist token if needed
+     
+     // Register the token with StackMob.  User is an arbitrary string to associate with the token.
+    [self.pushClient registerDeviceToken:token withUser:@"Person123" onSuccess:^{
+        // Successful registration
+    } onFailure:^(NSError *error) {
+        // Error
+    }];
+}
+ 
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    // Error in registration
+}
+```
+
+<p class="alert">The <code>withUser:</code> parameter takes an arbitrary string to associate with the token. Typically this should be a username so that in the future you can push to devices using usernames rather than token strings.</p>
+
+Once your token is registered with StackMob, you can begin sending pushes to that device!
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPushClient.html#task_Registering a Device Token" target="_blank">SMPushClient: Registering a Device Token</a></li>
+        <li><a href="http://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/IPhoneOSClientImp.html#//apple_ref/doc/uid/TP40008194-CH103-SW2" target="_blank">Apple: Registering For Remote Notifications</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Receive Notifications -->
+
+### Receiving Notifications
+
+To receive remote notifications in your app, implement the `UIApplication` `didReceiveRemoteNotification:` method:
+
+```obj-c
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+  
+  // Here's an example of displaying an alert with the push message
+  UIApplicationState state = [application applicationState];
+  if (state == UIApplicationStateActive) {
+      NSString *cancelTitle = @"Close";
+      NSString *showTitle = @"Show";
+      NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"StackMob Message"
+                                                          message:message
+                                                         delegate:self
+                                                cancelButtonTitle:cancelTitle
+                                                otherButtonTitles:showTitle, nil];
+      [alertView show];
+
+  } else {
+      //Do stuff that you would do if the application was not active
+  }
+}
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://developer.apple.com/library/mac/#documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/IPhoneOSClientImp.html#//apple_ref/doc/uid/TP40008194-CH103-SW4" target="_blank">Apple: Handling Local and Remote Notifications</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Broadcast -->
 
 ### Broadcasting Messages
 
+To broadcast a push message from a device, create your dictionary payload and pass it to the `broadcastMessage:` method.
+
+The payload can consist of the `alert`, `badge`, and `sound` keys.
+
+```obj-c
+NSDictionary *pushMessage = [NSDictionary dictionaryWithObjectsAndKeys:@"Hello, this is a push!", @"alert", [NSNumber numberWithInt:1], @"badge", nil];
+[self.pushClient broadcastMessage:pushMessage onSuccess:^{
+  // Successful push
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<p class="alert">The value of the `alert` key can only be a string. Dictionary values are currently not supported.</p>
+
+<p class="alert">The notification payload for using standalone APNS requires you encapsulate the alert, badge, and sound keys in an dictionary identified by the key `aps`, which is nested in an outer dictionary. When sending message payloads to StackMob push methods, you only need to pass the dictionary would be the value of the `aps` key.</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPushClient.html#//api/name/broadcastMessage:onSuccess:onFailure:" target="_blank">broadcastMessage:onSuccess:onFailure:</a></li>
+        <li><a href="http://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html#//apple_ref/doc/uid/TP40008194-CH100-SW1" target="_blank">Apple: The Notification Payload</a>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Send to Users -->
+
 ### Sending Messages to Users
+
+You can send push messages to other devices via the username strings that were originally linked with those tokens during registration:
+
+```obj-c
+NSDictionary *pushMessage = [NSDictionary dictionaryWithObjectsAndKeys:@"It's your turn!", @"alert", [NSNumber numberWithInt:1], @"badge", nil];
+NSArray *users = [NSArray arrayWithObjects:@"Ted", @"Mary", @"Joe", nil];
+
+[self.pushClient sendMessage:pushMessage toUsers:users onSuccess:^{
+  // Successful push
+} onFailure:^(NSError *error){
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPushClient.html#//api/name/sendMessage:toUsers:onSuccess:onFailure:" target="_blank">sendMessage:toUsers:onSuccess:onFailure:</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Send to Tokens -->
 
 ### Sending Messages to Tokens
 
+You can send push messages to other devices via the registered tokens:
+
+```obj-c
+NSDictionary *pushMessage = [NSDictionary dictionaryWithObjectsAndKeys:@"It's your turn!", @"alert", [NSNumber numberWithInt:1], @"badge", nil];
+NSArray *tokens = [NSArray arrayWithObjects:@"57383958", @"543224738", @"2857732", nil];
+
+[self.pushClient sendMessage:pushMessage toTokens:tokens onSuccess:^{
+  // Successful push
+} onFailure:^(NSError *error){
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPushClient.html#//api/name/sendMessage:toTokens:onSuccess:onFailure:" target="_blank">sendMessage:toTokens:onSuccess:onFailure:</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Get Tokens -->
+
 ### Getting Tokens For Users
 
-### Deleting Tokens
+If you need the registered tokens for a set of users, you can do so with the `getTokensForUsers` method:
+
+```obj-c
+NSArray *users = [NSArray arrayWithObjects:@"Ted", @"Mary", @"Joe", nil];
+
+[self.pushClient getTokensForUsers:users onSuccess:^(NSDictionary *results) {
+  // Results contains a dictionary of user:token pairs
+} onFailure:^(NSError *error){
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPushClient.html#//api/name/getTokensForUsers:onSuccess:onFailure:" target="_blank">getTokensForUsers:onSuccess:onFailure:</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Delete Token -->
+
+### Deleting a Token
+
+If you need to delete a token registered on the StackMob server from the client, use the `deleteToken:` method:
+
+```obj-c
+[self.pushClient deleteToken:@"12345678" onSuccess:^{
+  // Token delete success
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPushClient.html#//api/name/deleteToken:onSuccess:onFailure:" target="_blank">deleteToken:onSuccess:onFailure:</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 <!---
   ///////////////////
@@ -1620,7 +2311,7 @@ LINK TO CUSTOM CODE DOCS
 
 ## Error Handling
 
-When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occured.
+When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occurred.
 
 ### Core Data Save Failure Errors
 
@@ -1636,7 +2327,7 @@ When a Core Data save fails because objects could not be inserted/updated/delete
 Here's an example of an error returned when trying to save a user object with primary key "Jack" when a user named "Jack" already exists on the server:
 
 ```bash
-Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError error -108.)" UserInfo=0xc99d030 {
+Error Domain=SMError Code=-108 "The operation couldn't be completed. (SMError error -108.)" UserInfo=0xc99d030 {
   SMInsertedObjectFailures=(
     {
       SMFailedManagedObjectError = "Error Domain=HTTP Code=409 \"The operation couldn\U2019t be completed. 
@@ -1751,7 +2442,7 @@ Error Domain=SMError Code=-108 "The operation couldn’t be completed. (SMError 
 
 ### String Constants
 
-The following is a list of string contants used for the domains of errors and names of exceptions.
+The following is a list of string constants used for the domains of errors and names of exceptions.
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">

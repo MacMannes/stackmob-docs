@@ -142,9 +142,9 @@ ViewController.m
     SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
                                     initGetRequestWithMethod:@"hello_world"];
         
-    [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request onSuccess:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+    [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request onSuccess:^(NSURLRequest *request, NSHTTPURLResponse *response, id responseBody) {
         NSLog(@"Success: %@",JSON);
-    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON){
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id responseBody){
         NSLog(@"Failure: %@",error);
     }];
 
