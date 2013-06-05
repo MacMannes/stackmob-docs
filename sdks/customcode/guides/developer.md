@@ -3,13 +3,13 @@ Developer Guide
 
 To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to each supported language of Scala and Clojure as well.  You can always find <a href="https://github.com/stackmob/stackmob-customcode-example" rel="nofollow">Scala and Clojure Custom Code examples</a> in our GitHub collection.  Plenty of working Java examples are available at <a href="https://github.com/stackmob/stackmob-customcode-java-examples">https://github.com/stackmob/stackmob-customcode-java-examples</a>.
 
-# Introduction
+## Introduction
 
 Custom Code is code you write that runs on the StackMob server in Java, Scala, and Clojure.  You deploy it to the servers by either uploading your JAR or linking your GitHub repository with StackMob.
 
 If you wrote a method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's accessible via the REST API with your OAuth 1.0 or OAuth 2.0 keys.
 
-## Try it!
+### Try it!
 
 Interested in trying custom code without needing to write any yet?  You can either upload a ready-to-go JAR or link your app with a GitHub repository.
 
@@ -26,7 +26,7 @@ Interested in trying custom code without needing to write any yet?  You can eith
 
 Now that Custom Code is running on StackMob, let's try it.
 
-## Calling Custom Code
+### Calling Custom Code
 
 The StackMob client SDKs can call custom code via the REST API.
 
@@ -74,7 +74,7 @@ You can also use the Dashboard Console to call your API methods.
 [Dashboard Console Screenshot]
 
 
-## Declaring Custom Code
+### Declaring Custom Code
 
 GitHub is the easiest way to get started with Custom Code.  Clone, download, or fork this repo to get started: <a href="https://github.com/stackmob/stackmob-customcode-java-examples" rel="nofollow">Java Custom Code examples</a>.  The necessary `pom.xml` and files are ready to go.
 
@@ -143,7 +143,7 @@ public class EntryPointExtender extends JarEntryObject {
   </div>
 </div>
 
-# Datastore
+## Datastore
 
 Custom Code can access your datastore via the Custom Code SDK (included in your project via Maven's `pom.xml` automatically).
 
@@ -164,7 +164,7 @@ You'll be accessing the datastore via `DataService`.
   </div>
 </div>
 
-## Create
+### Create
 
 Let's create an object in the datastore from custom code.
 
@@ -204,7 +204,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
   </div>
 </div>
 
-## Read
+### Read
 
 Let's read an object from the datastore.
 
@@ -248,7 +248,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
   </div>
 </div>
 
-## Update
+### Update
 
 Let's update an object.
 
@@ -290,7 +290,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
   </div>
 </div>
 
-## Delete
+### Delete
 
 Let's delete an object.
 
@@ -328,17 +328,17 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 </div>
 
 
-# Queries
+## Queries
 
 Let's make some queries against the datastore.
 
-## Request Bodies and Parameters
+### Request Bodies and Parameters
 
 Whether making queries or performing CRUD operations, you'll likely want to take user input to do so.
 
 You can fetch parameters out of the URL for GET and DELETE requests.  You can fetch parameters out of the request body for PUT and POST requests.
 
-### Fetching Parameters
+#### Fetching Parameters
 
 Let's get the parameters out of the request URL.  To start out, let's first make a GET request from the client SDKs with a few parameters.
 
@@ -394,7 +394,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 }
 ```
 
-### Fetching JSON Body
+#### Fetching JSON Body
 
 Perhaps you're sending up JSON.  Let's do that with the client SDKs.
 
@@ -488,7 +488,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
 </div>
 
 
-## Fetching Multiple Results
+### Fetching Multiple Results
 
 At the heart of fetching objects is the `DataService`.  The `DataService` is retrieved from the request which is passed into the `execute` method.  To read several objects, you'd use the `readObjects` method.
 
@@ -536,7 +536,7 @@ We'll cover each of the parameters in more detail below, but here's an overview:
   </div>
 </div>
 
-## Equality
+### Equality
 
 Let's look for users with the birthyear "2000".
 
@@ -570,7 +570,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-## Comparison
+### Comparison
 
 You can query for greater than/less than.  Let's get all users with a `birthyear` field greater or equal to the year 2000.
 
@@ -616,7 +616,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-## Array Queries
+### Array Queries
 
 You can query for objects to see if an array or relationship contains a value.
 
@@ -662,7 +662,7 @@ This works for both array and relationship fields.
   </div>
 </div>
 
-## Pagination Queries
+### Pagination Queries
 
 Fetch a few results at a time.  Let's return items 5 through 9.
 
@@ -705,7 +705,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-## Ordering
+### Ordering
 
 You can sort results and even provide tie breakers.  We are going to primarily sort by year (oldest to most recent) and then by createddate from newest to oldest.
 
@@ -750,7 +750,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-# Relationships
+## Relationships
 
 Just as in our SDKs, you can manipulate relationships from the Custom Code SDK.
 
@@ -758,7 +758,7 @@ Let's assume we have a `user` schema, and we've related the user to the `car` sc
 
 [Screenshot of Relationship between User and Car]
 
-## Adding related objects
+### Adding related objects
 
 **Existing Objects**
 
@@ -864,7 +864,7 @@ The user should now look something like:
   </div>
 </div>
 
-## Fetching related objects
+### Fetching related objects
 
 To retrieve related objects from the datastore, you can simply call `readObjects`.  Normally the related objects are represented by the primary keys:
 
@@ -924,7 +924,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-# Authentication
+## Authentication
 
 The StackMob client SDKs support OAuth 2.0 login.  When they make a request to custom code, custom code is aware of the logged in user.
 
@@ -948,9 +948,9 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-# Geolocation
+## Geolocation
 
-## Persisting Geopoints
+### Persisting Geopoints
 
 To manipulate geolocations in Custom Code, we'll just prepare the `lat` and `long` values as `SMDouble` instances.  We'll then pass them as a `SMSet` into our CRUD operations.
 
@@ -998,7 +998,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 
 
-## Querying Geopoints
+### Querying Geopoints
 
 Let's query for several users who live within ~60 miles of us.
 
@@ -1058,9 +1058,9 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 </div>
 
 
-# Push
+## Push
 
-## Registering Devices
+### Registering Devices
 
 Let's pass a `device_token` to the method and register it.  Here, we'll register it to a particular username so that in the future, we can send push messages to StackMob usernames rather than device tokens.  That'll make things a bit easier.
 
@@ -1104,7 +1104,7 @@ You've now registered the device token so that StackMob can send messages to it.
   </div>
 </div>
 
-## Broadcast Messages
+### Broadcast Messages
 
 ```java
 public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
@@ -1142,7 +1142,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-## Direct Messages
+### Direct Messages
 
 ```java
 public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
@@ -1183,7 +1183,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 </div>
 
 
-# Logging
+## Logging
 
 You can write logs that you can view at <a href="https://dashboard.stackmob.com/data/logs">your Dashboard Logs</a>.
 
@@ -1211,7 +1211,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-# External HTTP Calls
+## External HTTP Calls
 
 You can make calls to external APIs from custom code, but for security purposes, they must go through our HTTP call maker.
 
@@ -1267,13 +1267,13 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
-# Custom Headers and Response
+## Custom Headers and Response
 
 You can send up custom headers in your custom code API calls.
 
 You can also send back custom response headers and response bodies in various formats (non-JSON).
 
-# Caching
+## Caching
 
 The SDK includes functionality in `CachingService` to store key/value data in a fast, distributed cache. If your custom code does expensive computation or long running I/O, you should consider caching the results to make your code more efficient.
 
@@ -1311,11 +1311,11 @@ A few more notes:
   </div>
 </div>
 
-# External Dependencies
+## External Dependencies
 
 If you're working with external libraries, you can include them with Maven or include the JAR.
 
-## Maven
+### Maven
 
 Maven helps you build your projects by also organizing your dependencies.  Many developers upload their JARs to Maven's central repository, allowing you, the developer, to simply define what resource you need in Maven's xml.  Maven will pull it in for you automatically to help build your project.
 
@@ -1329,12 +1329,12 @@ Maven helps you build your projects by also organizing your dependencies.  Many 
 	Learn more about Maven and how to find JARs in Maven.
 </p>
 
-## JARs
+### JARs
 
 To include JARs
 
 
-# Building Custom Code
+## Building Custom Code
 
 You have several ways of building your code.
 
@@ -1377,22 +1377,22 @@ For those not familiar with sbt, here is the <a href="https://github.com/harrah/
 
 
 
-## GitHub
+### GitHub
 
 Instructions and Dashboard
 
-## JAR
+### JAR
 
 Instructions and Dashboard
 
-# Restrictions
+## Restrictions
 
-## Security Manager
+### Security Manager
 
-## External API calls
+### External API calls
 
-# Testing Locally
+## Testing Locally
 
 how to test the custom code locally (local runner)
 
-# Best Practices
+## Best Practices

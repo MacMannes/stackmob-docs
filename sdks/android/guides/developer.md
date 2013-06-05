@@ -4,9 +4,9 @@ Developer Guide
 StackMob's Android SDK enables your application to take advantage of StackMob's REST API on Android devices.  It's your app's interface to StackMob's services.
 
 
-# Setup
+## Setup
 
-## Initializing the Android SDK
+### Initializing the Android SDK
 
 Download the Android SDK from here.  It'll guide you on how to setup your app - most importantly, you'll be initializing your code with your StackMob public key, identifying your app.  <a href="https://dashboard.stackmob.com/settings" target="_blank">Find your public key on your app dashboard</a>.
 
@@ -34,7 +34,7 @@ StackMobAndroid.init(getApplicationContext(), 0,
             "e3b5ea78-d72a-4228-9ad5-55aae7577417");
 ```
 
-## Defining a Model
+### Defining a Model
 
 Let's say you're creating a simple todo-list app, where you have an object type called `Task`.  Even before we get to the backend, datastore, and all that good stuff, let's define our class.
 
@@ -73,11 +73,11 @@ public class Task extends StackMobModel {
   </div>
 </div>
 
-# Datastore
+## Datastore
 
 Let's use the Android SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
 
-## Create a Save Object
+### Create a Save Object
 
 Save an instance of your `todo` object to the server.
 
@@ -136,7 +136,7 @@ This will assign the primary key as `1`.  If the key already exists, the call wi
   </div>
 </div>
 
-## Asynchronous Calls
+### Asynchronous Calls
 
 Most StackMob calls are done asynchronously. This means that your code on the client continues to run while your HTTP request to StackMob may still be en route to the server.  `success` and `failure` are guaranteed to only execute **after** the call has returned, so if you have some action that you want to run after a `save` call, be sure to put it in the `success` or `failure` callbacks.
 
@@ -166,7 +166,7 @@ myTask.save(new StackMobModelCallback() {
   </div>
 </div>
 
-## Read an Object
+### Read an Object
 
 To fetch your `task` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.  Below, we'll assume the primary key is "1234".
 
@@ -199,7 +199,7 @@ The above makes an HTTP REST API call to StackMob.  A JSON object is returned, a
   </div>
 </div>
 
-## Update an Object
+### Update an Object
 
 You can edit existing objects easily.  Let's update `task` object `1234` with a new field: `done` and let's mark it as `true`.
 
@@ -257,7 +257,7 @@ public class Task extends StackMobModel {
   </div>
 </div>
 
-## Delete an Object
+### Delete an Object
 
 Let's delete the object of id `1234`.
 
@@ -290,7 +290,7 @@ myTask.destroy(new StackMobModelCallback() {
 
 
 
-## Create Multiple Objects at Once
+### Create Multiple Objects at Once
 
 Wnat to create multiple objects in one call?
 
@@ -318,7 +318,7 @@ StackMob currently do not support multiple updates at once.
 
 
 
-## Arrays
+### Arrays
 
 You can save arrays.  Let's add to our `Task` class so that it has an array of notes (`strings`) you can jot down.
 
@@ -394,7 +394,7 @@ myTask.append("notes", notes, new StackMobCallback(...);
   </div>
 </div>
 
-## Deleting from an Array
+### Deleting from an Array
 
 To safely remove elements from an array, use `remove`.
 
@@ -421,7 +421,7 @@ The string elements "Check the Android..." and "I was last reading.." will be re
   </div>
 </div>
 
-# Queries
+## Queries
 
 To query objects by field parameters, paginate, sort by, and more, use the static `query(..)` method provided by `StackMobModel`.
 
@@ -436,7 +436,7 @@ To query objects by field parameters, paginate, sort by, and more, use the stati
   </div>
 </div>
 
-## Comparison
+### Comparison
 
 Let's get `Task` objects where a `priority` integer field is greater than `3`.  The success callback will produce a list of matching `Task` objects.
 
@@ -469,7 +469,7 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3), ne
 
 
 
-## Chaining
+### Chaining
 
 You can chain together query parameters.  Let's search for `Task` objects with `priority > 3` and `done=true`.
 
@@ -489,7 +489,7 @@ Task.query(Task.class,
 });
 ```
 
-## Querying for Multiple Values
+### Querying for Multiple Values
 
 Looking for matching elements in arrays?  Let's get objects that have `A` or `B` in the `notes` array.  e.g. a `Task` object with `{ notes: ['A', 'C', 'E'], ...}` would be returned because it matched on `A`.
 
@@ -520,7 +520,7 @@ Task.query(Task.class, new StackMobQuery().fieldIsIn("notes", Arrays.asList("A",
 </div>
 
 
-## Pagination
+### Pagination
 
 You can paginate over results.  Let's grab the first ten.
 
@@ -551,7 +551,7 @@ Todo.query(Todo.class, new StackMobQuery().isInRange(0, 9),
 </div>
 
 
-## Select Fields
+### Select Fields
 
 Only return back a subset of fields, reducing the payload.  Get the first ten `Task` objects but only return the `name` and `priority` fields.  (IDs will be returned also, as StackMob always returns the ID).  This will reduce the amount of data sent over the network, if bandwidth is a concern.
 
@@ -608,7 +608,7 @@ Again, the ID is returned by default no matter what fields you select.
 </div>
 
 
-## Chaining
+### Chaining
 
 ```java
 Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3).
@@ -625,7 +625,7 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3).
 });
 ```
 
-## count
+### count
 
 Need to check the number of objects there are in the datastore?  Use `count`.
 
@@ -658,11 +658,11 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3).
   </div>
 </div>
 
-# Relationships
+## Relationships
 
 You can have relationships between data objects so that they can be easily loaded together. You can do this simply by having models as child objects. Here are some examples, starting with our standard `Task` class
 
-## One to One Relationship
+### One to One Relationship
 
 ```java
 package com.example.yourapp;
@@ -693,7 +693,7 @@ public class Task extends StackMobModel {
 
 Each `Task` object now can have a link to another `Task` object. This is called a one-to-one relation. Any child of a class extending `StackMobModel`, or any collection of them, becomes a relation like this and is stored independently. Now let's take a look at a new object.
 
-## One to Many Relationship
+### One to Many Relationship
 
 Let's now relate one object to many children objects.
 
@@ -773,19 +773,19 @@ taskList.fetch(StackMobOptions.depthOf(1), new StackMobModelCallback() {
 });
 ```
 
-## Adding Related Objects
+### Adding Related Objects
 
 create a related object and associate it with the parent in one API call
 
 appendAndSave
 
-## Decoupling Related Objects
+### Decoupling Related Objects
 
 remove
 
 removeAndSave
 
-# User Authentication
+## User Authentication
 
 StackMob gives you a way to authenticate your users.  The Android SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.
 
@@ -801,7 +801,7 @@ StackMob gives you a way to authenticate your users.  The Android SDK uses OAuth
 </div>
 
 
-## Creating a User
+### Creating a User
 
 Let's create a user object.  Below, our `User` class extends `StackMobUser` (which in turn extends `StackMobModel`).  `StackMobUser` will provide us authentication methods.
 
@@ -837,7 +837,7 @@ user.save();
 
 <p class="alert"><code>username</code> is the default primary key for <code>StackMob.User</code> objects.  <code>password</code> is a special field that gets encrypted on the server.</p>
 
-## Fetching a User
+### Fetching a User
 
 Fetching a user is simple.  Like other objects, just provide the primary key.
 
@@ -846,7 +846,7 @@ User user = new User("bob");
 user.fetch(...);
 ```
 
-## Login
+### Login
 
 Let's login your user.  If you recall, we have a `User` object with a `username/password` constructor.  Let's login that user.
 
@@ -884,7 +884,7 @@ Your user will be logged in for an hour.
   </div>
 </div>
 
-## Logout
+### Logout
 
 Logging out is easy.  Simply call `logout` on your user object.
 
@@ -914,7 +914,7 @@ user.logout(new StackMobModelCallback() {
   </div>
 </div>
 
-## Checking Login Status
+### Checking Login Status
 
 Check to see if a user is logged in.  These methods are asynchronous because they also check the server in some instances.
 
@@ -954,7 +954,7 @@ if(StackMob.getStackMob().isLoggedIn()) {
 
 
 
-## Change Password
+### Change Password
 
 If your user is logged in, your user may want to change his/her password.  To do so, you can call `resetPassword` on their behalf.  They'll have to provide their current password and their new password.
 
@@ -984,7 +984,7 @@ user.resetPassword("[current password]", "[new password]", new StackMobModelCall
 </div>
 
 
-## Password Recovery
+### Password Recovery
 
 If your user has forgotten his or her password, they can request that an email with a temporary password be sent to an email address.  That email address should be a field in the user schema.  You'll need to specify which field represents the email address when defining your User schema.
 
@@ -1020,7 +1020,7 @@ StackMobUser.sendForgotPasswordEmail("bob", new StackMobModelCallback() {
 
 
 
-# Access Controls
+## Access Controls
 
 
 StackMob provides you the ability to lock down access to your data with Access Controls.  You can disallow access to Create, Read, Update or Delete.  With user authentication, you can even restrict permissions at a user level.
@@ -1044,7 +1044,7 @@ So now if you call `tasks.fetch(..)`, you'll get a 401 Unauthorized error if you
   </div>
 </div>
 
-# Files
+## Files
 
 StackMob lets you save large files to S3 as easily as saving any other data to StackMob's cloud. The files are then accessible via an S3 url. To start, make sure you've [configured your app for S3](https://developer.stackmob.com/tutorials/android/Upload-to-S3). For this example we've got a binary field named photo on the schema `task` and a corresponding field on our `Task` object of type `StackMobFile`.
 
@@ -1115,7 +1115,7 @@ myTask.destroy()
 </div>
 
 
-# Geolocation
+## Geolocation
 
 To use geopoints, you first need to create a geopoint field in your schema. Go to [Manage Schemas](), edit your schema, and create a field of type Geopoint.
 
@@ -1234,9 +1234,9 @@ Task.query(Task.class, q, new StackMobQueryCallback<Task>() {
   </div>
 </div>
 
-# Social Integration
+## Social Integration
 
-## Facebook
+### Facebook
 
 StackMob allows you to use Facebook for user authentication in place of or alongside the built-in [User Authentication](https://developer.stackmob.com/tutorials/android/User-Authentication). This means rather than having a username and password login screen, you can have a "login with facebook" button. 
 
@@ -1311,7 +1311,7 @@ Being logged in with Facebook is exactly the same as being logged in regularly, 
   </div>
 </div>
 
-## Twitter
+### Twitter
 
 StackMob allows you to use Twitter for user authentication in place of or allongside the built-in [User Authentication](https://developer.stackmob.com/tutorials/android/User-Authentication). This means rather than having a username and password login screen, you can have a "login with twitter" button. 
 
@@ -1387,7 +1387,7 @@ Being logged in with Twitter is exactly the same as being logged in regularly, w
   </div>
 </div>
 
-# Push Notifications
+## Push Notifications
 
 <h3>Introduction to Android Push Notifications</h3>
 
@@ -1566,5 +1566,5 @@ The user tokens don't change, so you would still test in the same manner.
 
 Here is some additional info on <a href="http://developer.stackmob.com/tutorials/dashboard/API-Versioning">API versioning with development and production environments</a>.
 
-# Deploy
+## Deploy
 
