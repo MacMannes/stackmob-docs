@@ -1,4 +1,7 @@
-<h1>iOS SDK Offline Sync</h1>
+iOS SDK Offline Sync
+====================
+
+## Overview
 
 The offline sync feature enables developers to build apps that can function seamlessly without network connectivity. When the network connection is restored to the device, developers can sync locally changed data with their StackMob database. With the ability to define your own merge policies, error callbacks and fetch cache policies, StackMob offers developers the ability to build powerful, feature rich apps that aren't limited by a device's network connection.
 

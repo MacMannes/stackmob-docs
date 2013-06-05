@@ -6,9 +6,9 @@ StackMob's Javascript SDK enables your application to take advantage of StackMob
 The <a href="https://developer.stackmob.com/js-sdk/api-docs">StackMob JavaScript SDK API Docs</a> are also available for reference.
 
 
-# Setup
+## Setup
 
-## Initializing the JS SDK
+### Initializing the JS SDK
 
 Setup the JS SDK by including the latest <abbr title="StackMob JavaScript SDK">JS SDK</abbr>.  Check the <a href="https://developer.stackmob.com/js-sdk">StackMob JS SDK page</a> for the latest.
 
@@ -62,7 +62,7 @@ Notice how we included `jQuery`.  You can also use `Sencha Ext` or `Zepto.js` in
 </div>
 
 
-## Defining a Model
+### Defining a Model
 
 Let's say you're creating a simple todo-list app, where you have an object type called `Todo`.  Even before we get to the backend, datastore, and all that good stuff, let's define our object types.
 
@@ -107,7 +107,7 @@ Define your `Todo` class by extending from `StackMob.Model`.  Doing this will gi
 The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a schema named `todo` on the server side. *We'll get to the server side further down this guide!*
 
 
-### set(..)
+#### set(..)
 
 If you need to modify your object locally (without saving it to the server), you can use `get` and `set`.
 
@@ -132,7 +132,7 @@ You can use the `set(..)` method to pass in or change your local object.  You ca
 ```
 
 
-### get(..)
+#### get(..)
 
 You can use `get(..)` to get a field's value on your object:
 
@@ -147,7 +147,7 @@ You can use `get(..)` to get a field's value on your object:
 <p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
 
 
-### toJSON()
+#### toJSON()
 
 You can also display the JSON representation of your model by calling the `toJSON()` method.
 
@@ -185,7 +185,7 @@ You can also display the JSON representation of your model by calling the `toJSO
   </div>
 </div>
 
-## Defining Collections
+### Defining Collections
 
 To work with an array of your objects, define your `Collection`.
 
@@ -213,12 +213,12 @@ To work with an array of your objects, define your `Collection`.
 </div>
 
 
-# Datastore
+## Datastore
 
 Let's use the JS SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
 
 
-## Create an Obect
+### Create an Obect
 
 Save an instance of your `todo` object to the server.
 
@@ -274,7 +274,7 @@ This tells StackMob to save your object in the `todo` schema.
 </div>
 
 
-## Asynchronous Calls
+### Asynchronous Calls
 
 Notice that there are `success` and `error` callback functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
 
@@ -308,7 +308,7 @@ todo.create({
 </div>
 
 
-## Read an Object
+### Read an Object
 
 To fetch your `todo` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.
 
@@ -347,7 +347,7 @@ todo.fetch({
 </div>
 
 
-## Update an Object
+### Update an Object
 
 You can edit existing objects easily.  Let's update `todo` object `1234` with a new field: `done` and let's mark it as `true`.
 
@@ -388,7 +388,7 @@ todo.save({
 </div>
 
 
-## Delete an Object
+### Delete an Object
 
 Let's now delete your object.
 
@@ -413,7 +413,7 @@ user.destroy({
 </div>
 
 
-## Arrays
+### Arrays
 
 You can save arrays.
 
@@ -452,7 +452,7 @@ If you have multiple users appending to the same array concurrently, StackMob ma
 </div>
 
 
-## Deleting from an array
+### Deleting from an array
 
 Now let's safely delete from an array.
 
@@ -475,7 +475,7 @@ As with `appendAndSave`, concurrency issues are handled appropriately.
 </div>
 
 
-# Queries
+## Queries
 
 To query objects by field parameters, paginate, sort by, and more, use `StackMob.Collection.Query` in conjunction with your `Collection`.  In our case, that'll be `Todos`.  Let's get the first 5 `high` priority todo items, ordered by `createddate`.
 
@@ -503,7 +503,7 @@ todos.query(q, {
   </div>
 </div>
 
-## Comparison
+### Comparison
 
 Query by greater than, greater than or equal too, less than...
 
@@ -531,7 +531,7 @@ todos.query(q, ...);
 </div>
 
 
-## Relationship and Arrays
+### Relationship and Arrays
 
 Query for any `todo` object with a `subtask` of `do C`.
 
@@ -565,7 +565,7 @@ todos.query(q);
 </div>
 
 
-## Pagination
+### Pagination
 
 Return "page 2" of results, assuming 5 per page.
 
@@ -590,7 +590,7 @@ todos.query(q);
 </div>
 
 
-## Select Fields
+### Select Fields
 
 Only return back a subset of fields, reducing the payload.
 
@@ -626,7 +626,7 @@ StackMob always returns the primary key, but no other fields are returned.
 </div>
 
 
-# Relationships
+## Relationships
 
 Associate two separate objects together in a relationship.
 
@@ -635,7 +635,7 @@ Let's give a `user` object several `todo` items.
 [DOC ON RELATIONSHIPS/SCREENSHOTS]
 
 
-## Adding Related Objects
+### Adding Related Objects
 
 You can create objects and add them to a related parent object in one swoop.
 
@@ -696,7 +696,7 @@ todos.fetch();
 </div>
 
 
-## Fetching Related Objects (Join)
+### Fetching Related Objects (Join)
 
 Though StackMob keeps related objects by ID, you can get the full JSON for related objects from the server easily with `fetchExpanded`.
 
@@ -754,7 +754,7 @@ q.setExpand(3);
 </div>
 
 
-### Selecting Related Fields
+#### Selecting Related Fields
 
 You can limited the fields returned for related objects.
 
@@ -797,7 +797,7 @@ todos.query(q, ...)
 </div>
 
 
-## Decoupling Related Objects
+### Decoupling Related Objects
 
 You can decouple the relationship between two objects.  Remove chore `1` from the `Marty`'s list.  The todo object `1` remains in the datastore.  Use `StackMob.SOFT_DELETE`.
 
@@ -820,7 +820,7 @@ user.deleteAndSave('chores', ['1'],
 </div>
 
 
-### Delete Related Objects
+#### Delete Related Objects
 
 But you may want to delete a relationship **and** remove the actual related object from the database.  Use `StackMob.HARD_DELETE`.
 
@@ -845,7 +845,7 @@ Todo object `1` is removed from the datastore completely.
   </div>
 </div>
 
-# User Authentication
+## User Authentication
 
 StackMob also gives you a way to authenticate your users.  The JS SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.  Authentication is made available with the `StackMob.User` model.
 
@@ -861,7 +861,7 @@ StackMob also gives you a way to authenticate your users.  The JS SDK uses OAuth
 </div>
 
 
-## Creating a User
+### Creating a User
 
 StackMob provides a `StackMob.User` class for you out of the box.  Let's create a `StackMob.User` below, saving it to the server.
 
@@ -878,7 +878,7 @@ user.create({
 <p class="alert"><code>username</code> is the default primary key for <code>StackMob.User</code> objects.  <code>password</code> is a special field that gets encrypted on the server.</p>
 
 
-## Fetching a User
+### Fetching a User
 
 Fetching a user is simple.  Like other objects, just provide the primary key.
 
@@ -892,7 +892,7 @@ user.fetch({
 ```
 
 
-## Declaring your own User Object type
+### Declaring your own User Object type
 
 Are you using a schema besides `user`?  Maybe you renamed your `username` and `password` fields during the schema creation process.  Declare a new User type.
 
@@ -921,7 +921,7 @@ c.create(); //saves to "customer"
   </div>
 </div>
 
-## Login
+### Login
 
 Log in your user.
 
@@ -965,7 +965,7 @@ Your user will be logged in for an hour.
   </div>
 </div>
 
-## Logout
+### Logout
 
 Logging out is easy.
 
@@ -975,7 +975,7 @@ user.logout();
 ```
 
 
-## Checking Login Status
+### Checking Login Status
 
 Check to see if a user is logged in.  These methods are asynchronous because they also check the server in some instances.
 
@@ -1015,7 +1015,7 @@ user.isLoggedIn({
 </div>
 
 
-## Get Logged In User
+### Get Logged In User
 
 Get the logged in user.  This is asynchronous, as it may check the server.
 
@@ -1039,7 +1039,7 @@ StackMob.getLoggedInUser({
 </div>
 
 
-## Change Password
+### Change Password
 
 ```js
 var user = new StackMob.User({ username: 'Chuck Norris', password: 'myfists' });
@@ -1063,7 +1063,7 @@ user.resetPassword('myfists', 'mynewandimprovedfists', {
   </div>
 </div>
 
-## Password Recovery
+### Password Recovery
 
 If your user has forgotten his or her password, they can request that an email with a temporary password be sent to an email address.  That email address should be a field in the user schema.  You'll need to specify which field represents the email address when defining your User schema.
 
@@ -1108,7 +1108,7 @@ As with `login`, you can set whether or not to stay logged in.
   </div>
 </div>
 
-# Facebook
+## Facebook
 
 You can log in Facebook users into your StackMob app.  After using the Facebook JavaScript SDK to login, simply pass the Facebook access token into the login method.  StackMob will log the user in.  If the user doesn't exist yet, StackMob will create an instance for you in the datastore.
 
@@ -1137,7 +1137,7 @@ FB.login(function(response) {
   </div>
 </div>
 
-# Access Controls
+## Access Controls
 
 StackMob provides you the ability to lock down access to your data with Access Controls.  You can disallow access to Create, Read, Update or Delete.  With user authentication, you can even restrict permissions at a user level.
 
@@ -1160,7 +1160,7 @@ So now if you call `todos.fetch(..)`, you'll get a 401 Unauthorized error if you
   </div>
 </div>
 
-# Files
+## Files
 
 You can upload files to StackMob.  The files are saved to your Amazon S3 account, which you link with StackMob.  This'll allow you to more easily manage your files and retain content.
 
@@ -1271,12 +1271,12 @@ Let's take an expanded example and get a file from the local filesystem with the
 </div>
 
 
-# Geolocation
+## Geolocation
 
 StackMob supports geolocations, allowing you to save and search geo data.  Geolocations are saved to a `geopoint` field type on your schema.  Add a 
 
 
-## Saving Geopoints
+### Saving Geopoints
 
 Let's save a geopoint to `place`.  We'll use the `StackMob.GeoPoint` object to help with things.  It's a helper object that will convert the geopoint data to the JSON format we need via `toJSON`.
 
@@ -1307,7 +1307,7 @@ That's it!  Check out the dashboard for your new point.
 </div>
 
 
-## Querying Geopoints
+### Querying Geopoints
 
 To query for geopoints near a particular location, you can use several `StackMob.Collection.Query` additions for geopoints.  You can use:
 
@@ -1371,7 +1371,7 @@ See more about geolocation data in the resources below.
 </div>
 
 
-# Custom Code
+## Custom Code
 
 With the Custom Code module, StackMob lets you write code that runs and executes on the server.  Sending batch push messages?  Running some jobs?  Write it in Custom Code and call it from the SDK or anything that can hit a REST API.  You can define custom JSON responses so that your server can also notify the client of the result.
 
@@ -1408,7 +1408,7 @@ Read more about <a href="/customcode-sdk/developer-guide" target="_blank">StackM
 </div>
 
 
-# Deploy
+## Deploy
 
 You're done developing your app!  You've been working in StackMob development environment and you now want to get everything to the production environment.  StackMob let's you do that easily.  Let's go through what you'll need to do.
 
@@ -1416,7 +1416,7 @@ You're done developing your app!  You've been working in StackMob development en
 2.  Deploy your API
 3.  Deploy HTML5 (only if using StackMob's HTML5 hosting module)
 
-## CORS Settings
+### CORS Settings
 
 When deploying to production, you'll need to whitelist the domains you want to receive StackMob API calls from.  By default, your development environment allows all domains.
 
@@ -1428,7 +1428,7 @@ Perhaps you've seen the cross-domain call error before:
 
 Again, the development environment is defaulted to allow any domain.  You can configure your accepted development and production domains in the <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS module settings</a>.  Most importantly, you'll need to whitelist your production domains.  The protocol and port matter.
 
-## API
+### API
 
 StackMob gives you separate development and production environments so that you can keep your test data and custom code separate from your production set.  Deploying your API is a *critical* step you need to do when deploying.  StackMob provides a simple UI to help you do this easily.
 
@@ -1437,7 +1437,7 @@ Read about how to <a href="https://developer.stackmob.com/" target="_blank">Depl
 [SCREENSHOT of DEPLOY UI]
 
 
-## HTML5
+### HTML5
 
 If you're using StackMob's HTML5 hosting service, you'll also need to <a href="https://developer.stackmob.com/" target="_blank">deploy your HTML files to production</a>.
 
