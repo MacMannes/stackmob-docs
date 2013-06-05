@@ -1,7 +1,8 @@
 StackMob and OAuth
-==================
+===================================================
 
 ## Introduction
+
 
 StackMob has two ways of authorizing API calls to our servers:  OAuth 1.0 and OAuth 2.0.  Our Dashboard and SDKs use OAuth and take care of the OAuth implementation details for you.  OAuth 1.0 and 2.0 make use of the <a href="https://dashboard.stackmob.com/settings" target="_blank">application keys</a> so that our server knows what app to direct the requests to, and in OAuth 2.0's case, who the request is coming from.
 
@@ -13,11 +14,11 @@ Let's see how OAuth 1.0 and 2.0 are used at StackMob and what they mean.
 
 If you're writing your own REST API client in another language, this document may help you decide on whether or not to use OAuth 1.0 or OAuth 2.0.
 
-<h2 class="alwaysexpanded">OAuth 1.0</h2>
+## OAuth 1.0
 
 StackMob issues your application <a href="https://dashboard.stackmob.com/settings" target="_blank">public and private key pairs</a> - one pair for your development environment and another for your production environment.  OAuth 1.0 signs requests with both the public and private key to identify that the request is a valid one for your app. Your public and private keys are unique to your app.
 
-<h3>What uses OAuth 1.0?</h3>
+### What uses OAuth 1.0?
 
 What uses OAuth 1.0 on StackMob?
 
@@ -25,7 +26,7 @@ What uses OAuth 1.0 on StackMob?
 * <a href="https://dashboard.stackmob.com/data/browser" target="_blank">Dashboard Object Browser</a>
 * iOS and Android SDKs that are configured to use Push (we expect to move this to OAuth 2.0 in the future)
 
-<h3>When is OAuth 1.0 used?</h3>
+### When is OAuth 1.0 used?
 
 For StackMob, we assume that if you know the private key, you're the developer.  Hence if you use OAuth 1.0 (meaning you have the private key), you have privileged access to the API, and your calls bypass the <a href="http://developer.stackmob.com/tutorials/security/Access-Controls:-Schema-Permissions" target="_blank">logged-in access control rules</a> you've specified for your app.  As such, OAuth 1.0/private key access is generally used when you want full access to your data, which is why the Dashboard Console and Dashboard Object Browser use OAuth 1.0.
 
@@ -37,7 +38,7 @@ You're writing a PHP admin site for your enduser and want your user to have acce
 **The private key should NEVER be given out in public.**
 
 
-<h2 class="alwaysexpanded">OAuth 2.0</h2>
+## OAuth 2.0
 
 OAuth 2.0 only uses the public key to connect to the REST API.  It doesn't need the private key StackMob issues you.
 
@@ -48,7 +49,7 @@ What uses OAuth 2.0 on StackMob?
 * iOS, Android, JS SDKs
 * <a href="https://dashboard.stackmob.com/data/console" target="_blank">Dashboard Console</a>
 
-<h3>OAuth 2.0 and (no) Private Key</h3>
+### OAuth 2.0 and (no) Private Key
 
 The iOS, Android, and JS SDKs use OAuth 2.0 to authenticate API calls.  When you initialize your SDKs, you only provide your public key.  You don't use the private key that StackMob issues you.
 
@@ -58,7 +59,7 @@ With OAuth 2.0, REST API calls will respect the <a href="http://developer.stackm
 
 * Twitter and Facebook use OAuth 2.0 in their JS SDKs.
 
-<h3>When is OAuth 2.0 used?</h3>
+### When is OAuth 2.0 used?
 
 OAuth 2.0 is preferred when you want to login users and so that you can respect Access Controls.
 
