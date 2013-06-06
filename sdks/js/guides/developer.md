@@ -1422,15 +1422,17 @@ You're done developing your app!  You've been working in StackMob development en
 
 ### CORS Settings
 
-When deploying to production, you'll need to whitelist the domains you want to receive StackMob API calls from.  By default, your development environment allows all domains.
+When deploying to production, you'll need to update your <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS settings</a> and whitelist the domains you want to receive StackMob API calls from.  By default, your development environment allows all domains.
 
 Why do you need this?  Browsers typically only allow AJAX calls to fire against the same origin/domain.  This means that if you're on `https://www.mysite.com`, browsers won't allow AJAX calls to go to `https://api.stackmob.com`.  But with CORS (cross origin resource sharing), modern browsers can.
 
 Perhaps you've seen the cross-domain call error before:
 
-[Screenshot of error]
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/cors/modules-cors-origin-error.png" alt=""/></p>
 
-Again, the development environment is defaulted to allow any domain.  You can configure your accepted development and production domains in the <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS module settings</a>.  Most importantly, you'll need to whitelist your production domains.  The protocol and port matter.
+This is a result of not adding `http://fiddle.jshell.net` to the CORS list.
+
+Again, the **development environment** is defaulted to allow any domain.  You can configure your accepted development and production domains in the <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS module settings</a>.  Most importantly, you'll need to whitelist your production domains.  The protocol and port matter.
 
 ### API
 
@@ -1438,11 +1440,26 @@ StackMob gives you separate development and production environments so that you 
 
 Read about how to <a href="https://developer.stackmob.com/" target="_blank">Deploy your API</a>
 
-[SCREENSHOT of DEPLOY UI]
+<p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
+
+After deploying, you would point your JS SDK at your production API Version - in this case `1`:
+
+```js,3
+StackMob.init({
+  publicKey: ...,
+  apiVersion: 1
+});
+```
+
+That's it!  With your server rolled out to API Version 1, you can point your JS SDK at your production server and start making calls.  Your production environment has a different database than your development one, so you'll be able to continue developing in API Version 0 without affecting your production customers.
+
+<p class="alert">
+  You can have <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">multiple production API Versions</a> so that you can deploy multiple clients pointing at older versions of your API.  StackMob's <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">Multiple API Versions module</a> makes backwards compatibility easy.
+</p>
 
 
 ### HTML5
 
 If you're using StackMob's HTML5 hosting service, you'll also need to <a href="https://developer.stackmob.com/" target="_blank">deploy your HTML files to production</a>.
 
-[Deploy HTML5]
+<p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/html5/modules-html5-deploy.png" alt=""/></a></p>
