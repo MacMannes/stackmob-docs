@@ -2298,6 +2298,44 @@ If you need to delete a token registered on the StackMob server from the client,
   </div>
 </div>
 
+<!---
+  ///////////////////
+  DEPLOY
+  //////////////////
+-->
+
+## Deploy
+
+You're done developing your app! You've been working in the StackMob development environment and you now want to get everything into the production environment. StackMob lets you easily do that with our Deploy UI. You can also choose to deploy any web pages you have uploaded on your GitHub repo using our HTML5 hosting service.
+
+
+### API
+
+StackMob gives you separate development and production environments so that you can keep your test data and custom code separate from your production set. Deploying your API is a *critical* step you need to do when deploying. StackMob provides a simple UI to help you do this.
+
+Read about how to <a href="https://developer.stackmob.com/tutorials/dashboard/Deploying-your-StackMob-App" target="_blank">Deploy your API</a>
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
+
+After deploying, you would point your iOS SDK to your production API Version - in this case `1`:
+
+```obj-c
+self.client = [[SMClient alloc] initWithAPIVersion:@"1" publicKey:@"YOUR_PUBLIC_KEY"];
+```
+
+That's it! With your server rolled out to API Version 1 and your iOS SDK pointing to your production version all requests will be funneled to your production database.  Your production environment uses a separate database than your development one, so you'll be able to continue developing in API Version 0 without affecting your customers using the production version of your app.
+
+<p class="alert">
+  With StackMob's <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">Multiple API Versions module</a> you can have multiple Productions running concurrently, ensuring backwards compatibility with apps already on the market.
+</p>
+
+
+### HTML5
+
+If you're using StackMob's HTML5 hosting service, you'll also need to <a href="https://developer.stackmob.com/tutorials/html5/Deploying-your-HTML5-App-to-Production" target="_blank">deploy your HTML files to production</a>.
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/html5/modules-html5-deploy.png" alt=""/></a></p>
+
 
 <!---
   ///////////////////
