@@ -3,7 +3,7 @@ StackMob and Core Data
 
 StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
 
-# The Basics
+## The Basics
 
 If you are new to Core Data check out our list of <a href="#CoreDataReferences">Core Data References</a>.
 
@@ -13,11 +13,11 @@ The three main pieces of Core Data are instances of:
 * <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSPersistentStoreCoordinator_Class/NSPersistentStoreCoordinator.html" target="_blank">NSPersistentStoreCoordinator</a> - Coordinates between the managed object context and the actual database, in this case StackMob.
 * <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectModel_Class/Reference/Reference.html" target="_blank">NSManagedObjectModel</a> - References a file where you defined your object graph.
 
-# Coding Practices
+## Coding Practices
 
 The following are coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data.  This allows StackMob to seamlessly translate to and from the language that Core Data speaks.
 
-## Table Mapping
+### Table Mapping
 
 This is a table of how Core Data, StackMob and regular databases map to each other:
 <table class="table table-bordered table-pretty-header">
@@ -43,23 +43,23 @@ This is a table of how Core Data, StackMob and regular databases map to each oth
 	</tr>
 </table>
 
-## Naming Conventions
+### Naming Conventions
 
-### Entity Names
+#### Entity Names
 
 Core Data entities are encouraged to start with a capital letter and will translate to all lowercase on StackMob. Example: **Superpower** entity on Core Data translates to **superpower** schema on StackMob.
 
-### Property Names
+#### Property Names
 
 Core Data attribute and relationship names are encouraged to be in camelCase, but can also be in StackMob form, all lowercase with optional underscores. Acceptable formats are therefore **yearBorn**, **year_born**, or **yearborn**. All camelCased names will be converted to and from their equivalent form on StackMob, i.e. the property yearBorn will appear as year\_born on StackMob.
 
-### StackMob Schema Primary Keys
+#### StackMob Schema Primary Keys
 
 All StackMob schemas have a primary key field that is always schemaName\_id, unless the schema is a user object, in which case it defaults to "username" but can be changed manually by setting the userPrimaryKeyField property in your `SMClient` instance.
 
-## Best Practices
+### Best Practices
 
-### Entity Primary Keys
+#### Entity Primary Keys
 
 Following the section above on primary keys, each Core Data entity must include an attribute of type string that maps to the primary key field on StackMob. Acceptable formats are _schemaName_Id or _schemaName_\_id. 
 
@@ -67,7 +67,7 @@ If the managed object subclass for the Entity inherits from `SMUserManagedObject
 
 For example: entity **Soda** should have attribute **sodaId** or **soda_id**, whereas your **User** entity primary key field defaults to **@"username"**.
 
-### Assign IDs
+#### Assign IDs
 
 When inserting new objects into your managed object context, you must assign an id value to the attribute which maps to the StackMob primary key field BEFORE you make save the context. 90% of the time you can get away with assigning ids like this:
 
@@ -91,19 +91,19 @@ The other 10% of the time is when you want to assign your own ids that aren't un
 ```
 
 
-### NSManagedObject Subclasses
+#### NSManagedObject Subclasses
 
 Creating an NSManagedObject subclass for each of your entities is highly recommended for convenience. You can add an init method to each subclass and include the ID assignment line from above - then you don't have to remember to do it each time you create a new object!
 
-### SMUserManagedObject Subclasses
+#### SMUserManagedObject Subclasses
 
 After creating an NSManagedObject subclass for an entity that maps to a user object on StackMob, change the inherited class to SMUserManagedObject.  This class will give you a method to securely set a password for the user object, without directly setting any attributes in Core Data.  It is important to make sure you initialize an SMUserManagedObject instance properly.
 
-### Create Before Relate
+#### Create Before Relate
 
 Before saving updated objects and depending on the merge policy, Core Data will grab persistent values from the server to compare against.  Problems arise when a relationship is updated with an object that hasn't been saved on the server yet.  To play it safe, try to create and save objects before relating them to one another. 
 
-### Working With NSDate Attributes
+#### Working With NSDate Attributes
 
 As of v1.4.0, NSDate attribute values are serialized to the StackMob server as integers in ms.  Declare the fields on StackMob as Integer.  By keeping consistency with the way the auto-generated **createddate** and **lastmoddate** fields are stored (ms), NSDate attributes for them will be deserialized correctly.
 
@@ -120,7 +120,7 @@ if ([date1 timeIntervalSinceDate:date2] < 1) {
 
 Feel free to try other ways of comparing dates to find the method that works best for your app's needs.
 
-# Support Specifications
+## Support Specifications
 
 As part of the integration between StackMob and Core Data, our goal is to support as much Core Data functionality as we can, including attribute types, fetch request settings and predicate formats.
 
@@ -128,9 +128,9 @@ As we continually improve our SDK this page will stay up to date with everything
 
 Features without date to indicate starting support date are assumed v1.0.0+
 
-## Data Type Maps
+### Data Type Maps
 
-#### Core Data Attribute Type -> StackMob Field Type
+##### Core Data Attribute Type -> StackMob Field Type
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -183,7 +183,7 @@ Features without date to indicate starting support date are assumed v1.0.0+
     </tr>
 </table>
 
-#### StackMob Field Type -> Core Data Attribute Type
+##### StackMob Field Type -> Core Data Attribute Type
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -220,7 +220,7 @@ Features without date to indicate starting support date are assumed v1.0.0+
     </tr>
 </table>
 
-## Fetch Requests
+### Fetch Requests
 
 Support Table is based on `NSFetchRequest` methods.  Additional support, especially in regards to managing how results are returned, is planned for future releases.
 
@@ -322,15 +322,15 @@ Support Table is based on `NSFetchRequest` methods.  Additional support, especia
 </ul>
 
 
-### Predicates
+#### Predicates
 
-#### Comparison Predicates
+##### Comparison Predicates
 
 Predicate's <b>leftExpression</b> must be of type <b>NSKeyPathExpressionType</b>.
 
 Predicate's <b>rightExpression</b> must be of type <b>NSConstantValueExpressionType</b>.
 
-#### Supported Predicate Operator Types: (based on NSPredicateOperatorType)
+##### Supported Predicate Operator Types: (based on NSPredicateOperatorType)
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -395,7 +395,7 @@ Predicate's <b>rightExpression</b> must be of type <b>NSConstantValueExpressionT
     </tr>
 </table>
 
-#### Compound Predicates
+##### Compound Predicates
 
 <p>For a tutorial on using compound predicates see the <a href="https://developer.stackmob.com/tutorials/ios/Advanced-Queries" target="_blank">Advanced Query Tutorial</a>.
 <ul>
@@ -403,13 +403,13 @@ Predicate's <b>rightExpression</b> must be of type <b>NSConstantValueExpressionT
 	<li>NSORPredicateType - Use [NSPredicate orPredicateWithSubpredicates:arrayOfPredicates] or OR in predicate format string.</li>
 </ul>
 
-## Concurrency API
+### Concurrency API
 
 The concurrency API <i>(v1.2.0+)</i> brings a new set of asynchronous and synchronous operations to Core Data.  All methods follow patterns to execute saves and fetches on background queues on private contexts.  It is recommended to use these methods to achieve optimal performance between Core Data, StackMob and the local caching system.
 
 All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">SMManagedObjectContext+Concurrency Class Reference</a>.
 
-# Core Data References
+## Core Data References
 
 * [Core Data Primer eBook](http://go.stackmob.com/learncoredata.html) - StackMob has put together an eBook based on one of our tutorial series which walks you through the full implementation of an app that uses Core Data.
 * [Getting Started With Core Data](http://www.raywenderlich.com/934/core-data-on-ios-5-tutorial-getting-started) - Ray Wenderlich does a great tutorial on the basics of Core Data.
