@@ -1,11 +1,10 @@
 Facebook with StackMob
 =====================================
 
-[iOS](http://developer.stackmobdev.com:8080/ios-sdk/login-with-facebook-tutorial)
+The StackMob Facebook module enables you to log in users into your StackMob application with Facebook.  It'll allow you to be able to create user objects from the Facebook access token you receive upon logging in.
 
-[Android](http://developer.stackmobdev.com:8080/android-sdk/integrating-with-facebook-tutorial)
+With a user associated with a Facebook access token/login, you can now login a person with Facebook.
 
-[JavaScript](http://developer.stackmobdev.com:8080/js-sdk/setting-up-facebook-tutorial)
-[JavaScript](http://developer.stackmobdev.com:8080/js-sdk/create-stackmob-user-from-facebook-tutorial)
-[JavaScript](http://developer.stackmobdev.com:8080/js-sdk/link-stackmob-user-with-facebook-tutorial)
-[JavaScript](http://developer.stackmobdev.com:8080/js-sdk/login-with-facebook-tutorial)
+The StackMob Facebook module is installed and enabled by default 
+
+<a href="https://developer.stackmob.com/sdks" target="_blank">Find your SDK developer guide</a> for more information on logging in with Facebook and other social integration.
