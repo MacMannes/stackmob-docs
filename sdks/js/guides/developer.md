@@ -218,7 +218,7 @@ To work with an array of your objects, define your `Collection`.
 Let's use the JS SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
 
 
-### Create an Obect
+### Create an Object
 
 Save an instance of your `todo` object to the server.
 
@@ -236,11 +236,15 @@ That's it!  That fires off an AJAX call to StackMob which saves your object.  St
 
 Here's how it'll look on the server:
 
-[SCREENSHOT OF DATA BROWSER]
+<p class="screenshot">
+  <a href="https://dashboard.stackmob.com/schemas/edit/todo" target="_blank"><img border="0" src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/schemas/schemas-todo-basic-fields.png" alt-""/></a>
+</p>
 
-And 
+And the data:
 
-[SCREENSHOT OF SCHEMA LIST]
+<p class="screenshot">
+  <a href="https://dashboard.stackmob.com/data/browser/todo" target="_blank"><img border="0" src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/schemas/objectbrowser-todo-basic.png" alt=""/></a>
+</p>
 
 StackMob automatically generates some fields for you too.
 
