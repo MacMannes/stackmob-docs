@@ -1,7 +1,7 @@
 StackMob and Core Data
 =====================================
 
-StackMob recommends using Core Data for data persistance. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
+StackMob recommends using Core Data for data persistence. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
 
 ## The Basics
 
@@ -105,7 +105,7 @@ Before saving updated objects and depending on the merge policy, Core Data will 
 
 #### Working With NSDate Attributes
 
-As of v1.4.0, NSDate attribute values are serialized to the StackMob server as integers in ms.  Declare the fields on StackMob as Integer.  By keeping consistency with the way the auto-generated **createddate** and **lastmoddate** fields are stored (ms), NSDate attributes for them will be deserialized correctly.
+As of v1.4.0, NSDate attribute values are serialized to the StackMob server as integers in ms.  Declare the fields on StackMob as Integer.  By keeping consistency with the way the auto-generated **createddate** and **lastmoddate** fields are stored (ms), NSDate attributes will be deserialized correctly.
 
 If you want to check if one date is equal to another, use the **timeIntervalSinceDate:** method.  Dates being equal to the second is equivalent to the time interval being less than 1.  Methods like <b>isEqualToDate:</b> track sub-second differences between dates, which are not present in the serialized integers.  Here's an example of how to check if two dates are equal:
 
@@ -313,7 +313,7 @@ Support Table is based on `NSFetchRequest` methods.  Additional support, especia
 
 <b>Additional Supported Features:</b>
 <ul>
-	<li>Fetch Entity with predicates where "relationship key == managed object or managed object ID". <b>Important:</b> Predicate supported only for comparion predicates and to-one relationships.</li>
+	<li>Fetch Entity with predicates where "relationship key == managed object or managed object ID". <b>Important:</b> Predicate supported only for comparison predicates and to-one relationships.</li>
 </ul>
 <b>Not Supported</b>
 <ul>
@@ -408,6 +408,12 @@ Predicate's <b>rightExpression</b> must be of type <b>NSConstantValueExpressionT
 The concurrency API <i>(v1.2.0+)</i> brings a new set of asynchronous and synchronous operations to Core Data.  All methods follow patterns to execute saves and fetches on background queues on private contexts.  It is recommended to use these methods to achieve optimal performance between Core Data, StackMob and the local caching system.
 
 All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">SMManagedObjectContext+Concurrency Class Reference</a>.
+
+### Miscellaneous Support
+
+#### Default Values
+
+Setting default values for attributes of string, number (integer, decimal, etc.), or boolean types will get included in the object dictionary during insert.
 
 ## Core Data References
 

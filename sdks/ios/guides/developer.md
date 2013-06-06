@@ -946,8 +946,6 @@ StackMob provides GeoPoint field types which allow you to save objects with lati
 
 ### Add a GeoPoint Schema Field
 
-<p class="alert">Geopoint field inference was introduced in iOS SDK v2.0.0+.</p>
-
 In order for a schema to allow for geopoints, it must have a field with the GeoPoint type. To manually add a geopoint field to your schema, follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-GeoPoint-Field-to-Schemas" target="_blank">Adding a GeoPoint Field To Schemas</a> tutorial to get set up.
 
 <!--- Track Geo-Location -->
@@ -1253,8 +1251,6 @@ Files and images in the form binary data works by linking StackMob to your perso
 <!--- Add schema field -->
 
 ### Add a Binary Schema Field
-
-<p class="alert">Binary field inference was introduced in iOS SDK v2.0.0+. This means that, while you still need to manually configure the S3 module settings if you haven't already, you will not need to manually add a Binary field to your schema.</p>
 
 Follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-Binary-Field-to-Schemas" target="_blank">Adding a Binary Field To Schemas</a> tutorial to get the S3 module and a Binary field in your schema set up.
 

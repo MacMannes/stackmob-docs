@@ -9,7 +9,9 @@ In this guide we will discuss how the cache works, options the developer has to 
 
 <h2>How the Cache Works</h2>
 
-The cache itself is a Core Data stack, equipped with its own private managed object context and persistent store coordinator. It uses SQLite as the persistent store. By implementing the cache as a Core Data stack, results from fetches performed on the network can be cached independently of their original request. You can then perform subsequent local fetches that are able to return subsets of the originally cached data. 
+The cache itself is a Core Data stack, equipped with its own private managed object context and persistent store coordinator. It uses SQLite as the persistent store. By implementing the cache as a Core Data stack, results from fetches performed on the network can be cached independently of their original request. You can then perform subsequent local fetches that are able to return subsets of the originally cached data.
+
+<img class="screenshot" src="https://s3.amazonaws.com/static.stackmob.com/images/ios/offlinesync/caching.png" />
 
 For example, suppose you are building a To-Do application which has the option to filter tasks by date, subject, etc. These filters would translate to conditional fetches on the same list of task objects. Rather than needing to execute a fetch on the network every time your query condition changes, you can instead grab all the tasks during application launch with one network call. From there you can perform the conditional fetches on that data locally, without needing to fetch from the network again. By reducing the amount of network calls we are drastically improving the performance of the application, as well as preserving data usage and potentially battery usage as well.
 
@@ -130,6 +132,12 @@ __block SMCoreDataStore *blockCoreDataStore = self.appDelegate.coreDataStore;
         }
 }];
 ```
+
+<h3>How It Works</h3>
+
+The syncing process starts with the list of modified object IDs that has been populated since the device was offline. Those IDs are then read from both the server and the cache and the resulting objects are then checked for conflict. If there is a conflict, a merge policy is applied to determine which representation of the object should be synced across the server and cache. Each ID thus results in a write operation, be it an update to the server, insert into the cache, etc. When the requests are all ready they are executed as one batch. If everything goes well, the sync completion callback is executed. Any errors cause error callbacks to be executed as well. Here's a diagram to demonstrate the entire process that takes place asynchronously behind the scenes:
+
+<img class="screenshot" src="https://s3.amazonaws.com/static.stackmob.com/images/ios/offlinesync/syncing.png" />
 
 <h3>Deciding on a Merge Policy</h3>
 
@@ -255,14 +263,15 @@ The structure of the dictionary passed to the callback is exactly like the error
 
 When an error occurs while syncing an object, it remains marked as "dirty" i.e. not synced. To mark an object as synced and optionally purge it from the cache as well, pass the dictionary entry to the `SMCoreDataStore markObjectAsSynced:purgeFromCache:` method. To mark multiple entries with one call use `markArrayOfObjectsAsSynced:purgeFromCache:`.
 
-<h2>Additional Utility Properties/Methods</h2>
+<h2>Other Utility Properties/Methods</h2>
 
 The following are utility properties/methods to assist in your offline sync implementation:
 
+* <b>SM_ALLOW_CACHE_RESET</b> flag - Use during development when changing your Core Data model often to allow the local Core Data stack to reset itself if needed.
 * <b><i>syncInProgress</i> (SMCoreDataStore)</b> - Boolean property which returns YES while a sync with the server is taking place.  Otherwise NO.
 * <b><i>isDirtyObject:</i> (SMCoreDataStore)</b> - Takes the managed object ID of an object and returns YES if the object has not yet been synced to the server.  Otherwise returns NO.
 * <b><i>sendLocalTimestamps</i> (SMCoreDataStore)</b> - Boolean indicating whether to send the `createddate` and `lastmoddate` keys and values in a request payload (during sync only). 
-* <b><i>stringContainsURL:</i> (SMBinaryDataConversion)</b> - Returns whether the value of a string attribute contains an s3 url or raw data.  This is for string attributes which map to a binary field on StackMob.  The value would be raw data if the object was saved offline and hasn't yet been synced with the server.
+* <b><i>stringContainsURL:</i> (SMBinaryDataConversion)</b> - Returns whether the value of a string attribute contains an S3 URL or raw data.  This is for string attributes which map to a binary field on StackMob.  The value would be raw data if the object was saved offline and hasn't yet been synced with the server.
 * <b><i>dataForString:</i> (SMBinaryDataConversion)</b> - If the value of a string attribute is raw data (because the object has not yet been synced with the server), call this method to translate it back to data.
 
 
