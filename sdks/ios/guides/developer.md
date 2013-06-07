@@ -1851,7 +1851,7 @@ With the Custom Code module, StackMob lets you write code that runs and executes
 
 The first step to performing custom code requests from the client is... writing and uploading them to the server!
 
-Head to the <a href="https://developer.stackmob.com/customcode-sdk/developer-guide" target="_blank">Custom Code Developer Guide</a> to get started with writing your server side logic and getting up uploaded to StackMob.
+Head to the <a href="https://developer.stackmob.com/tutorials/customcode/Getting-Started:-Custom-Code-SDK" target="_blank">Custom Code SDK Guide</a> to get started with writing your server side logic and getting up uploaded to StackMob.
 
 <!--- Perform Custom Code Requests -->
 
@@ -2013,7 +2013,7 @@ As you can see, you have the option at the end of the block to retry the custom 
 
 ## Push Notifications
 
-StackMob integrates with Apple's APNS service for push notifications on iOS. Before you start using push notifications, you should familiarize yourself with the client-side aspects of APNS by reading the <a href="" target="_blank">Google Cloud Messaging Framework</a>. Don't worry about the server-side aspects of push - that's what we're here for.
+StackMob integrates with Apple's APNS service for push notifications on iOS. Before you start using push notifications, you should familiarize yourself with the client-side aspects of APNS by reading the <a href="http://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction.html" target="_blank">Apple Local and Push Notification Programming Guide</a>. Don't worry about the server-side aspects of push - that's what we're here for.
 
 <!--- Module -->
 
