@@ -77,7 +77,7 @@ We've created a separate guide on using StackMob with Core Data, which contains 
 
 To use Core Data you will define an `NSManagedObjectModel` instance which points to your local object graph, a `.xcdatamodeld` file. This file defines a local representation of your database, using Entities which have attributes and relationships.
 
-Your Core Data model should replicate your StackMob schemas. The <a href="http://stackmob.github.io/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">StackMob - Core Data Support Specifications</a> page details the mappings between StackMob field types and Core Data attribute types, ensuring proper translations to and from Core Data.
+Your Core Data model should replicate your StackMob schemas. The <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#SupportSpecifications" target="_blank">Support Specifications</a> section of the Core Data Guide details the mappings between StackMob field types and Core Data attribute types, ensuring proper translations to and from Core Data.
 
 Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, declare a property called `managedObjectModel` of type `NSManagedObjectModel` and include the following method in your implementation file:
 
@@ -215,7 +215,7 @@ NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntit
 [newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
 ```
 
-The `primaryKeyField` method is provided by the SDK for convenience to return the attribute which maps to the primary key field on StackMob. The SDK knows which attribute is the primary key field because of its format. The format is defined in the <a href="http://stackmob.github.io/stackmob-ios-sdk/index.html#coding_practices" target="_blank">StackMob - Core Data Coding Practices</a>. 
+The `primaryKeyField` method is provided by the SDK for convenience to return the attribute which maps to the primary key field on StackMob. The SDK knows which attribute is the primary key field because of its format. The format is defined in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#EntityPrimaryKeys" target="_blank">Entity Primary Keys</a> section of the Core Data Guide. 
 
 <p class="alert">
 The newly created object is not persisted until you <a href="#PerformingSaves">save the managed object context</a>.
@@ -246,7 +246,7 @@ The newly created object is not persisted until you <a href="#PerformingSaves">s
 
 To read objects from a particular Entity, create and execute a Core Data fetch request using methods from the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
 
-For a list of StackMob supported `NSFetchRequest` methods, see the `Fetch Requests` section of the <a href="file://localhost/Users/mattvaz/Documents/stackmob/editAppledocs/ios-sdk/CoreDataSupportSpecs.html#fetch_request" target="_blank">Core Data Support Specs</a>.
+For a list of StackMob supported `NSFetchRequest` methods, see the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#FetchRequests" target="_bank">Fetch Requests</a> section of the Core Data Guide.
 
 <p class="alert">By default, objects are returned as faults, and attribute values are not accessed from the persistent store until specifically called upon in your code.  This ensures in-memory usage is as low as possible.</p>
 
@@ -472,7 +472,7 @@ See the <a href="#ReadingObjects">Reading Objects</a> section for information on
 
 To learn more about fetch requests in general visit Apple's documentation on <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CoreData/Articles/cdFetching.html" target="_blank">Fetching Managed Objects</a>.
 
-For a list of StackMob supported predicate types, visit the `Predicates` section of the <a href="file://localhost/Users/mattvaz/Documents/stackmob/editAppledocs/ios-sdk/CoreDataSupportSpecs.html#predicates" target="_blank">Core Data Support Specs</a>.
+For a list of StackMob supported predicate types, visit the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#Predicates" target="_blank">Predicates</a> section of the Core Data Guide.
 
 <div class="alert alert-info">
   <div class="row-fluid">
