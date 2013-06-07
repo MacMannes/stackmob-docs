@@ -660,16 +660,80 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3).
 
 ## Relationships
 
-You can have relationships between data objects so that they can be easily loaded together. You can do this simply by having models as child objects. Here are some examples, starting with our standard `Task` class
+StackMob supports relationships between objects.  For example a `user` can be associated with many `task` objects.  StackMob saves one-to-many relationships as an array of IDs rather than an array of JSON objects.  Here's a JSON representation of `john`, a user, with three related `task` objects.
 
+```js
+//user object
+{
+  username: 'john',
+  tasks: ['123', '234', '345'] //example of todo IDs
+}
+```
+
+Where `123`, `234`, `345` are example IDs of todo objects.  Saving by ID makes editing a child object much easier - you only have to edit one instance of the object, even if it's saved on various parent objects.  (Versus if we saved embedded JSON objects - then copies of the objects would be everywhere.)
+
+Defining relationships lets you fetch and save information more easily.  You can:
+
+* create related objects and attach them to a parent object in one call
+* fetch a parent object and have the full JSON objects returned as well, not just the ids.
+
+    ```js
+    {
+      username: 'john',
+      chores: [
+         { task_id: '123', action: '...', ...}, 
+         { task_id: '234', action: '...', ...}, 
+         { task_id: '345', action: '...', ...}]
+    }
+    ```
+
+<p class="alert">
+  StackMob handles relationships by reference.  StackMob does not embed JSON within JSON.  There's only one instance of it in the datastore, making your data more easily editable and flexible.
+</p>
+
+
+### Relating Objects
+
+Relationships are stored as arrays, so you can handle relationships with simple array operations.
+
+```java
+//show how you can save task ids to the array and do "save"
+
+```
+
+
+Let's get to it.
+
+
+
+
+### Creating Relationships with the Dashboard
+
+Let's give a `user` object several `todo` items.  We'll assume that we have both `todo` and `user` schemas already defined.
+
+<a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank">Edit the user schema</a> and add a Relationship to the user.
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
+
+Fill in relationship details:
 
 <p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-task-modal.png" alt=""/></a></p>
 
-
-
-
+And you'll get:
 
 <p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-task-field.png" alt=""/></a></p>
+
+**Save the schema** and that's it - you have a relationship.
+
+Let's work with relationships in the code.
+
+
+
+
+
+
+
+
 
 <p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-task-list.png" alt=""/></a></p>
 
