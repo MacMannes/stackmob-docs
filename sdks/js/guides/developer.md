@@ -1,178 +1,64 @@
 JavaScript Developer Guide
 =====================================
 
-StackMob's Javascript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
+StackMob's JavaScript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
 
 The <a href="https://developer.stackmob.com/js-sdk/api-docs">StackMob JavaScript SDK API Docs</a> are also available for reference.
 
 
 ## Setup
 
-### Initializing the JS SDK
+### Initializing the SDK
 
-Setup the JS SDK by including the latest <abbr title="StackMob JavaScript SDK">JS SDK</abbr>.  Check the <a href="https://developer.stackmob.com/js-sdk">StackMob JS SDK page</a> for the latest.
+Include <a href="https://developer.stackmob.com/sdks/js/api#a-general_setup">jQuery (or Sencha or Zepto)</a> and the latest StackMob JavaScript SDK in your page:
 
-<a href="https://dashboard.stackmob.com/settings">Find your public key on your app dashboard</a> and initialize the <abbr title="StackMob JavaScript SDK">JS SDK</abbr>.
-
-```js,4,5,11,12
-<!DOCTYPE html>
-<html>
-<head>
+```html
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-x.y.z-bundled-min.js"></script>
-
-<script type="text/javascript">
-/* <![CDATA[ */
-//Make sure that you call `StackMob.init(...)` before using other StackMob calls.  
-StackMob.init({
-  publicKey: "YOUR PUBLIC KEY", 
-  apiVersion: 0
-});
-/* ]]> */
-</script>
-
-</head>
-<body>
-
-
-<script type="text/javascript">
-  //your code goes here (or an external file if you choose)
-</script>
-
-</body>
-</html>
+<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 ```
 
-Here's an example of keys in <a href="https://dashboard.stackmob.com/settings" target="_blank">App Settings</a>.
+<a href="https://dashboard.stackmob.com/settings">Find your public key on your app dashboard</a> to initialize the <abbr title="StackMob JavaScript SDK">JavaScript SDK</abbr>.
 
-<p class="screenshot"><a href="https://dashboard.stackmob.com/settings" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/setup/app-settings-keys.png" alt="Your App Keys"></a></p>
+```js
+StackMob.init({
+  publicKey: "YOUR PUBLIC KEY",
+  apiVersion: 0
+});
+```
 
-
-Notice how we included `jQuery`.  You can also use `Sencha Ext` or `Zepto.js` instead.  Just include the Sencha or Zepto library in place of jQuery.
+API Version 0 is your built in development environment. <a href="">Learn more about API Versions here.</a>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-general_setup" target="_blank">Setup</a></li>
+        <li><a href="https://developer.stackmob.com/sdks/js/api#a-init" target="_blank">StackMob.init()</a></li>
       </ul>
     </div>
   </div>
 </div>
 
+## Objects
+
+Let's use the JS SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
 
 ### Defining a Model
 
 Let's say you're creating a simple todo-list app, where you have an object type called `Todo`.  Even before we get to the backend, datastore, and all that good stuff, let's define our object types.
 
-Define your `Todo` class by extending from `StackMob.Model`.  Doing this will give your object its save/fetch abilities (and much more).
+Define your `Todo` class by extending from `StackMob.Model`.  Doing this will give your object its save/fetch abilities and much more.
 
 <p class="alert">A <code>StackMob.Model</code> is built upon Backbone.js's <code>Model</code> and therefore has all <a href="http://documentcloud.github.com/backbone/#Model" target="_blank">methods of a Backbone.js Model</a>.</p>
 
 ```js,15-17
-<!DOCTYPE html>
-<html>
-<head>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-x.y.z-bundled-min.js"></script>
-
-<script type="text/javascript">
-/* <![CDATA[ */
-  StackMob.init({
-    publicKey: "YOUR PUBLIC KEY",
-    apiVersion: 0
-  });
-
   //Define your Todo class once on the page
   var Todo = StackMob.Model.extend({
     schemaName: 'todo'  //schemaName must be lowercase
   });
-
-/* ]]> */
-</script>
-
-</head>
-<body>
-
-
-<script type="text/javascript">
-  // Your code goes here
-</script>
-
-</body>
-</html>
 ```
 
 The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a schema named `todo` on the server side. *We'll get to the server side further down this guide!*
-
-
-#### set(..)
-
-If you need to modify your object locally (without saving it to the server), you can use `get` and `set`.
-
-You can use the `set(..)` method to pass in or change your local object.  You can call `set` multiple times.
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User();
-  user.set({ username: 'Chuck Norris', password: 'myfists'});
-  user.set({
-    string: 'abcde',
-    int: 10,
-    float: 2.5,
-    boolean: true,
-    arraystring: ['a','b','c'],
-    arrayint: [1,2,3],
-    arrayfloat: [1.5,2.5,3.5],
-    arraybool: [true, false, true]
-  });
-  user.create();
-</script>
-```
-
-
-#### get(..)
-
-You can use `get(..)` to get a field's value on your object:
-
-```javascript
-<script type="text/javascript">
-  var todo = new Todo({ action: 'Take out the garbage!' });
-  todo.get('action'); //Take out the garbage!
-
-</script>
-```
-
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
-
-
-#### toJSON()
-
-You can also display the JSON representation of your model by calling the `toJSON()` method.
-
-```javascript
-<script type="text/javascript">
-  var user = new StackMob.User({ username: 'Chuck Norris' });
-  //fetches the user "Chuck Norris" asynchronously
-  user.fetch({
-    success: function(model) {
-      //After StackMob returns "Chuck Norris", print out the result as JSON
-      console.debug(model.toJSON());
-      /*
-       {
-        username: 'Chuck Norris',
-        weaponofchoice: ...,
-        weaknesses: [...],
-        strengths: [...],
-        createddate: ...,
-        lastmoddate: ...
-       }
-       */
-    }
-  });
-</script>
-```
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -185,51 +71,17 @@ You can also display the JSON representation of your model by calling the `toJSO
   </div>
 </div>
 
-### Defining Collections
-
-To work with an array of your objects, define your `Collection`.
-
-```js,5-7
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
-
-  var Todos = StackMob.Collection.extend({
-    model: Todo
-  });
-```
-
-<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection" target="_blank">StackMob.Collection</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-
-## Datastore
-
-Let's use the JS SDK to persist objects to the datastore and retrieve them.  **You don't have to setup any databases beforehand!**
-
-
 ### Create an Object
 
 Save an instance of your `todo` object to the server.
 
 ```javascript
-<script type="text/javascript">
+  var Todo = StackMob.Model.extend({ schemaName: 'todo' });
   var todo = new Todo({ action: 'Go back and save Marty!', when: 'back to the future!', priority: 1, done: false });
   todo.create({
     success: function(model, result, options) { console.debug(model.toJSON()); },
     error: function(model, error, options) {}
   });
-</script>
 ```
 
 That's it!  That fires off an AJAX call to StackMob which saves your object.  StackMob will **automatically create your schema** for you if it doesn't already exist.  
@@ -278,39 +130,27 @@ This tells StackMob to save your object in the `todo` schema.
 </div>
 
 
-### Asynchronous Calls
+### set(..)
 
-Notice that there are `success` and `error` callback functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
+If you need to modify your object locally (without saving it to the server), you can use `get` and `set`.
 
-For example, let's try getting the JSON representation of an object after we've created it.
+You can use the `set(..)` method to pass in or change your local object.  You can call `set` multiple times.
 
-```js
-var todo = new Todo({ ... });
-todo.create(); //an AJAX call is fired to StackMob
-todo.toJSON(); //this may not work because "create" may still be waiting for AJAX request to complete!
+```javascript
+  var user = new StackMob.User();
+  user.set({ username: 'Chuck Norris', password: 'myfists'});
+  user.set({
+    string: 'abcde',
+    int: 10,
+    float: 2.5,
+    boolean: true,
+    arraystring: ['a','b','c'],
+    arrayint: [1,2,3],
+    arrayfloat: [1.5,2.5,3.5],
+    arraybool: [true, false, true]
+  });
+  user.create();
 ```
-
-Your code should be inside the success/error callbacks.
-
-```js
-var todo = new Todo({ ... });
-todo.create({
-  success: function(model, result, options) { console.debug(todo.toJSON()); },  //this is guaranteed to run after the AJAX call is complete
-  error: function(model, result, options) {}
-});
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-callbacks_and_options" target="_blank">Callbacks and Options</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
 
 ### Read an Object
 
@@ -479,6 +319,109 @@ As with `appendAndSave`, concurrency issues are handled appropriately.
 </div>
 
 
+### get(..)
+
+You can use `get(..)` to get a field's value on your object:
+
+```javascript
+  var todo = new Todo({ action: 'Take out the garbage!' });
+  todo.get('action'); //Take out the garbage!
+```
+
+<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
+
+
+### toJSON()
+
+You can also display the JSON representation of your model by calling the `toJSON()` method.
+
+```javascript
+  var user = new StackMob.User({ username: 'Chuck Norris' });
+
+  // Fetch the user "Chuck Norris" asynchronously
+  user.fetch({
+    success: function(model) {
+      // After StackMob returns "Chuck Norris", print out the result as JSON
+      console.debug(model.toJSON());
+      /*
+       {
+        username: 'Chuck Norris',
+        weaponofchoice: ...,
+        weaknesses: [...],
+        strengths: [...],
+        createddate: ...,
+        lastmoddate: ...
+       }
+       */
+    }
+  });
+```
+
+### Asynchronous Calls
+
+Notice that there are `success` and `error` callback functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
+
+For example, let's try getting the JSON representation of an object after we've created it.
+
+```js
+var todo = new Todo({ ... });
+todo.create(); //an AJAX call is fired to StackMob
+todo.toJSON(); //this may not work because "create" may still be waiting for AJAX request to complete!
+```
+
+Your code should be inside the success/error callbacks.
+
+```js
+var todo = new Todo({ ... });
+todo.create({
+  success: function(model, result, options) { console.debug(todo.toJSON()); },  //this is guaranteed to run after the AJAX call is complete
+  error: function(model, result, options) {}
+});
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/sdks/js/api#a-callbacks_and_options" target="_blank">Callbacks and Options</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+## Collections
+
+
+### Defining Collections
+
+To work with an array of your objects, define your `Collection`.
+
+```js,5-7
+  var Todo = StackMob.Model.extend({
+    schemaName: 'todo'
+  });
+
+  var Todos = StackMob.Collection.extend({
+    model: Todo
+  });
+```
+
+<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection" target="_blank">StackMob.Collection</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 ## Queries
 
 To query objects by field parameters, paginate, sort by, and more, use `StackMob.Collection.Query` in conjunction with your `Collection`.  In our case, that'll be `Todos`.  Let's get the first 5 `high` priority todo items, ordered by `createddate`.
@@ -493,7 +436,7 @@ todos.query(q, {
   success: function(collection) {
     console.debug(collection.toJSON());
   }
-});   
+});
 ```
 
 <div class="alert alert-info">
