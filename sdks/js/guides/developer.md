@@ -632,12 +632,59 @@ StackMob always returns the primary key, but no other fields are returned.
 
 ## Relationships
 
-Associate two separate objects together in a relationship.
+StackMob supports relationships between objects.  For example a `user` can be associated with many `todo` objects.  StackMob saves one-to-many relationships as an array of IDs rather than an array of JSON objects.  Here's a JSON representation of `john`, a user, with three related `todo` objects.
 
-Let's give a `user` object several `todo` items.
+```js
+//user object
+{
+  username: 'john',
+  chores: ['123', '234', '345'] //example of todo IDs
+}
+```
 
-[DOC ON RELATIONSHIPS/SCREENSHOTS]
+Where `123`, `234`, `345` are example IDs of todo objects.  Saving by ID makes editing a child object much easier - you only have to edit one instance of the object, even if it's saved on various parent objects.  (Versus if we saved embedded JSON objects - then copies of the objects would be everywhere.)
 
+Defining relationships lets you fetch and save information more easily.  You can:
+
+* create related objects and attach them to a parent object in one call
+* fetch a parent object and have the full JSON objects returned as well, not just the ids.
+
+    ```js
+    {
+      username: 'john',
+      chores: [
+         { todo_id: '123', action: '...', ...}, 
+         { todo_id: '234', action: '...', ...}, 
+         { todo_id: '345', action: '...', ...}]
+    }
+    ```
+
+Let's get to it.
+
+<p class="alert">
+  StackMob handles relationships by reference.  StackMob does not embed JSON within JSON.  There's only one instance of it in the datastore, making your data more easily editable and flexible.
+</p>
+
+
+### Creating Relationships with the Dashboard
+
+Let's give a `user` object several `todo` items.  We'll assume that we have both `todo` and `user` schemas already defined.
+
+<a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank">Edit the user schema</a> and add a Relationship to the user.
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
+
+Fill in relationship details:
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-todo-modal.png" alt=""/></a></p>
+
+And you'll get:
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-todo-field.png" alt=""/></a></p>
+
+**Save the schema** and that's it - you have a relationship.
+
+Let's work with relationships in the code.
 
 ### Adding Related Objects
 
@@ -683,10 +730,6 @@ todos.fetch();
   { todo_id: '3', action: 'Have Biff wash my car.!'},
 ]
 ```
-
-<p class="alert">
-  StackMob handles relationships by reference.  StackMob does not embed JSON within JSON.  There's only one instance of it in the datastore, making your data more easily editable and flexible.
-</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -1285,19 +1328,19 @@ StackMob supports geolocations, allowing you to save and search geo data.  Geolo
 Let's save a geopoint to `place`.  We'll use the `StackMob.GeoPoint` object to help with things.  It's a helper object that will convert the geopoint data to the JSON format we need via `toJSON`.
 
 ```js
-var Place = new StackMob.Model.extend({ schemaName: 'place' }); 
+var Place = StackMob.Model.extend({ schemaName: 'place' }); 
  
 var latlon = new StackMob.GeoPoint(37.772161,-122.406443); //lat, lon
-var stackmob_office = new Place({ location: latlon.toJSON() }); //notice "toJSON()"
+var stackmob_office = new Place({ name: 'StackMob Office', location: latlon.toJSON() }); //notice "toJSON()"
 stackmob_office.create({
-  success: function(..) {},
-  error: function(..) {}
+  success: function(model, response, options) {},
+  error: function(model, response, options) {}
 });
 ```
 
 That's it!  Check out the dashboard for your new point.
 
-[SCREENSHOT OF OBJECT BROWSER]
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/geo/modules-geo-objectbrowser-place.png" alt=""/></a></p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -1438,9 +1481,9 @@ Again, the **development environment** is defaulted to allow any domain.  You ca
 
 StackMob gives you separate development and production environments so that you can keep your test data and custom code separate from your production set.  Deploying your API is a *critical* step you need to do when deploying.  StackMob provides a simple UI to help you do this easily.
 
-Read about how to <a href="https://developer.stackmob.com/" target="_blank">Deploy your API</a>
+Read about how to <a href="https://developer.stackmob.com/deploy" target="_blank">Deploy your API</a>
 
-<p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://developer.stackmob.com/tutorials/dashboard/Deploying-your-StackMob-App" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
 
 After deploying, you would point your JS SDK at your production API Version - in this case `1`:
 
@@ -1460,6 +1503,6 @@ That's it!  With your server rolled out to API Version 1, you can point your JS 
 
 ### HTML5
 
-If you're using StackMob's HTML5 hosting service, you'll also need to <a href="https://developer.stackmob.com/" target="_blank">deploy your HTML files to production</a>.
+If you're using StackMob's HTML5 hosting service, you'll also need to <a href="https://developer.stackmob.com/tutorials/html5/Deploying-your-HTML5-App-to-Production" target="_blank">deploy your HTML files to production</a>.
 
 <p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/html5/modules-html5-deploy.png" alt=""/></a></p>

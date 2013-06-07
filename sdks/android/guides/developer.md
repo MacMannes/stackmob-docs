@@ -662,6 +662,22 @@ Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3).
 
 You can have relationships between data objects so that they can be easily loaded together. You can do this simply by having models as child objects. Here are some examples, starting with our standard `Task` class
 
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-task-modal.png" alt=""/></a></p>
+
+
+
+
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-task-field.png" alt=""/></a></p>
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-task-list.png" alt=""/></a></p>
+
+
+<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-todo.png" alt=""/></a></p>
+
+
+
 ### One to One Relationship
 
 ```java
