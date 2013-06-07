@@ -415,6 +415,8 @@ All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-
 
 Setting default values for attributes of string, number (integer, decimal, etc.), or boolean types will get included in the object dictionary during insert.
 
+<b>Check your attributes with number types</b> because they automatically default to 0 unless you deselect the `Default` checkbox.
+
 ## Core Data References
 
 * [Core Data Primer eBook](http://go.stackmob.com/learncoredata.html) - StackMob has put together an eBook based on one of our tutorial series which walks you through the full implementation of an app that uses Core Data.
