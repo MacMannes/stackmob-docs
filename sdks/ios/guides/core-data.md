@@ -55,13 +55,13 @@ Core Data attribute and relationship names are encouraged to be in camelCase, bu
 
 #### StackMob Schema Primary Keys
 
-All StackMob schemas have a primary key field that is always schemaName\_id, unless the schema is a user object, in which case it defaults to "username" but can be changed manually by setting the userPrimaryKeyField property in your `SMClient` instance.
+All StackMob schemas have a primary key field that is always **schemaName\_id**, unless the schema is a user object, in which case it defaults to "username" but can be changed manually by setting the `userPrimaryKeyField` property in your `SMClient` instance.
 
 ### Best Practices
 
 #### Entity Primary Keys
 
-Following the section above on primary keys, each Core Data entity must include an attribute of type string that maps to the primary key field on StackMob. Acceptable formats are _schemaName_Id or _schemaName_\_id. 
+Following the section above on primary keys, each Core Data entity must include an attribute of type string that maps to the primary key field on StackMob. Acceptable formats are <b><i>schemaName</i>Id</b> or <b><i>schemaName</i>_id</b>. 
 
 If the managed object subclass for the Entity inherits from `SMUserManagedObject`, meaning it is intended to define user objects, you may use either of the above formats or whatever lowercase string with optional underscores matches the primary key field on StackMob. 
 
@@ -130,7 +130,9 @@ Features without date to indicate starting support date are assumed v1.0.0+
 
 ### Data Type Maps
 
-##### Core Data Attribute Type -> StackMob Field Type
+##### Core Data Attribute Type to StackMob Field Type
+
+<br/>
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -183,7 +185,9 @@ Features without date to indicate starting support date are assumed v1.0.0+
     </tr>
 </table>
 
-##### StackMob Field Type -> Core Data Attribute Type
+##### StackMob Field Type to Core Data Attribute Type
+
+<br/>
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -324,13 +328,19 @@ Support Table is based on `NSFetchRequest` methods.  Additional support, especia
 
 #### Predicates
 
-##### Comparison Predicates
+##### <b>Comparison Predicates</b>
+
+<br/>
 
 Predicate's <b>leftExpression</b> must be of type <b>NSKeyPathExpressionType</b>.
 
 Predicate's <b>rightExpression</b> must be of type <b>NSConstantValueExpressionType</b>.
 
-##### Supported Predicate Operator Types: (based on NSPredicateOperatorType)
+<br/>
+
+##### Supported Predicate Operator Types (based on NSPredicateOperatorType):
+
+<br/>
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
@@ -395,7 +405,7 @@ Predicate's <b>rightExpression</b> must be of type <b>NSConstantValueExpressionT
     </tr>
 </table>
 
-##### Compound Predicates
+##### <b>Compound Predicates</b>
 
 <p>For a tutorial on using compound predicates see the <a href="https://developer.stackmob.com/tutorials/ios/Advanced-Queries" target="_blank">Advanced Query Tutorial</a>.
 <ul>
@@ -414,6 +424,8 @@ All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-
 #### Default Values
 
 Setting default values for attributes of string, number (integer, decimal, etc.), or boolean types will get included in the object dictionary during insert.
+
+<b>Check your attributes with number types</b> because they automatically default to 0 unless you deselect the `Default` checkbox.
 
 ## Core Data References
 
