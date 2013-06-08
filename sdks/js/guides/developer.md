@@ -1428,11 +1428,11 @@ Read about how to <a href="https://developer.stackmob.com/deploy" target="_blank
 
 <p class="screenshot"><a href="https://developer.stackmob.com/tutorials/dashboard/Deploying-your-StackMob-App" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
 
-After deploying, you would point your JS SDK at your production API Version - in this case `1`:
+After deploying, you would point your JS SDK at your production API Version - in this case `1`.  Also, use the <a href="https://dashboard.stackmob.com/settings" target="_blank"><b>production</b> public key</a> we provide you:
 
 ```js,3
 StackMob.init({
-  publicKey: ...,
+  publicKey: "YOUR PRODUCTION PUBLIC KEY",
   apiVersion: 1
 });
 ```

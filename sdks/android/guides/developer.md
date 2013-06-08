@@ -1648,3 +1648,27 @@ Here is some additional info on <a href="http://developer.stackmob.com/tutorials
 
 ## Deploy
 
+You're done developing your app!  You've been working in StackMob development environment and you now want to get everything to the production environment.  StackMob let's you do that easily.  Let's go through what you'll need to do.
+
+### API
+
+StackMob gives you separate development and production environments so that you can keep your test data and custom code separate from your production set.  Deploying your API is a *critical* step you need to do when deploying.  StackMob provides a simple UI to help you do this easily.
+
+Read about how to <a href="https://developer.stackmob.com/deploy" target="_blank">Deploy your API</a>
+
+<p class="screenshot"><a href="https://developer.stackmob.com/tutorials/dashboard/Deploying-your-StackMob-App" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
+
+After deploying, you would point your JS SDK at your production API Version - in this case `1`.  Also, use the <a href="https://dashboard.stackmob.com/settings" target="_blank"><b>production</b> public key</a> we provide you:
+
+```js,3
+StackMob.init({
+  publicKey: "YOUR PRODUCTION PUBLIC KEY",
+  apiVersion: 1
+});
+```
+
+That's it!  With your server rolled out to API Version 1, you can point your JS SDK at your production server and start making calls.  Your production environment has a different database than your development one, so you'll be able to continue developing in API Version 0 without affecting your production customers.
+
+<p class="alert">
+  You can have <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">multiple production API Versions</a> so that you can deploy multiple clients pointing at older versions of your API.  StackMob's <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">Multiple API Versions module</a> makes backwards compatibility easy.
+</p>

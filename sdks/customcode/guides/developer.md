@@ -1,84 +1,35 @@
 Developer Guide
 ==========================================
 
+## Overview
+
+Custom Code is Java, Scala, or Clojure code you write that runs on the StackMob server.  You deploy it to the servers by either uploading your JAR or linking your GitHub repository with StackMob.
+
+If you wrote a method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's accessible via the REST API and callable from the StackMob Client SDKs.
+
 To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to each supported language of Scala and Clojure as well.  You can always find <a href="https://github.com/stackmob/stackmob-customcode-example" rel="nofollow">Scala and Clojure Custom Code examples</a> in our GitHub collection.  Plenty of working Java examples are available at <a href="https://github.com/stackmob/stackmob-customcode-java-examples">https://github.com/stackmob/stackmob-customcode-java-examples</a>.
 
-## Introduction
+### Try Custom Code in less than 5 minutes
 
-Custom Code is code you write that runs on the StackMob server in Java, Scala, and Clojure.  You deploy it to the servers by either uploading your JAR or linking your GitHub repository with StackMob.
+We've provided a ready-to-upload JAR so you can try Custom Code immediately:
 
-If you wrote a method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's accessible via the REST API with your OAuth 1.0 or OAuth 2.0 keys.
+<a href="" class="btn btn-info">Download the Example JAR</a> and <a href="" target="_blank">Upload it through the Dashboard</a>
 
-### Try it!
+You can try Custom Code in the <a href="https://dashboard.stackmob.com/data/console" target="_blank">Dashboard Console</a>
 
-Interested in trying custom code without needing to write any yet?  You can either upload a ready-to-go JAR or link your app with a GitHub repository.
+[SCREENSHOT OF CONSOLE]
 
-<span class="tab startcc" title="Upload a JAR"></span>
+We'll show you how to call it from the StackMob SDKs below.
 
-1.  Download this Custom Code JAR
-2.  Upload it to StackMob
+## Setup
 
-<span class="tab"></span>
+Let's get a Custom Code project started.
 
-<span class="tab startcc" title="Link with GitHub"></span>
-
-<span class="tab"></span>
-
-Now that Custom Code is running on StackMob, let's try it.
-
-### Calling Custom Code
-
-The StackMob client SDKs can call custom code via the REST API.
-
-<span class="tab clientcall" title="iOS SDK"></span>
-```obj-c
-SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
-	initGetRequestWithMethod:@"hello_world"];
-         
-[[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
-  onSuccess:^(NSURLRequest *request, 
-  			  NSHTTPURLResponse *response, 
-  			  id JSON) {
-        NSLog(@"Success: %@",JSON);
-  } onFailure:^(NSURLRequest *request, 
-  				NSHTTPURLResponse *response, 
-  				NSError *error, 
-  				id JSON){
-        NSLog(@"Failure: %@",error);
-}];
-```
-<span class="tab"></span>
-
-<span class="tab clientcall" title="Android SDK"></span>
-```java
-StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
-    @Override public void success(String responseBody) {}
-    @Override public void failure(StackMobException e) {}
-});
-```
-<span class="tab"></span>
-
-<span class="tab clientcall" title="JS SDK"></span>
-```js
-StackMob.customcode('hello_world', {}, 'GET', {
-	success: function(result) {},
-	error: function(result) {}
-})
-```
-<span class="tab"></span>
-
-The server will execute the server side custom code and return a response with a body that you define, allowing you to easily communicate between client and server.
-
-You can also use the Dashboard Console to call your API methods.
-
-[Dashboard Console Screenshot]
-
-
-### Declaring Custom Code
-
-GitHub is the easiest way to get started with Custom Code.  Clone, download, or fork this repo to get started: <a href="https://github.com/stackmob/stackmob-customcode-java-examples" rel="nofollow">Java Custom Code examples</a>.  The necessary `pom.xml` and files are ready to go.
+<a href="" class="btn btn-info">Download the Custom Code Starter Template zip</a> and unzip it.
 
 Let's add a `hello_world` method to your Custom Code so that clients can call it.  We'll put it under the path `src/main/java/com/stackmob/example`.
+
+## d
 
 A method is represented by a class that extends the interface `CustomCodeMethod`, of which there are three methods to implement:
 
@@ -142,6 +93,68 @@ public class EntryPointExtender extends JarEntryObject {
     </div>
   </div>
 </div>
+
+## Calling Custom Code 
+
+The StackMob client SDKs can call custom code via the REST API.
+
+<span class="tab clientcall" title="iOS SDK"></span>
+```obj-c
+SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
+  initGetRequestWithMethod:@"hello_world"];
+         
+[[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
+  onSuccess:^(NSURLRequest *request, 
+          NSHTTPURLResponse *response, 
+          id JSON) {
+        NSLog(@"Success: %@",JSON);
+  } onFailure:^(NSURLRequest *request, 
+          NSHTTPURLResponse *response, 
+          NSError *error, 
+          id JSON){
+        NSLog(@"Failure: %@",error);
+}];
+```
+<span class="tab"></span>
+
+<span class="tab clientcall" title="Android SDK"></span>
+```java
+StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
+    @Override public void success(String responseBody) {}
+    @Override public void failure(StackMobException e) {}
+});
+```
+<span class="tab"></span>
+
+<span class="tab clientcall" title="JS SDK"></span>
+```js
+StackMob.customcode('hello_world', {}, 'GET', {
+  success: function(result) {},
+  error: function(result) {}
+})
+```
+<span class="tab"></span>
+
+<span class="tab clientcall" title="REST API"></span>
+```js
+URL: 
+GET https://api.stackmob.com/hello_world
+
+Request Headers:
+Accept: application/vnd.stackmob+json; version=0
+X-StackMob-API-Key: /* Your Public Key */
+
+Request Body:
+None
+```
+<span class="tab"></span>
+
+The server will execute the server side custom code and return a response with a body that you define, allowing you to easily communicate between client and server.
+
+You can also use the Dashboard Console to call your API methods.
+
+[Dashboard Console Screenshot]
+
 
 ## Datastore
 
@@ -1319,19 +1332,32 @@ If you're working with external libraries, you can include them with Maven or in
 
 Maven helps you build your projects by also organizing your dependencies.  Many developers upload their JARs to Maven's central repository, allowing you, the developer, to simply define what resource you need in Maven's xml.  Maven will pull it in for you automatically to help build your project.
 
+Below we include Google's `json-simple` library to help with JSON manipulation
+
 
 ```xml
-
+<dependencies>
+  ...
+  <dependency>
+    <groupId>com.googlecode.json-simple</groupId>
+    <artifactId>json-simple</artifactId>
+    <version>1.1.1</version>
+  </dependency>
+  ...
+</dependencies>
 ```
 
 
-<p class="alert alert-info">
-	Learn more about Maven and how to find JARs in Maven.
-</p>
-
-### JARs
-
-To include JARs
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/pom.xml" target="_blank">Example pom.xml</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 ## Building Custom Code
