@@ -79,7 +79,7 @@ Let's use the Android SDK to persist objects to the datastore and retrieve them.
 
 ### Create a Save Object
 
-Save an instance of your `todo` object to the server.
+Save an instance of your `task` object to the server.
 
 ```java
 Task myTask = new Task("Learn more about StackMob", new Date());
@@ -171,7 +171,8 @@ myTask.save(new StackMobModelCallback() {
 To fetch your `task` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.  Below, we'll assume the primary key is "1234".
 
 ```java
-Task myTask = new Task("1234");
+Task myTask = new Task();
+myTask.setID("1234");
 myTask.fetch(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -204,7 +205,8 @@ The above makes an HTTP REST API call to StackMob.  A JSON object is returned, a
 You can edit existing objects easily.  Let's update `task` object `1234` with a new field: `done` and let's mark it as `true`.
 
 ```java
-Task myTask = new Task("1234");
+Task myTask = new Task();
+myTask.setID("1234");
 myTask.setIsDone(true);
 myTask.save(new StackMobModelCallback() {
     @Override
@@ -259,10 +261,11 @@ public class Task extends StackMobModel {
 
 ### Delete an Object
 
-Let's delete the object of id `1234`.
+Let's assume you have created an object Task and saved it to StackMob.
+Say we store it in a variable called `myTask`.
+Now you can delete the object by calling `myTask.destroy()`
 
 ```java
-Task myTask = new Task("1234");
 myTask.destroy(new StackMobModelCallback() {
     @Override
     public void success() {
@@ -274,6 +277,14 @@ myTask.destroy(new StackMobModelCallback() {
         // the call failed
     }
 });
+```
+
+You can also delete an object by its ID. Let's delete Task object with ID `1234`
+
+```java
+Task myTask = new Task();
+myTask.setID("1234"); // set the object ID here
+myTask.destroy();
 ```
 
 <div class="alert alert-info">
@@ -328,8 +339,8 @@ public class Task extends StackMobModel {
     private Date dueDate;
     private List<String> notes;
  
-    public Todo(String name, Date dueDate) {
-        super(Todo.class);
+    public Task(String name, Date dueDate) {
+        super(Task.class);
         this.dueDate = dueDate;
         this.notes = new ArrayList<String>();
         this.name = name;
@@ -363,63 +374,6 @@ myTask.save(...);
 
 An array of strings will be saved on the server side.
 
-Arrays are special in that if you have two users saving to the same array at the same time, they could overwrite each others changes.
-
-e.g. John saves `['do A', 'do B']` and Jill saves `['do C']`.  Whoever calls `save` last will "win", overwriting the other data.
-
-But sometimes you want to append to an array.  StackMob provides ways of *appending* to arrays so that the end result will be `['do A', 'do B', 'do C']`, even if multiple users are operating on that field.
-
-Let's append to an array by adding to the "notes" field, which corresponds to your array field name in your schema.  The following example is of a `String` type, but as long as it matches the field type (`Boolean`, `Integer`), it will be fine.
-
-```java,7
-List<String> notes = new ArrayList<String>();
-notes.add("Check the Android Developer Guide");
-notes.add("I was last reading about arrays");
-
-...
-//add to your Task instance
-myTask.append("notes", notes, new StackMobCallback(...);
-```
-
-`append` will safely add the items to the client and server instances of the task, even if multiple clients are operating on that field.
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobModel.html#append(java.lang.String, java.util.List, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobModel#append</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-### Deleting from an Array
-
-To safely remove elements from an array, use `remove`.
-
-```java,7
-List<String> notes = new ArrayList<String>();
-notes.add("Check the Android Developer Guide");
-notes.add("I was last reading about arrays");
-
-...
-//add to your Task instance
-myTask.remove("notes", notes, new StackMobCallback(...);
-```
-
-The string elements "Check the Android..." and "I was last reading.." will be removed from the object on the client and server instances.  This is safer than saving a whole list, the result of which would be the replacement of the entire array rather editing elements of it.
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-java-client-sdk/javadoc/apidocs/com/stackmob/sdk/model/StackMobModel.html#remove(java.lang.String, java.util.List, com.stackmob.sdk.callback.StackMobCallback)" target="_blank">StackMobModel#remove</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
 
 ## Queries
 
@@ -441,6 +395,8 @@ To query objects by field parameters, paginate, sort by, and more, use the stati
 Let's get `Task` objects where a `priority` integer field is greater than `3`.  The success callback will produce a list of matching `Task` objects.
 
 ```java
+// Assume we have `priority` field in our schema
+// Which means that we have an `int priority` field in our `Task` class
 Task.query(Task.class, new StackMobQuery().fieldIsGreaterThan("priority", 3), new StackMobQueryCallback<Task>() {
     @Override
     public void success(List<Task> result) {
@@ -728,24 +684,9 @@ And you'll get:
 Let's work with relationships in the code.
 
 
-
-
-
-
-
-
-
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-task-list.png" alt=""/></a></p>
-
-
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-todo.png" alt=""/></a></p>
-
-
-
 ### One to One Relationship
 
 ```java
-package com.example.yourapp;
 import java.util.Date;
 import com.stackmob.sdk.model.StackMobModel;
 
@@ -778,8 +719,6 @@ Each `Task` object now can have a link to another `Task` object. This is called 
 Let's now relate one object to many children objects.
 
 ```java
-package com.stackmob.taskmob;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -852,18 +791,6 @@ taskList.fetch(StackMobOptions.depthOf(1), new StackMobModelCallback() {
     }
 });
 ```
-
-### Adding Related Objects
-
-create a related object and associate it with the parent in one API call
-
-appendAndSave
-
-### Decoupling Related Objects
-
-remove
-
-removeAndSave
 
 ## User Authentication
 
@@ -1129,7 +1056,6 @@ So now if you call `tasks.fetch(..)`, you'll get a 401 Unauthorized error if you
 StackMob lets you save large files to S3 as easily as saving any other data to StackMob's cloud. The files are then accessible via an S3 url. To start, make sure you've [configured your app for S3](https://developer.stackmob.com/tutorials/android/Upload-to-S3). For this example we've got a binary field named photo on the schema `task` and a corresponding field on our `Task` object of type `StackMobFile`.
 
 ```java
-package com.example.yourapp;
 import java.util.Date;
 import com.stackmob.sdk.model.StackMobModel;
 
@@ -1204,7 +1130,6 @@ To use geopoints, you first need to create a geopoint field in your schema. Go t
 For this example we've got a Geopoint field named location on the schema `task` and a corresponding field on our `Task` object of type `StackMobGeoPoint`.
 
 ```java
-package com.example.yourapp;
 import java.util.Date;
 import com.stackmob.sdk.model.StackMobModel;
 
