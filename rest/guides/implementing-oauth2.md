@@ -1,4 +1,11 @@
-# Logging in with OAuth 2.0
+Logging in with OAuth 2.0
+=========================
+
+## Introduction
+
+StackMob provides an OAuth 2.0 authentication service for your mobile app so that you can keep track of your users. When your users sign in with a username/password combo, StackMob issues your user an access token so that you can sign requests identifying the user.
+
+## Login
 
 Let's login user "Bruce Wayne" with password "imbatman"
 
@@ -36,8 +43,7 @@ You'll be given back the following in the response:
 
 You can store the above into Local Storage, for instance.
 
-
-# Making Requests with OAuth 2.0 Signature (After Logging In)
+## Making Requests with OAuth 2.0 Signature (After Logging In)
 
 Make API request as you normally would (see REST API docs for StackMob functionality).  If the user is logged in, you'll want to include an extra header: `Authorization`.  Below, we'll go over how to generate the `Authorization` string.  Example of request to get all books.
 
@@ -51,7 +57,7 @@ Make API request as you normally would (see REST API docs for StackMob functiona
     Authorization:MAC id="vV6xEfVgQZv4ABJ6VZDHlQfCaqKgFZuN",ts="1343427512",nonce="n2468",mac="79js6rr3ynOCyssOHuGpGikfpvs="
 
 
-# Generating the Authorization Header
+## Generating the Authorization Header
 
 StackMob follows the OAuth 2.0 spec for signing Authorization headers as depicted here:  [http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-01](http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-01)
 
