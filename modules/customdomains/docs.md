@@ -1,26 +1,26 @@
 StackMob Custom Domains
 =====================================
 
-# Setting up Custom Domains
+## Setting up Custom Domains
 
 StackMob allows you to setup custom domain names.  If you have access to change your domain's CNAME on your domain name service, then you can have you domain point to StackMob's hosted HTML5 service.
 
 When your HTML5 is hosted on StackMob, you can easily use [StackMob's JS SDK](http://developer.stackmob.com/tutorials/js) to access StackMob's backend services.
 
-# Step 1 of 2. Registering your domain with StackMob
+### Step 1 of 2. Registering your domain with StackMob
 
 To have `www.yourapp.com` be a StackMob-hosted site, fill in your [Manage HTML5: Domains](https://dashboard.stackmob.com/module/html5/settings) page like below:
 
 <div><a class="screenshot" href="https://dashboard.stackmob.com/module/html5/settings" target="_blank"><img src="//s3.amazonaws.com/static.stackmob.com/images/screenshots/overview/StackMob_HTML_addingcustomdomain.png" /></a>
 </div>
 
-# Step 2 of 2. Adding CNAME records
+### Step 2 of 2. Adding CNAME records
 
 After saving, proceed to your domain registrar and add a CNAME entry for StackMob.  The subdomain value should be * and it should point to `stackmobapp.com.` If your provider does not support wildcard DNS records, you'll need to create one CNAME record using the development prefix you entered on the Manage HTML5 page and another with the subdomain `www` (both pointing to `stackmobapp.com.`)
 
 That's it! `http://dev.yourapp.com` and `http://www.yourapp.com` are now served at StackMob.
 
-# Root Level Domain Names (aka Naked or Bare Domains)
+## Root Level Domain Names (aka Naked or Bare Domains)
 
 Unfortunately, root-level domains and cloud services don't play well together. Because an A record must point to a static IP address, it limits our ability to make dynamic changes to improve security, scalability, and performance. There's [a good blog post by Neil Middleton](http://neilmiddleton.com/the-dangers-of-a-records-and-heroku/) describing the dangers and limits of using A records, in terms of scalability for cloud services.
 
@@ -52,30 +52,9 @@ Setting an A record as above resolves the 404 case. So, set an A record!
 
 
 
-# Using SSL (HTTPS) with Custom Domains - HTML5
-
-### Objective
+## Using SSL (HTTPS) with Custom Domains - HTML5
 
 Create a secure, SSL-enabled custom domain for an HTML5 application.
-
-In this, we will show you how to enable SSL (HTTPS) for your HTML5 application, allowing you to encrypt all the traffic
-that is sent between your users and StackMob's servers. This is recommended only for users who *require* SSL encryption
-on their HTML5 applications, and you must take care to ensure that your HTML5 application will still function as desired
-when under encryption.
-
-**Important Note:** since your website will now be encrypted, any outside resources that your website tries to access
-that are not themselves sent over an encrypted connection will cause a warning to appear in most web browsers. This
-applies to resources such as JavaScript modules, CSS files, images, video, and so on. If you choose to use SSL for your
-HTML5 application, we recommend that you double-check the documentation of any JavaScript modules you may be using for
-caveats involving HTTPS, and that you verify HTTPS for as many resources and modules as you can.
-
-### Experience Level
-
-Intermediate
-
-### Estimated time to complete
-
-~20 minutes
 
 ### Prerequisites
 
@@ -83,7 +62,7 @@ Intermediate
 * Active [HTML5](https://dashboard.stackmob.com/module/html5), [Custom Domains](https://dashboard.stackmob.com/module/customdomains), and [SSL](https://dashboard.stackmob.com/module/ssl) modules for your application
 * [OpenSSL](http://www.openssl.org/), to generate a key and certificate signing request
 
-# Let's get started!
+### Let's get started!
 
 ### Choosing a Certificate Authority
 

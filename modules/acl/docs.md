@@ -1,6 +1,8 @@
 Access Controls - Schema Permissions
 =====================================
 
+## Overview
+
 StackMob provides a way for you to set access level controls on your schemas.  You can limit your users' Create, Read, Update, or Delete access with various permission levels.  This feature is implemented using OAuth 2 and supported by the current versions of our all our SDKs.
 
 You can take advantage of access controls by changing your schema settings through <a href="https://dashboard.stackmob.com/schemas/" target="_blank">Editing your Schemas</a> on the web platform.  Access Control permissions are at the bottom of the page.
@@ -15,7 +17,7 @@ Example screenshot of Editing the User Schema:
 
 
 
-# Why OAuth 2.0?
+## Why OAuth 2.0?
 
 More and more apps are being written in Javascript, connecting to remote systems with AJAX. How do we know that the user making the call is allowed to do so? We can't hide secret keys in the source since Javascript source is out in the open. This is where OAuth 2.0 swoops in.
 
@@ -26,7 +28,7 @@ If you've logged into websites with Facebook or Twitter's JS SDKs, you've used O
 **OAuth 2.0 is supported in the following StackMob SDKs: iOS SDK v0.5.0+, Android SDK v0.5.0+, JS SDK v0.5.0+**
 
 
-# Access Levels
+## Access Levels
 
 The following access levels are currently available in order of most restrictive to least.  You can assign these individually to each action (Create, Read, Update, Delete).
 
@@ -42,7 +44,7 @@ The following access levels are currently available in order of most restrictive
 
 Let's see what these do.
 
-## Not Allowed
+### Not Allowed
 
 At this permission level, don't allow anybody to access this schema through the REST API. 
 
@@ -64,7 +66,7 @@ For instance, you can set `Create, Update, and Delete` to `Not Allowed` but allo
 * JavaScript - all versions
 
 
-## Allowed with Private Key
+### Allowed with Private Key
 
 At this permission level, as long as the API request is signed with the public and private key combo (OAuth 1.0), you can manipulate the data in your schemas. (Only applicable to StackMob SDKs *below* v0.5.0, as versions above v0.5.0 use OAuth 2.0, which does *not* use the app's private key.)
 
@@ -89,7 +91,7 @@ The `Allowed with Private Key` access level is available to the following SDKs:
 * Javascript v0.3.0 and below
 
 
-## Logged In Permissions
+### Logged In Permissions
 
 *The following permissions only work with OAuth 2.0 versions of our SDKs:*
 
@@ -108,7 +110,7 @@ There are various levels of access for users who've logged-in.  These are genera
 * <a href="#a-allow_to_any_logged_in_user">Allow to Any Logged In User</a>
 
 
-### Allow to Object Owner
+#### Allow to Object Owner
 
 At this permission level, only allow the logged in owner of the object instance to perform the action on the object.  For instance, if user `johndoe` created a new `todo` record, and the `todo` schema had `Read` set to this permission level, then only `johndoe` would be allowed to read this  `todo` record.
 
@@ -143,7 +145,7 @@ Available to the following SDKs:
 * JS SDK v0.5.0+
 
 
-### Any User with a relationship to the object
+#### Any User with a relationship to the object
 
 Only users defined in a user relationship to that object instance can perform the action (CREATE, READ, UPDATE or DELETE) on that object.
 
@@ -174,7 +176,7 @@ Here's an example of a todo object with related users.
 
 *Your users must be logged-in and related to the individual object in order to take advantage of this access level.*
 
-### Related Users on the sm_owner instance
+#### Related Users on the sm_owner instance
 
 `sm_owner` represents the user who created the object. Only allow access to users specified in a relationship field on the `sm_owner` user object.
 
@@ -188,7 +190,7 @@ For instance, to share a photo with the photo sm_owner's friends, the `user` sch
 <a href="https://dashboard.stackmob.com/schemas/" target="_blank"><img src="//s3.amazonaws.com/static.stackmob.com/images/tutorial/dashboard/acl-09.png" alt=""/></a>
 </p>
 
-### Users defined in a Role
+#### Users defined in a Role
 
 You can group your users by `Role`.  A role is basically a list of users grouped together.
 
@@ -230,7 +232,7 @@ Assume you've created a `role` named `Admins`.  You can limit `read` access to A
 
 
 
-### Allow to Any Logged In User
+#### Allow to Any Logged In User
 
 All objects in the schema are accessible to any logged-in user via the chosen REST actions (CREATE, READ, UPDATE, DELETE)
 
@@ -255,7 +257,7 @@ Because `sm_owner` is a new auto-generated field, data that already exists will 
 
 
 
-## Open (Accessible with public key OR private key)
+### Open (Accessible with public key OR private key)
 
 At this permission level, anybody can perform the action on this object as long as they have the public key.  In OAuth 2.0 terms, because the public key is, well, public, that pretty much means anybody can make the call.  
 
@@ -273,7 +275,7 @@ This access level is available to the following SDKs:
 * Android 0.5.0  and higher
 
 
-# How Schema Permissions affect development
+## How Schema Permissions affect development
 
 With the introduction of Access Level Permissions, default schema permission settings have changed. 
 
@@ -286,30 +288,30 @@ E.g., Bottom of the User schema:
 </p>
 
 
-## Automatically Generated Schemas: Open Permissions
+### Automatically Generated Schemas: Open Permissions
 
 Automatically generated schemas have different default schemas permissions depending on what SDKs you're using. Read on.
 
-### iOS v0.4.12, Android v0.4.7 and JS SDK v0.3.0 and earlier SDKs (OAuth 1.0)
+#### iOS v0.4.12, Android v0.4.7 and JS SDK v0.3.0 and earlier SDKs (OAuth 1.0)
 
 The permission levels for Create, Read, Update, and Delete will all be set to `Allow with private key` for *new* schemas created via <a href="http://www.stackmob.com/devcenter/docs/Automatic-Schema-Generation" target="_blank">automatic schema generation</a> if they used these SDKS to make the API call.
 
-### iOS v0.5.0, Android v0.5.0 and  JS SDK v0.4.0 and above (OAuth 2.0)
+#### iOS v0.5.0, Android v0.5.0 and  JS SDK v0.4.0 and above (OAuth 2.0)
 
 The permission levels for Create, Read, Update, and Delete will all be set to `Open (Accessible with public key OR private key)` for *new* schemas created via <a href="http://www.stackmob.com/devcenter/docs/Automatic-Schema-Generation" target="_blank">automatic schema generation</a> if they used these SDKs to make the API call.  With permissions set to `Open`, this means that anybody with your public key can make these calls. 
 
-### The User schema
+#### The User schema
 
 StackMob provides the User schema for you automatatically when you create an app.  The <a href="http://www.stackmob.com/devcenter/docs/User-Schemas" target="_blank">User schema</a> will be set to `Open (Accessible with public key OR private key)` with permissions set to `Open`.  This means that anybody with your public key can make these calls. 
 
 
-## Why default to Open?
+### Why default to Open?
 
 With the introduction of OAuth 2.0, where SDKs make calls to the REST API with only the public key, `Open` schema permissions are set so that if a <a href="http://www.stackmob.com/devcenter/docs/Automatic-Schema-Generation" target="_blank">schema is generated automatically via an API call</a>, subsequent API calls in development are guaranteed to work in the interest of fluid development.
 
 For example, **if** we had defaulted to `Private Key` permission, then SDKs using OAuth 2.0 (and passing up only the public key) would automatically generate a schema, then subsequently get blocked out because they aren't passing in public keys.  This obviously isn't too ideal!
 
-## Action Needed During Development
+### Action Needed During Development
 
 As a result, **you will want to <a href="https://dashboard.stackmob.com/schemas/" target="_blank">update your schema permissions through the web platform</a> during development**.
 
@@ -319,14 +321,6 @@ It is **highly** recommended that you update the permissions to their desired (a
 For your safety, we will require that you acknowledge your `Open` permissioned schemas in the <a href="http://www.stackmob.com/devcenter/docs/Deploying-your-App" target="_blank">deployment process</a>.
 
 * Meanwhile, <a href="https://dashboard.stackmob.com/schemas/new" target="_blank">schemas created manually via the web platform</a> will retain permissions set by the developer.
-
-### ACL not working in the Local Runner (JS SDK)?
-
-If you are developing locally on the Local Runner and getting `401 Unauthorized` or similar rejection messages when querying for objects, try the following:
-
-* If you are using `http://localhost:4567`, change to `http://127.0.0.1:4567`.
-* <a href="https://dashboard.stackmob.com/schemas/" target="_blank">Check your schema permissions</a> to see if they are overly restrictively (Private Key, Not Allowed, etc)
-
 # More Info: OAuth 2.0
 
 If you'd like to read more about OAuth 2.0, you can read the <a href="http://www.stackmob.com/devcenter/docs/Authenticating-Users-with-the-JS-SDK" target="_blank">OAuth 2.0 docs for the JS SDK</a>. 

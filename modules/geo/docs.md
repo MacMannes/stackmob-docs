@@ -19,6 +19,10 @@ Click Add Field, then Save Schema, and you're set!
 
 ## Saving and Querying Geolocation data
 
-Check your SDK for more info on saving and querying.
+<a href="https://developer.stackmob.com/sdks">Check your SDK's</a> Developer Guide for more info on saving and querying.
 
-<a href="https://developer.stackmob.com/sdks">Find your SDK</a>
+
+
+<p class="alert">
+	You can only have one geopoint field per schema.
+</p>
