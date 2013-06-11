@@ -835,7 +835,7 @@ Todo object `1` is removed from the datastore completely.
   </div>
 </div>
 
-## User Authentication
+## Users
 
 StackMob also gives you a way to authenticate your users.  The JS SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.  Authentication is made available with the `StackMob.User` model.
 
@@ -1150,7 +1150,7 @@ So now if you call `todos.fetch(..)`, you'll get a 401 Unauthorized error if you
   </div>
 </div>
 
-## Files
+## File Storage
 
 You can upload files to StackMob.  The files are saved to your Amazon S3 account, which you link with StackMob.  This'll allow you to more easily manage your files and retain content.
 

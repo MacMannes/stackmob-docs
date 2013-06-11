@@ -792,7 +792,7 @@ taskList.fetch(StackMobOptions.depthOf(1), new StackMobModelCallback() {
 });
 ```
 
-## User Authentication
+## Users
 
 StackMob gives you a way to authenticate your users.  The Android SDK uses OAuth 2.0 to login. It uses your `user` schema to perform login.
 
@@ -1051,7 +1051,7 @@ So now if you call `tasks.fetch(..)`, you'll get a 401 Unauthorized error if you
   </div>
 </div>
 
-## Files
+## File Storage
 
 StackMob lets you save large files to S3 as easily as saving any other data to StackMob's cloud. The files are then accessible via an S3 url. To start, make sure you've [configured your app for S3](https://developer.stackmob.com/tutorials/android/Upload-to-S3). For this example we've got a binary field named photo on the schema `task` and a corresponding field on our `Task` object of type `StackMobFile`.
 
