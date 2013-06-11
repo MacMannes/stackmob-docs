@@ -1111,7 +1111,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 </div>
 
 
-## Push
+## Push Notifications
 
 ### Registering Devices
 
