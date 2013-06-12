@@ -1,4 +1,4 @@
-Developer Guide
+Android Developer Guide
 =====================================
 
 StackMob's Android SDK enables your application to take advantage of StackMob's REST API on Android devices.  It's your app's interface to StackMob's services.

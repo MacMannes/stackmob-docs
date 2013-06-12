@@ -1,11 +1,11 @@
-Developer Guide
+Custom Code Developer Guide
 ==========================================
 
 ## Overview
 
 Custom Code is Java, Scala, or Clojure code you write that runs on the StackMob server.  You deploy it to the servers by either uploading your JAR or linking your GitHub repository with StackMob.
 
-If you wrote a method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's callable from the StackMob Client SDKs.
+If you wrote a Custom Code method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's callable from the StackMob Client SDKs.  The server will execute the server side custom code and return a response with a body that you define.
 
 Example of mobile SDKs calling Custom Code:
 
@@ -72,11 +72,15 @@ None
 ```
 <span class="tab"></span>
 
-The server will execute the server side custom code and return a response with a body that you define, allowing you to easily communicate between client and server.
+Custom Code allows you to easily communicate between client and server.
 
-<p class="alert">
+In each section of this guide you may see colored boxes which are meant to highlight important information:
+
+<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
+
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
+
 To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to each supported language of Scala and Clojure as well.
-</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -89,12 +93,6 @@ To cover a universal audience, this developer guide will be covered in Java, tho
     </div>
   </div>
 </div>
-
-In each section of this guide you may see colored boxes which are meant to highlight important information:
-
-<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
-
-<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
 
 ### Try Custom Code in less than 5 minutes
 
