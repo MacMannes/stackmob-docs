@@ -410,7 +410,8 @@ Predicate's <b>rightExpression</b> must be of type <b>NSConstantValueExpressionT
 <p>For a tutorial on using compound predicates see the <a href="https://developer.stackmob.com/tutorials/ios/Advanced-Queries" target="_blank">Advanced Query Tutorial</a>.
 <ul>
 	<li>NSAndPredicateType - Use [NSPredicate andPredicateWithSubpredicates:arrayOfPredicates] or AND in predicate format string.</li>
-	<li>NSORPredicateType - Use [NSPredicate orPredicateWithSubpredicates:arrayOfPredicates] or OR in predicate format string.</li>
+	<li>NSOrPredicateType - Use [NSPredicate orPredicateWithSubpredicates:arrayOfPredicates] or OR in predicate format string. Requests directed to the network are limited to one subset of OR conditions i.e. `(A AND (B OR C OR D))` but not `((A OR B) AND (C OR D))`.</li>
+    <li>NSNotPredicateType - Request directed to the network can use NOT only for IN queries i.e. `@"!(field IN [1,2,3,4])`.</li>
 </ul>
 
 ### Concurrency API
