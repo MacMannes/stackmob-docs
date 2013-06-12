@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 
 Need to download and setup the SDK? 
 
-<a href="">Setup and Configure the Android SDK <i class="icon-chevron-right"></i></a>
+<a href="https://developer.stackmob.com/android-sdk/configure">Setup and Configure the Android SDK <i class="icon-chevron-right"></i></a>
 
 <span class="tab"></span>
 
@@ -75,7 +75,7 @@ StackMob client = new StackMob(StackMob.OAuthVersion.ONE,
     apiVersion, "YOUR PUBLIC KEY", "YOUR PRIVATE KEY"); 
 ```
 
-<a href="">Setup and Configure the Java SDK <i class="icon-chevron-right"></i></a>
+<a href="https://developer.stackmob.com/java-sdk/configure">Setup and Configure the Java SDK <i class="icon-chevron-right"></i></a>
 
 <span class="tab"></span>
 
@@ -136,9 +136,6 @@ That's it!  That fires off an HTTP request to StackMob's REST API which saves yo
 Here's the data on the server, as seen through the Object Browser:
 
 <p class="screenshot"><a href="https://dashboard.stackmob.com/data/browser/task" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/schemas/objectbrowser-task-basic.png" alt="You first Task object in the Object Browser"></a></p>
-
-
-
 
 StackMob created a schema for you on the fly by inferring it from the JSON sent to the API.  Here's the brand new `task` schema being listed in the Schemas UI.
 

@@ -1408,25 +1408,11 @@ Read more about <a href="/customcode-sdk/developer-guide" target="_blank">StackM
 
 ## Deploy
 
-You're done developing your app!  You've been working in StackMob development environment and you now want to get everything to the production environment.  StackMob let's you do that easily.  Let's go through what you'll need to do.
+You're done developing your app!  You've been working in the StackMob **development** environment, and you now want to get everything to the **production** environment.  StackMob lets you do that easily.  Let's go through what you'll need to do.
 
-1.  Check your CORS settings
-2.  Deploy your API
+1.  Deploy your API
+2.  Check your CORS settings
 3.  Deploy HTML5 (only if using StackMob's HTML5 hosting module)
-
-### CORS Settings
-
-When deploying to production, you'll need to update your <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS settings</a> and whitelist the domains you want to receive StackMob API calls from.  By default, your development environment allows all domains.
-
-Why do you need this?  Browsers typically only allow AJAX calls to fire against the same origin/domain.  This means that if you're on `https://www.mysite.com`, browsers won't allow AJAX calls to go to `https://api.stackmob.com`.  But with CORS (cross origin resource sharing), modern browsers can.
-
-Perhaps you've seen the cross-domain call error before:
-
-<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/cors/modules-cors-origin-error.png" alt=""/></p>
-
-This is a result of not adding `http://fiddle.jshell.net` to the CORS list.
-
-Again, the **development environment** is defaulted to allow any domain.  You can configure your accepted development and production domains in the <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS module settings</a>.  Most importantly, you'll need to whitelist your production domains.  The protocol and port matter.
 
 ### API
 
@@ -1451,9 +1437,39 @@ That's it!  With your server rolled out to API Version 1, you can point your JS 
   You can have <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">multiple production API Versions</a> so that you can deploy multiple clients pointing at older versions of your API.  StackMob's <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">Multiple API Versions module</a> makes backwards compatibility easy.
 </p>
 
+### CORS Settings
+
+*This section is only applicable to apps where the client runs inside a web browser or other environment that restricts AJAX calls to the same domain. (<a href="http://www.w3.org/Security/wiki/Same_Origin_Policy" target="_blank" rel="nofollow">same origin policy</a>) *
+
+When deploying to production, you'll need to update your <a href="https://dashboard.stackmob.com/module/cors/settings" target="_blank">CORS settings</a> and whitelist the domains you want to receive StackMob API calls from in **production**.  (The **development environment** was defaulted to allow any domain via the `*` setting.)
+
+When adding the domain/origin, the protocol and port matter.  Whitelisting `http://www.mysite.com` *does not* whitelist `http://subdomain.mysite.com` nor `http://www.mysite.com:8080`.
+
+How do you know what domain/origin to add?  In the JS Console, your AJAX calls fail with this error (or similar).
+
+<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/cors/modules-cors-origin-error.png" alt=""/></p>
+
+This is a result of not adding `http://fiddle.jshell.net` to the CORS list.
+
+<p class="alert">
+  Why do you need this?  Browsers typically only allow AJAX calls to fire against the same origin/domain.  This means that if you're on <code>https://www.mysite.com</code>, browsers won't allow AJAX calls to go to <code>https://api.stackmob.com</code>.  But with CORS (cross origin resource sharing), modern browsers can.
+</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/modules/cors/docs" target="_blank">CORS module docs</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 ### HTML5
 
 If you're using StackMob's HTML5 hosting service, you'll also need to <a href="https://developer.stackmob.com/tutorials/html5/Deploying-your-HTML5-App-to-Production" target="_blank">deploy your HTML files to production</a>.
 
 <p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/html5/modules-html5-deploy.png" alt=""/></a></p>
+
+StackMob rolls whatever HTML and assets you have in your developer HTML environment (`dev.yourapp...stackmobapp.com`)

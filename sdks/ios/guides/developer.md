@@ -2306,7 +2306,7 @@ If you need to delete a token registered on the StackMob server from the client,
 
 ## Deploy
 
-You're done developing your app! You've been working in the StackMob development environment and you now want to get everything into the production environment. StackMob lets you easily do that with our Deploy UI. You can also choose to deploy any web pages you have uploaded on your GitHub repo using our HTML5 hosting service.
+You're done developing your app! You've been working in the StackMob development environment, and you now want to get everything into the production environment. StackMob lets you easily do that with our Deploy UI.
 
 
 ### API
