@@ -3,12 +3,33 @@ Developer Guide
 
 StackMob's Android SDK enables your application to take advantage of StackMob's REST API on Android devices.  It's your app's interface to StackMob's services.
 
+## Overview
+
+The StackMob Android SDK is Model based, meaning that if you declare a class that represents an object, you can directly save and fetch from that object and StackMob will make appropriate save and fetch calls to the datastore for you, populating your object asynchronously.
+
+The Android SDK is built off of the StackMob Java SDK, so a lot of this content is applicable for both the Android SDK and the Java SDK.  You'll see references to them in this guide, but for the most part they overlap seamlessly.
+
+In each section of this guide you may see colored boxes which are meant to highlight important information:
+
+<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
+
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
 
 ## Setup
 
-### Initializing the Android SDK
+### Initializing the SDK
 
-Download the Android SDK from here.  It'll guide you on how to setup your app - most importantly, you'll be initializing your code with your StackMob public key, identifying your app.  <a href="https://dashboard.stackmob.com/settings" target="_blank">Find your public key on your app dashboard</a>.
+The Android SDK is built on top of the Java SDK, so we've provided the initialization of both SDKs here.  Simply choose your SDK.
+
+In both SDKs you'll need <a href="https://dashboard.stackmob.com/settings" target="_blank">your development public key on your app dashboard</a>.
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/settings" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/setup/app-settings-keys.png" alt="Your App Keys"></a></p>
+
+Initialize the SDK with your public key.
+
+<span class="tab setup" title="Android SDK"></span>
+
+<p><b>Android SDK</b></p>
 
 ```java,6,7
 public class MainActivity extends Activity {
@@ -22,17 +43,41 @@ public class MainActivity extends Activity {
 }
 ```
 
-Here's an example of keys in <a href="https://dashboard.stackmob.com/settings" target="_blank">App Settings</a>.
+Need to download and setup the SDK? 
 
-<p class="screenshot"><a href="https://dashboard.stackmob.com/settings" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/setup/app-settings-keys.png" alt="Your App Keys"></a></p>
+<a href="">Setup and Configure the Android SDK <i class="icon-chevron-right"></i></a>
 
+<span class="tab"></span>
 
-so...
+<span class="tab setup" title="Java SDK"></span>
+
+<p><b>Java SDK</b></p>
+
+The Java SDK runs in OAuth 1.0 mode or OAuth 2.0 mode.  Read <a href="" target="_blank">how StackMob uses OAuth 1.0 and OAuth 2.0</a> to decide which one you would like to use.
+
+<p><b>Initialize the SDK for OAuth 2.0</b></p>
 
 ```java
-StackMobAndroid.init(getApplicationContext(), 0, 
-            "e3b5ea78-d72a-4228-9ad5-55aae7577417");
+import com.stackmob.sdk.api.StackMob
+Integer apiVersion = 0;
+
+StackMob client = new StackMob(apiVersion, "YOUR PUBLIC KEY");
 ```
+
+<p><b>Initialize the SDK for OAuth 1.0</b></p>
+
+```java
+import com.stackmob.sdk.api.StackMob
+Integer apiVersion = 0;
+
+// set the api secret to null if you use oauth version 2
+StackMob client = new StackMob(StackMob.OAuthVersion.ONE, 
+    apiVersion, "YOUR PUBLIC KEY", "YOUR PRIVATE KEY"); 
+```
+
+<a href="">Setup and Configure the Java SDK <i class="icon-chevron-right"></i></a>
+
+<span class="tab"></span>
 
 ### Defining a Model
 

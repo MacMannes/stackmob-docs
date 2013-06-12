@@ -90,6 +90,12 @@ To cover a universal audience, this developer guide will be covered in Java, tho
   </div>
 </div>
 
+In each section of this guide you may see colored boxes which are meant to highlight important information:
+
+<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
+
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
+
 ### Try Custom Code in less than 5 minutes
 
 We've provided a ready-to-upload JAR so you can try Custom Code immediately.

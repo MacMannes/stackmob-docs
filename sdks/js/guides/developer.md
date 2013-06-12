@@ -1,9 +1,17 @@
 JavaScript Developer Guide
 =====================================
 
+## Overview
+
 StackMob's JavaScript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
 
 The <a href="https://developer.stackmob.com/js-sdk/api-docs">StackMob JavaScript SDK API Docs</a> are also available for reference.
+
+In each section of this guide you may see colored boxes which are meant to highlight important information:
+
+<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
+
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
 
 
 ## Setup
