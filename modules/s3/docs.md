@@ -1,4 +1,5 @@
-# Binary Data via Amazon S3
+Binary Data via Amazon S3
+=========================
 
 <h3>Objective</h3>
 Adding a Binary field to schemas

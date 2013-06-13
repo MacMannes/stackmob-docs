@@ -84,8 +84,18 @@ The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a s
 Save an instance of your `todo` object to the server.
 
 ```javascript
+  // Associate s Model with the Schema
   var Todo = StackMob.Model.extend({ schemaName: 'todo' });
-  var todo = new Todo({ action: 'Go back and save Marty!', when: 'back to the future!', priority: 1, done: false });
+
+  // Create new instance of Todo
+  var todo = new Todo({
+    action: 'Go back and save Marty!',
+    when: 'back to the future!',
+    priority: 1,
+    done: false
+  });
+
+  // Persist the object to StackMob
   todo.create({
     success: function(model, result, options) { console.debug(model.toJSON()); },
     error: function(model, error, options) {}
@@ -93,6 +103,8 @@ Save an instance of your `todo` object to the server.
 ```
 
 That's it!  That fires off an AJAX call to StackMob which saves your object.  StackMob will **automatically create your schema** for you if it doesn't already exist.  
+
+  
 
 Here's how it'll look on the server:
 
@@ -159,6 +171,17 @@ You can use the `set(..)` method to pass in or change your local object.  You ca
   });
   user.create();
 ```
+
+### get(..)
+
+You can use `get(..)` to get a field's value on your object:
+
+```javascript
+  var todo = new Todo({ action: 'Take out the garbage!' });
+  todo.get('action'); //Take out the garbage!
+```
+
+<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
 
 ### Read an Object
 
@@ -326,17 +349,6 @@ As with `appendAndSave`, concurrency issues are handled appropriately.
   </div>
 </div>
 
-
-### get(..)
-
-You can use `get(..)` to get a field's value on your object:
-
-```javascript
-  var todo = new Todo({ action: 'Take out the garbage!' });
-  todo.get('action'); //Take out the garbage!
-```
-
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
 
 
 ### toJSON()
@@ -1182,80 +1194,80 @@ user.setBinaryFile('profilepic', fileName, fileType, base64Content);
 
 Let's take an expanded example and get a file from the local filesystem with the HTML5 FileReader API:
 
-```js
-<!DOCTYPE html>
-<html>
-<head>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
- 
-<script type="text/javascript">
-/* <![CDATA[ */
-    StackMob.init({
-        publicKey: 'your_public_key',
-    apiVersion: 0
-  });
-/* ]]> */
-</script>
- 
-</head>
-<body>
- 
-<table>
-  <tr>
-    <td>File to Encode:</td>
-    <td><input type="file" id="files" name="files[]" multiple /></td>
-  </tr>
-</table>
- 
-<script type="text/javascript">
-  //Define your Todo class once on the page.
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
- 
-  var todoInstance = new Todo();
-  var fieldname = 'picture'; //name of binary field that you created in your schema
-  
-  function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
- 
-    // Loop through the FileList
-    for (var i = 0, f; f = files[i]; i++) {
- 
-      var reader = new FileReader();
- 
-      // Closure to capture the file information
-      reader.onload = (function(theFile) {
-        return function(e) {
- 
-          /*
-            e.target.result will return "data:image/jpeg;base64,[base64 encoded data]...".
-            We only want the "[base64 encoded data] portion, so strip out the first part
-          */
-          var base64Content = e.target.result.substring(e.target.result.indexOf(',') + 1, e.target.result.length);
-          var fileName = theFile.name;
-          var fileType = theFile.type;
- 
-          todoInstance.setBinaryFile(fieldname, fileName, fileType, base64Content);
-          todoInstance.save();
- 
-        };
-      })(f);
- 
-      // Read in the file as a data URL
-      fileContent = reader.readAsDataURL(f);
- 
-    }
-  }
- 
-  document.getElementById('files').addEventListener('change', handleFileSelect, false);
- 
-</script>
- 
-</body>
-</html>
-```
+    ```js
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+     
+    <script type="text/javascript">
+    /* <![CDATA[ */
+        StackMob.init({
+            publicKey: 'your_public_key',
+        apiVersion: 0
+      });
+    /* ]]> */
+    </script>
+     
+    </head>
+    <body>
+     
+    <table>
+      <tr>
+        <td>File to Encode:</td>
+        <td><input type="file" id="files" name="files[]" multiple /></td>
+      </tr>
+    </table>
+     
+    <script type="text/javascript">
+      //Define your Todo class once on the page.
+      var Todo = StackMob.Model.extend({
+        schemaName: 'todo'
+      });
+     
+      var todoInstance = new Todo();
+      var fieldname = 'picture'; //name of binary field that you created in your schema
+      
+      function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+     
+        // Loop through the FileList
+        for (var i = 0, f; f = files[i]; i++) {
+     
+          var reader = new FileReader();
+     
+          // Closure to capture the file information
+          reader.onload = (function(theFile) {
+            return function(e) {
+     
+              /*
+                e.target.result will return "data:image/jpeg;base64,[base64 encoded data]...".
+                We only want the "[base64 encoded data] portion, so strip out the first part
+              */
+              var base64Content = e.target.result.substring(e.target.result.indexOf(',') + 1, e.target.result.length);
+              var fileName = theFile.name;
+              var fileType = theFile.type;
+     
+              todoInstance.setBinaryFile(fieldname, fileName, fileType, base64Content);
+              todoInstance.save();
+     
+            };
+          })(f);
+     
+          // Read in the file as a data URL
+          fileContent = reader.readAsDataURL(f);
+     
+        }
+      }
+     
+      document.getElementById('files').addEventListener('change', handleFileSelect, false);
+     
+    </script>
+     
+    </body>
+    </html>
+    ```
 
 <div class="alert alert-info">
   <div class="row-fluid">

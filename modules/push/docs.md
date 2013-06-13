@@ -1,4 +1,5 @@
-# Push Notification Docs
+Push Notification Docs
+======================
 
 StackMob supports push notifications for iOS and Android. Check out the tutorials below to learn more
 

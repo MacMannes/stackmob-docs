@@ -1617,13 +1617,15 @@ Here is some additional info on <a href="http://developer.stackmob.com/tutorials
 
 You're done developing your app!  You've been working in StackMob development environment and you now want to get everything to the production environment.  StackMob let's you do that easily.  Let's go through what you'll need to do.
 
-### API
+### Deploying your API
 
 StackMob gives you separate development and production environments so that you can keep your test data and custom code separate from your production set.  Deploying your API is a *critical* step you need to do when deploying.  StackMob provides a simple UI to help you do this easily.
 
 Read about how to <a href="https://developer.stackmob.com/deploy" target="_blank">Deploy your API</a>
 
 <p class="screenshot"><a href="https://developer.stackmob.com/tutorials/dashboard/Deploying-your-StackMob-App" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
+
+### Pointing the SDK at the new API
 
 After deploying, you would point your JS SDK at your production API Version - in this case `1`.  Also, use the <a href="https://dashboard.stackmob.com/settings" target="_blank"><b>production</b> public key</a> we provide you:
 
