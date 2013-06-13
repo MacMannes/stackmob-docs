@@ -82,6 +82,8 @@ In each section of this guide you may see colored boxes which are meant to highl
 
 To cover a universal audience, this developer guide will be covered in Java, though the fundamentals apply to each supported language of Scala and Clojure as well.
 
+Code examples of the topics covered in this Developer Guide can be found in our GitHub repositories below.
+
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span12">
@@ -740,10 +742,6 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 }
 ```
 
-<p class="alert alert-info">
-	<a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/PaginateResults.java" rel="nofollow">Pagination Example</a>
-</p>
-
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
@@ -811,9 +809,9 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 Just as in our SDKs, you can manipulate relationships from the Custom Code SDK.
 
-Let's assume we have a `user` schema, and we've related the user to the `car` schema.  Let's add cars to the user.
+Let's assume we have a `user` schema, and we've related the user to the `car` schema.  Let's add cars to the user on the `garage` field, which we've created as a Relationship field.
 
-[Screenshot of Relationship between User and Car]
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/schemas/dashboard-schemas-relationships-user-car-garage.png" alt=""/></a></p>
 
 ### Adding related objects
 
@@ -861,7 +859,8 @@ No new objects are created in the datastores.  We're just linking existing objec
 If the cars *don't* exist in the `car` schema yet, we can create them and relate them to the `user` in one call.  Let's give a `user` two new `cars`.  The following will create the two `car` objects in the respective `car` schema and relate them to the user at the same time.
 
 ```java,23,24
-public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+public ResponseToProcess execute(ProcessedAPIRequest request, 
+      SDKServiceProvider serviceProvider) {
 	// These are some example cars that will be created
 	Map<String, SMValue> carValues1 = new HashMap<String, SMValue>();
 	carValues1.put("make", new SMString("Audi"));
@@ -884,7 +883,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 	try {
 	  BulkResult result = ds.createRelatedObjects(
-	  	"user", new SMString("john"), "cars", cars);
+	  	"user", new SMString("john"), "garage", cars);
 
 	  feedback.put(owner + " now owns", cars);
 
@@ -899,7 +898,7 @@ The user should now look something like:
 ```js
 {
 	username: 'john',
-	cars: ["151gd", "1351dg5"],
+	garage: ["151gd", "1351dg5"],
 	...
 }
 ```
@@ -928,7 +927,7 @@ To retrieve related objects from the datastore, you can simply call `readObjects
 ```js
 {
 	username: 'john',
-	cars: ['Camry', 'Accord']
+	garage: ['Camry', 'Accord']
 }
 ```
 
@@ -937,7 +936,7 @@ But you can get **expanded related objects** by passing an expand depth of 1.
 ```js
 {
 	username: 'john',
-	cars: [{
+	garage: [{
 		car_id: 'Camry',
 		maker: 'Toyota',
 		...
@@ -1270,7 +1269,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 ## External HTTP Calls
 
-You can make calls to external APIs from custom code, but for security purposes, they must go through our HTTP call maker.
+You can make calls to external APIs from custom code, but for security purposes, they must go through our `HTTPService` provider.
 
 ```java
 public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
@@ -1420,7 +1419,11 @@ Our projects have `Maven`'s `pom.xml` file included, so you just have to go to t
 mvn package
 ```
 
-This will build the JAR which you can <a href="https://dashboard.stackmob.com/module/customcode/upload" target="_blank">upload to StackMob</a>.
+This will build the JAR which you can <a href="https://dashboard.stackmob.com/module/customcode/upload" target="_blank">upload to StackMob</a>.  Your JAR can be found at:
+
+```xml
+your-project-folder-name/target/java-example-0.1.0-SNAPSHOT.jar
+```
 
 Upon uploading, StackMob will deploy your JAR to your development environment.
 
