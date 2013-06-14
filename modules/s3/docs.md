@@ -51,7 +51,7 @@ Click Add Field, then Save Schema, and you're set!
 
 Find more information on how StackMob's mobile SDKs handle files.
 
-* https://developer.stackmob.com/ios-sdk/developer-guide#FileStorage
-* https://developer.stackmob.com/android-sdk/developer-guide#FileStorage
-* https://developer.stackmob.com/js-sdk/developer-guide#FileStorage
+* <a href="https://developer.stackmob.com/ios-sdk/developer-guide#FileStorage" target="_blank">iOS SDK</a>
+* <a href="https://developer.stackmob.com/android-sdk/developer-guide#FileStorage" target="_blank">Android SDK</a>
+* <a href="https://developer.stackmob.com/js-sdk/developer-guide#FileStorage" target="_blank">JS SDK</a>
 
