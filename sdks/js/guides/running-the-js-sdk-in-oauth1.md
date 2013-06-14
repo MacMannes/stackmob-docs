@@ -1,10 +1,13 @@
-<h1>Running the JavaScript SDK with OAUTH1</h1>
+Running the JavaScript SDK with OAuth 1.0
+==========================================
 
-# Introduction
+## Overview
 
 This guide will show you how to run the StackMob JavaScript SDK in OAuth v1.
 
-# HTML
+## HTML
+
+We'll be using <a href="https://github.com/bytespider/jsOAuth"> target="_blank" rel="nofollow">bytespider's jsOAuth OAuth 1.0 JS library</a>.
 
 ```html
 <html>
@@ -25,9 +28,14 @@ This guide will show you how to run the StackMob JavaScript SDK in OAuth v1.
 </html>
 ```
 
-# JavaScript
+## JavaScript
+
+And let's define `oauth-js-sdk-extensions.js`:
 
 ```javascript
+
+//oauth-js-sdk-extensions.js
+
 _.extend(StackMob, {
   'ajax': function(model, params, method) {
 
@@ -67,8 +75,8 @@ _.extend(StackMob, {
   //jsOAuth takes parameters to set what's in the body, header, etc, success, failure, and that is all inside "params", which is passed in.
 
   //make the ajax call with jsoauth
-  },
-  'apiURL': 'http://api.stackmob.com' //Can you make cross domain calls from your browser? If so, set this so you hit the API server directly. If not, remove this line.
   }
 );
 ```
+
+You can now use the JS SDK as you normally would, but your requests are now signed as OAuth 1.0 requests, given you complete access to your data.
