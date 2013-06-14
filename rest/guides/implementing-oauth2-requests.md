@@ -1,4 +1,4 @@
-Making REST API Calls
+Implementing OAuth 2.0 REST API Calls
 ===============================================
 
 ## Overview
