@@ -1,27 +1,9 @@
 Binary Data via Amazon S3
 =========================
 
-<h3>Objective</h3>
-Adding a Binary field to schemas
-
-<h3>Experience Level</h3>
-Beginner
-
-<h3>Estimated Time to Complete</h3>
-~5 minutes
-
-<h3>Prerequisites</h3>
-
-* You have a StackMob account. If you don't, <a href="https://stackmob.com/signup" target="_blank">sign up</a> now!
-
-* You have a StackMob application
-
-* You have a schema. If you don't have any, then you need to <a href="https://dashboard.stackmob.com/schemas/new" target="_blank">create a schema</a>
-
-* You have an Amazon Web Services account. If you don't, <a href="http://aws.amazon.com" target="_blank">sign up</a> now!  You'll store Binary data on Amazon S3.
+## Overview 
 
 
-<h1>Let's get started!</h1>
 
 <h2>Setup an Amazon S3 Bucket</h2>
 
@@ -64,3 +46,12 @@ Click Add Field button and in this example, we will name our Binary field as `ph
 
 
 Click Add Field, then Save Schema, and you're set!
+
+## Using SDKs to Handle Files
+
+Find more information on how StackMob's mobile SDKs handle files.
+
+* https://developer.stackmob.com/ios-sdk/developer-guide#FileStorage
+* https://developer.stackmob.com/android-sdk/developer-guide#FileStorage
+* https://developer.stackmob.com/js-sdk/developer-guide#FileStorage
+
