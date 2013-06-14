@@ -422,10 +422,14 @@ SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 
 <span class="tab clientcallgetparams" title="Android SDK"></span>
 ```java
-StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
-    @Override public void success(String responseBody) {}
-    @Override public void failure(StackMobException e) {}
-});
+List<Map.Entry<String, String>> args = new ArrayList<Map.Entry<String, String>>();
+args.add(new AbstractMap.SimpleEntry<String, String>("name","joe"));
+args.add(new AbstractMap.SimpleEntry<String, String>("age","10"));
+ 
+List<Map.Entry<String, String>> headers = new ArrayList<Map.Entry<String, String>>();
+ 
+StackMobDatastore ds = client.getDatastore();
+ds.get("hello_world", args, headers, new StackMobCallback() {});
 ```
 <span class="tab"></span>
 
@@ -477,11 +481,13 @@ SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 <span class="tab"></span>
 
 <span class="tab clientcallpostjson" title="Android SDK"></span>
+
 ```java
-StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
-    @Override public void success(String responseBody) {}
-    @Override public void failure(StackMobException e) {}
-});
+//POST /hello_world with body {name:'joe',age:10}
+Map<String, String> body = new HashMap<String, String>();
+body.put("name", "joe");
+body.put("age", "10");
+ds.post("hello_world", body, new StackMobCallback() {});
 ```
 <span class="tab"></span>
 
