@@ -7,7 +7,7 @@ This guide will show you how to run the StackMob JavaScript SDK in OAuth v1.
 
 ## HTML
 
-We'll be using <a href="https://github.com/bytespider/jsOAuth"> target="_blank" rel="nofollow">bytespider's jsOAuth OAuth 1.0 JS library</a>.
+We'll be using <a href="https://github.com/bytespider/jsOAuth" target="_blank" rel="nofollow">bytespider's jsOAuth OAuth 1.0 JS library</a>.
 
 ```html
 <html>
