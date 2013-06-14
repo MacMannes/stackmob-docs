@@ -293,7 +293,7 @@ If you wish to return managed object IDs rather than objects, use the following 
       <strong>Resources</strong>
       <ul>
         <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read.zip">Download Sample Project</a></li>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Read-into-Table-View-tutorial" target="_blank">Read Into Tableview Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/read-into-table-view-tutorial" target="_blank">Read Into Tableview Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -446,7 +446,7 @@ If you want to make direct REST-based calls to the Datastore, check out the <a h
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Lower-Level-CRUD-API-tutorial" target="_blank">Lower Level CRUD API Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/lower-level-crud-api-tutorial" target="_blank">Lower Level CRUD API Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -479,8 +479,8 @@ For a list of StackMob supported predicate types, visit the <a href="https://dev
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Basic-Queries-tutorial" target="_blank">Basic Queries Tutorial</a></li>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Advanced-Queries-tutorial" target="_blank">Advanced Queries Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/basic-queries-tutorial" target="_blank">Basic Queries Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/advanced-queries-tutorial" target="_blank">Advanced Queries Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -553,7 +553,7 @@ Add a relationship from one entity to another by creating a new entry in the **R
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/One-to-One-Relationships-tutorial" target="_blank">One-To-One Relationships Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-one-relationships-tutorial" target="_blank">One-To-One Relationships Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -574,7 +574,7 @@ In the data model, be sure to check the box for a To-Many relationship, as shown
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/One-to-Many-Relationships-tutorial" target="_blank">One-To-Many Relationships Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-many-relationships-tutorial" target="_blank">One-To-Many Relationships Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -689,7 +689,7 @@ The above example assumes an entity `User` with attributes `username` and `age`.
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Create-a-User-Object-tutorial" target="_blank">Create a User Object Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/create-user-object-tutorial" target="_blank">Create a User Object Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -720,7 +720,7 @@ Logging into StackMob using the standard username/password pattern is done throu
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/User-Authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/user-authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -799,7 +799,7 @@ To see whether your user is logged in, use the `SMClient` `isLoggedIn` and `isLo
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/User-Authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/user-authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -861,7 +861,7 @@ Here's how to log a user out of StackMob:
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/User-Authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/user-authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1088,7 +1088,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
     <div class="span6">
       <strong>Examples</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Saving-Geo-Location-Data-tutorial" target="_blank">Saving Geo Location Data</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/saving-geolocation-tutorial" target="_blank">Saving Geolocation Data Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1155,7 +1155,7 @@ All <code>SMPredicate</code> methods to query based on an instance of <code>SMGe
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Querying-Geo-Location-Data-tutorial" target="_blank">Querying Geo Location Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/querying-geolocation-tutorial" target="_blank">Querying Geolocation Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1298,7 +1298,7 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Upload-to-S3-tutorial" target="_blank">Upload To S3 Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/upload-files-to-s3-tutorial" target="_blank">Upload Files to S3 Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1512,7 +1512,7 @@ StackMob provides integrations with Facebook and Twitter to allow users to login
 
 You will need to download the Facebook SDK and follow their tutorials to get login working in your application. Once you have a Facebook session open you will direct the application in the `sessionStateChanged:state:error` Facebook method to login to StackMob using the provided Facebook access token.
 
-All the implementation details for Facebook's SDK can be found in our <a href="https://developer.stackmob.com/ios-sdk/Integrating-with-Facebook-tutorial" target="_blank">Facebook Tutorial</a>.
+All the implementation details for Facebook's SDK can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-facebook-tutorial" target="_blank">Facebook Integration Tutorial</a>.
 
 <!--- SUB: Login with Facebook -->
 
@@ -1556,7 +1556,7 @@ Alternatively, you can implement a more manual workflow using the methods listed
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Integrating-with-Facebook-tutorial" target="_blank">Integrating With Facebook Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/integrating-with-facebook-tutorial" target="_blank">Facebook Integration Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1684,7 +1684,7 @@ Sometimes you may want to get the logged in user's Facebook info, either for UI 
 
 You will need to download the Twitter SDK and follow their tutorials to get login working in your application. Once you have a Twitter session open you will direct the application to login to StackMob using the provided Twitter access token.
 
-All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Twitter Tutorial</a>.
+All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Twitter Integration Tutorial</a>.
 
 <!--- SUB: Login with Facebook -->
 
@@ -1717,7 +1717,7 @@ Alternatively, you can implement a more manual workflow using the methods listed
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Integrating With Twitter Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Twitter Integration Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1897,7 +1897,7 @@ You can expect the `responseBody` parameter of the success callback to be in the
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Custom-Code-Requests-tutorial" target="_blank">Custom Code Requests Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/custom-code-tutorial" target="_blank">Custom Code Requests Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -2021,7 +2021,7 @@ StackMob integrates with Apple's APNS service for push notifications on iOS. Bef
 
 The first step in getting push notifications working is to set up the Push Module for you StackMob application.
 
-Work through the <a href="https://developer.stackmob.com/ios-sdk/Push-Notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a>, which will walk you through the steps of setting up Apple Push certs, uploading them to the Push Module settings, writing the code to register your device, and finally broadcasting to your device from the dashboard push console.
+Work through the <a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a>, which will walk you through the steps of setting up Apple Push certs, uploading them to the Push Module settings, writing the code to register your device, and finally broadcasting to your device from the dashboard push console.
 
 When you're finished come back here to learn how to send pushes from a device.
 
@@ -2048,7 +2048,7 @@ SMPushClient *pushClient = [[SMPushClient alloc] initWithAPIVersion:@"0" publicK
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Push-Notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -2106,7 +2106,7 @@ Once your token is registered with StackMob, you can begin sending pushes to tha
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Push-Notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -2151,7 +2151,7 @@ To receive remote notifications in your app, implement the `UIApplication` `didR
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/Push-Notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
       </ul>
     </div>
   </div>

@@ -1,4 +1,4 @@
-Log In a User
+User Authentication
 =============
 
 ## Overview
