@@ -1,7 +1,7 @@
 StackMob Collaboration
 =====================================
 
-# Setup
+## Setup
 
 [Go to the collaboration settings page here.](https://dashboard.stackmob.com/module/collaboration/settings)
 
@@ -37,6 +37,6 @@ How to promote an org member to owner:
 2. Click on the left arrow that shows up and that user will become an owner.  
 
 
-# TroubleShooting:
+## TroubleShooting:
 
 If for some reason clicking on any button does not do anything, try refreshing the page or log out and log back in.
