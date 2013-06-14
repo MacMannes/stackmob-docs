@@ -1,4 +1,4 @@
-Running the JavaScript SDK with OAuth 1.0
+Running the JavaScript SDK in OAuth 1.0 Mode
 ==========================================
 
 ## Overview
