@@ -1537,4 +1537,11 @@ Be sure to read about <a href="https://developer.stackmob.com/customcode-sdk/bes
 
 ## Restrictions
 
-### Security Manager
+The Custom Code environment has some restrictions so as to ensure a secure environment.
+
+* can not create new threads
+* can not read/write files
+* can not read/write to socket (unless using <a href="#ExternalHTTPCalls">StackMob's HTTPService</a>)
+* can not read/write properties
+* can not use reflection
+* maximum execution time is 25 seconds
