@@ -241,5 +241,5 @@ The StackMob JS SDK will automatically use the `StackMob['ajax']` function for i
 
 The `params` has all you need to make the AJAX request.  It's best to look at an example.
 
-<a href="https://gist.github.com/ericktai/d6b5c3d6b3fdf40e7731" target="_blank">View an example of overwriting the StackMob JS SDK with an OAuth 1.0 AJAX caller: jsOAuth</a>
+<a href="https://developer.stackmob.com/js-sdk/running-the-js-sdk-in-oauth1-guide" target="_blank">View an example of overwriting the StackMob JS SDK with an OAuth 1.0 AJAX caller: jsOAuth</a>
 

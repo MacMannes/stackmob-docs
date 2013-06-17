@@ -1,6 +1,8 @@
 Forgot Password
 ====================================================
 
+## Overview 
+
 StackMob gives you the ability to send Forgot Password emails.  These emails contain temporary passwords that are emailed to your users.  With these temporary passwords, the users can log into their account and reset their password.
 
 The email is sourced from a field you have in the object instance.
@@ -13,13 +15,10 @@ You can also customize your emails with the <a href="https://dashboard.stackmob.
 
 The Forgot Password email template follows the <a href="http://scalate.fusesource.org/documentation/mustache.html" target="_blank">Mustache templating syntax</a>.
 
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span12">
-      <strong>Resources</strong>
-      <ul>
-        <li>Look for more information in your <a href="https://developer.stackmob.com/sdks">SDKs</a> respective Developer Guides on "Forgot Password".</li>
-      </ul>
-    </div>
-  </div>
-</div>
+## Calling Forgot Password from the SDKs
+
+Read about calling Forgot Password from the mobile SDKs:
+
+* <a href="https://developer.stackmob.com/ios-sdk/developer-guide#PasswordRecovery" target="_blank">iOS SDK</a>
+* <a href="https://developer.stackmob.com/android-sdk/developer-guide#ForgotPassword" target="_blank">Android SDK</a>
+* <a href="https://developer.stackmob.com/js-sdk/developer-guide#ForgotPassword" target="_blank">JS SDK</a>

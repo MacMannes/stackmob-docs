@@ -3,9 +3,9 @@ JavaScript Developer Guide
 
 ## Overview
 
-StackMob's JavaScript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
+StackMob's JavaScript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank" rel="nofollow">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
 
-The <a href="https://developer.stackmob.com/js-sdk/api-docs">StackMob JavaScript SDK API Docs</a> are also available for reference.
+The <a href="https://developer.stackmob.com/js-sdk/api-docs" target="_blank" rel="nofollow">StackMob JavaScript SDK API Docs</a> are also available for reference.
 
 In each section of this guide you may see colored boxes which are meant to highlight important information:
 
@@ -18,14 +18,14 @@ In each section of this guide you may see colored boxes which are meant to highl
 
 ### Initializing the SDK
 
-Include <a href="https://developer.stackmob.com/sdks/js/api#a-general_setup">jQuery (or Sencha or Zepto)</a> and the latest StackMob JavaScript SDK in your page:
+Include <a href="https://developer.stackmob.com/js-sdk/api-docs#a-general_setup" target="_blank">jQuery (or Sencha or Zepto)</a> and the latest StackMob JavaScript SDK in your page:
 
 ```html
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 ```
 
-<a href="https://dashboard.stackmob.com/settings">Find your public key on your app dashboard</a> to initialize the <abbr title="StackMob JavaScript SDK">JavaScript SDK</abbr>.
+<a href="https://dashboard.stackmob.com/settings" rel="nofollow" target="_blank">Find your public key on your app dashboard</a> to initialize the <abbr title="StackMob JavaScript SDK">JavaScript SDK</abbr>.
 
 ```js
 StackMob.init({
@@ -34,14 +34,14 @@ StackMob.init({
 });
 ```
 
-API Version 0 is your built in development environment. <a href="">Learn more about API Versions here.</a>
+API Version 0 is your built in development environment. <a href="https://developer.stackmob.com/module/apiversions" target="_blank">Learn more about API Versions here.</a>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-init" target="_blank">StackMob.init()</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-init" target="_blank">StackMob.init()</a></li>
       </ul>
     </div>
   </div>
@@ -73,7 +73,7 @@ The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a s
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.model" target="_blank">StackMob.Model</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-stackmob.model" target="_blank">StackMob.Model</a></li>
       </ul>
     </div>
   </div>
@@ -84,8 +84,18 @@ The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a s
 Save an instance of your `todo` object to the server.
 
 ```javascript
+  // Associate s Model with the Schema
   var Todo = StackMob.Model.extend({ schemaName: 'todo' });
-  var todo = new Todo({ action: 'Go back and save Marty!', when: 'back to the future!', priority: 1, done: false });
+
+  // Create new instance of Todo
+  var todo = new Todo({
+    action: 'Go back and save Marty!',
+    when: 'back to the future!',
+    priority: 1,
+    done: false
+  });
+
+  // Persist the object to StackMob
   todo.create({
     success: function(model, result, options) { console.debug(model.toJSON()); },
     error: function(model, error, options) {}
@@ -131,7 +141,7 @@ This tells StackMob to save your object in the `todo` schema.
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-create" target="_blank">StackMob.Model#create</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-create" target="_blank">StackMob.Model#create</a></li>
       </ul>
     </div>
   </div>
@@ -159,6 +169,56 @@ You can use the `set(..)` method to pass in or change your local object.  You ca
   });
   user.create();
 ```
+
+### get(..)
+
+You can use `get(..)` to get a field's value on your object:
+
+```javascript
+  var todo = new Todo({ action: 'Take out the garbage!' });
+  todo.get('action'); //Take out the garbage!
+```
+
+<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model" rel="nofollow" target="_blank">See the Backbone.Model docs</a>.</p>
+
+
+
+### Asynchronous Calls
+
+Notice that there are `success` and `error` call"_blank"back functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
+
+For example, let's try getting the JSON representation of an object after we've created it.
+
+```js
+var todo = new Todo({ ... });
+todo.create(); //an AJAX call is fired to StackMob
+todo.toJSON(); //this may not work because "create" may still be waiting for AJAX request to complete!
+```
+
+Your code should be inside the success/error callbacks.
+
+```js
+var todo = new Todo({ ... });
+todo.create({
+  success: function(model, result, options) { 
+    //this is guaranteed to run after the AJAX call is complete
+    console.debug(todo.toJSON()); 
+  },
+  error: function(model, result, options) {}
+});
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-callbacks_and_options" target="_blank">Callbacks and Options</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 ### Read an Object
 
@@ -192,7 +252,7 @@ todo.fetch({
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-fetch" target="_blank">StackMob.Model#fetch</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-fetch" target="_blank">StackMob.Model#fetch</a></li>
       </ul>
     </div>
   </div>
@@ -233,7 +293,7 @@ todo.save({
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-save" target="_blank">StackMob.Model#save</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-save" target="_blank">StackMob.Model#save</a></li>
       </ul>
     </div>
   </div>
@@ -258,14 +318,14 @@ user.destroy({
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-destroy" target="_blank">StackMob.Model#destroy</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-destroy" target="_blank">StackMob.Model#destroy</a></li>
       </ul>
     </div>
   </div>
 </div>
 
 
-### Arrays
+### Array Fields
 
 You can save arrays.
 
@@ -297,7 +357,7 @@ If you have multiple users appending to the same array concurrently, StackMob ma
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-appendandsave" target="_blank">StackMob.Model#appendAndSave</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-appendandsave" target="_blank">StackMob.Model#appendAndSave</a></li>
       </ul>
     </div>
   </div>
@@ -320,23 +380,12 @@ As with `appendAndSave`, concurrency issues are handled appropriately.
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-deleteandsave" target="_blank">StackMob.Model#deleteAndSave</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-deleteandsave" target="_blank">StackMob.Model#deleteAndSave</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-
-### get(..)
-
-You can use `get(..)` to get a field's value on your object:
-
-```javascript
-  var todo = new Todo({ action: 'Take out the garbage!' });
-  todo.get('action'); //Take out the garbage!
-```
-
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
 
 
 ### toJSON()
@@ -365,39 +414,6 @@ You can also display the JSON representation of your model by calling the `toJSO
   });
 ```
 
-### Asynchronous Calls
-
-Notice that there are `success` and `error` callback functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
-
-For example, let's try getting the JSON representation of an object after we've created it.
-
-```js
-var todo = new Todo({ ... });
-todo.create(); //an AJAX call is fired to StackMob
-todo.toJSON(); //this may not work because "create" may still be waiting for AJAX request to complete!
-```
-
-Your code should be inside the success/error callbacks.
-
-```js
-var todo = new Todo({ ... });
-todo.create({
-  success: function(model, result, options) { console.debug(todo.toJSON()); },  //this is guaranteed to run after the AJAX call is complete
-  error: function(model, result, options) {}
-});
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-callbacks_and_options" target="_blank">Callbacks and Options</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
 
 ## Collections
 
@@ -416,14 +432,14 @@ To work with an array of your objects, define your `Collection`.
   });
 ```
 
-<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
+<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank" rel="nofollow">methods of a Backbone.js Collection</a>.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection" target="_blank">StackMob.Collection</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-stackmob.collection" target="_blank">StackMob.Collection</a></li>
       </ul>
     </div>
   </div>
@@ -452,7 +468,7 @@ todos.query(q, {
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection.query" target="_blank">StackMob.Collection.Query</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-stackmob.collection.query" target="_blank">StackMob.Collection.Query</a></li>
       </ul>
     </div>
   </div>
@@ -479,7 +495,7 @@ todos.query(q, ...);
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-lt__less_than_" target="_blank">StackMob.Collection.Query#lt,lte,gt,gte</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-lt__less_than_" target="_blank">StackMob.Collection.Query#lt,lte,gt,gte</a></li>
       </ul>
     </div>
   </div>
@@ -513,7 +529,7 @@ todos.query(q);
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-mustbeoneof" target="_blank">StackMob.Collection.Query#mustBeOneOf</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-mustbeoneof" target="_blank">StackMob.Collection.Query#mustBeOneOf</a></li>
       </ul>
     </div>
   </div>
@@ -538,7 +554,7 @@ todos.query(q);
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-setrange" target="_blank">StackMob.Collection.Query#setRange</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-setrange" target="_blank">StackMob.Collection.Query#setRange</a></li>
       </ul>
     </div>
   </div>
@@ -574,7 +590,7 @@ StackMob always returns the primary key, but no other fields are returned.
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-select" target="_blank">StackMob.Collection.Query#select</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-select" target="_blank">StackMob.Collection.Query#select</a></li>
       </ul>
     </div>
   </div>
@@ -623,15 +639,15 @@ Let's give a `user` object several `todo` items.  We'll assume that we have both
 
 <a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank">Edit the user schema</a> and add a Relationship to the user.
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
 
 Fill in relationship details:
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-todo-modal.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-todo-modal.png" alt=""/></a></p>
 
 And you'll get:
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-todo-field.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-todo-field.png" alt=""/></a></p>
 
 **Save the schema** and that's it - you have a relationship.
 
@@ -687,7 +703,7 @@ todos.fetch();
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-addrelationship" target="_blank">StackMob.Model#addRelationship</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-addrelationship" target="_blank">StackMob.Model#addRelationship</a></li>
       </ul>
     </div>
   </div>
@@ -744,8 +760,8 @@ q.setExpand(3);
     <div class="span12">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-fetchexpanded" target="_blank">StackMob.Model#fetchExpanded (for a single model)</a></li>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-setexpand" target="_blank">StackMob.Collection.Query#setExpand (for a collection query)</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-fetchexpanded" target="_blank">StackMob.Model#fetchExpanded (for a single model)</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-setexpand" target="_blank">StackMob.Collection.Query#setExpand (for a collection query)</a></li>
       </ul>
     </div>
   </div>
@@ -788,7 +804,7 @@ todos.query(q, ...)
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-select" target="_blank">StackMob.Collection.Query#select</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-select" target="_blank">StackMob.Collection.Query#select</a></li>
       </ul>
     </div>
   </div>
@@ -811,7 +827,7 @@ user.deleteAndSave('chores', ['1'],
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-deleteandsave" target="_blank">StackMob.Model#deleteAndSave</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-deleteandsave" target="_blank">StackMob.Model#deleteAndSave</a></li>
       </ul>
     </div>
   </div>
@@ -837,7 +853,7 @@ Todo object `1` is removed from the datastore completely.
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-deleteandsave" target="_blank">StackMob.Model#deleteAndSave</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-deleteandsave" target="_blank">StackMob.Model#deleteAndSave</a></li>
       </ul>
     </div>
   </div>
@@ -852,7 +868,7 @@ StackMob also gives you a way to authenticate your users.  The JS SDK uses OAuth
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.user" target="_blank">StackMob.User</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-stackmob.user" target="_blank">StackMob.User</a></li>
       </ul>
     </div>
   </div>
@@ -913,7 +929,7 @@ c.create(); //saves to "customer"
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-login_-_with_custom_schema" target="_blank">StackMob.User Custom Schema and Fields</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-login_-_with_custom_schema" target="_blank">StackMob.User Custom Schema and Fields</a></li>
       </ul>
     </div>
   </div>
@@ -957,7 +973,7 @@ Your user will be logged in for an hour.
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-login" target="_blank">StackMob.User#login</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-login" target="_blank">StackMob.User#login</a></li>
       </ul>
     </div>
   </div>
@@ -1004,9 +1020,9 @@ user.isLoggedIn({
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-isloggedin_-_stackmob" target="_blank">StackMob#isLoggedIn</a></li>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-isuserloggedin" target="_blank">StackMob#isUserLoggedIn</a></li>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-isloggedin_-_stackmob.user" target="_blank">StackMob.User#isLoggedIn</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-isloggedin_-_stackmob" target="_blank">StackMob#isLoggedIn</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-isuserloggedin" target="_blank">StackMob#isUserLoggedIn</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-isloggedin_-_stackmob.user" target="_blank">StackMob.User#isLoggedIn</a></li>
       </ul>
     </div>
   </div>
@@ -1030,7 +1046,7 @@ StackMob.getLoggedInUser({
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-getloggedinuser" target="_blank">StackMob#getLoggedInUser</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-getloggedinuser" target="_blank">StackMob#getLoggedInUser</a></li>
       </ul>
     </div>
   </div>
@@ -1055,7 +1071,7 @@ user.resetPassword('myfists', 'mynewandimprovedfists', {
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-resetpassword" target="_blank">StackMob.User#resetPassword</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-resetpassword" target="_blank">StackMob.User#resetPassword</a></li>
       </ul>
     </div>
   </div>
@@ -1099,8 +1115,8 @@ As with `login`, you can set whether or not to stay logged in.
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-forgotpassword" target="_blank">StackMob.User#forgotPassword</a></li>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-loginwithtempandsetnewpassword" target="_blank">StackMob.User#loginWithTempAndSetNewPassword</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-forgotpassword" target="_blank">StackMob.User#forgotPassword</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-loginwithtempandsetnewpassword" target="_blank">StackMob.User#loginWithTempAndSetNewPassword</a></li>
       </ul>
     </div>
   </div>
@@ -1129,7 +1145,7 @@ FB.login(function(response) {
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-loginwithfacebookautocreate" target="_blank">StackMob.User#loginWithFacebookAutoCreate</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-loginwithfacebookautocreate" target="_blank">StackMob.User#loginWithFacebookAutoCreate</a></li>
       </ul>
     </div>
   </div>
@@ -1182,87 +1198,87 @@ user.setBinaryFile('profilepic', fileName, fileType, base64Content);
 
 Let's take an expanded example and get a file from the local filesystem with the HTML5 FileReader API:
 
-```js
-<!DOCTYPE html>
-<html>
-<head>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
- 
-<script type="text/javascript">
-/* <![CDATA[ */
-    StackMob.init({
-        publicKey: 'your_public_key',
-    apiVersion: 0
-  });
-/* ]]> */
-</script>
- 
-</head>
-<body>
- 
-<table>
-  <tr>
-    <td>File to Encode:</td>
-    <td><input type="file" id="files" name="files[]" multiple /></td>
-  </tr>
-</table>
- 
-<script type="text/javascript">
-  //Define your Todo class once on the page.
-  var Todo = StackMob.Model.extend({
-    schemaName: 'todo'
-  });
- 
-  var todoInstance = new Todo();
-  var fieldname = 'picture'; //name of binary field that you created in your schema
-  
-  function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
- 
-    // Loop through the FileList
-    for (var i = 0, f; f = files[i]; i++) {
- 
-      var reader = new FileReader();
- 
-      // Closure to capture the file information
-      reader.onload = (function(theFile) {
-        return function(e) {
- 
-          /*
-            e.target.result will return "data:image/jpeg;base64,[base64 encoded data]...".
-            We only want the "[base64 encoded data] portion, so strip out the first part
-          */
-          var base64Content = e.target.result.substring(e.target.result.indexOf(',') + 1, e.target.result.length);
-          var fileName = theFile.name;
-          var fileType = theFile.type;
- 
-          todoInstance.setBinaryFile(fieldname, fileName, fileType, base64Content);
-          todoInstance.save();
- 
-        };
-      })(f);
- 
-      // Read in the file as a data URL
-      fileContent = reader.readAsDataURL(f);
- 
-    }
-  }
- 
-  document.getElementById('files').addEventListener('change', handleFileSelect, false);
- 
-</script>
- 
-</body>
-</html>
-```
+    ```js
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+     
+    <script type="text/javascript">
+    /* <![CDATA[ */
+        StackMob.init({
+            publicKey: 'your_public_key',
+        apiVersion: 0
+      });
+    /* ]]> */
+    </script>
+     
+    </head>
+    <body>
+     
+    <table>
+      <tr>
+        <td>File to Encode:</td>
+        <td><input type="file" id="files" name="files[]" multiple /></td>
+      </tr>
+    </table>
+     
+    <script type="text/javascript">
+      //Define your Todo class once on the page.
+      var Todo = StackMob.Model.extend({
+        schemaName: 'todo'
+      });
+     
+      var todoInstance = new Todo();
+      var fieldname = 'picture'; //name of binary field that you created in your schema
+      
+      function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+     
+        // Loop through the FileList
+        for (var i = 0, f; f = files[i]; i++) {
+     
+          var reader = new FileReader();
+     
+          // Closure to capture the file information
+          reader.onload = (function(theFile) {
+            return function(e) {
+     
+              /*
+                e.target.result will return "data:image/jpeg;base64,[base64 encoded data]...".
+                We only want the "[base64 encoded data] portion, so strip out the first part
+              */
+              var base64Content = e.target.result.substring(e.target.result.indexOf(',') + 1, e.target.result.length);
+              var fileName = theFile.name;
+              var fileType = theFile.type;
+     
+              todoInstance.setBinaryFile(fieldname, fileName, fileType, base64Content);
+              todoInstance.save();
+     
+            };
+          })(f);
+     
+          // Read in the file as a data URL
+          fileContent = reader.readAsDataURL(f);
+     
+        }
+      }
+     
+      document.getElementById('files').addEventListener('change', handleFileSelect, false);
+     
+    </script>
+     
+    </body>
+    </html>
+    ```
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-setbinaryfile" target="_blank">StackMob.Model#setBinaryFile</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-setbinaryfile" target="_blank">StackMob.Model#setBinaryFile</a></li>
       </ul>
     </div>
   </div>
@@ -1291,14 +1307,14 @@ stackmob_office.create({
 
 That's it!  Check out the dashboard for your new point.
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/geo/modules-geo-objectbrowser-place.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/data/browser/place" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/geo/modules-geo-objectbrowser-place.png" alt=""/></a></p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.geopoint" target="_blank">StackMob.GeoPoint</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-stackmob.geopoint" target="_blank">StackMob.GeoPoint</a></li>
       </ul>
     </div>
   </div>
@@ -1362,7 +1378,7 @@ See more about geolocation data in the resources below.
     <div class="span12">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-stackmob.collection.query_with_stackmob.geopoint" target="_blank">StackMob.Collection.Query: mustBeNear,isWithin,isWithinBox (radians, mi, km)</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-stackmob.collection.query_with_stackmob.geopoint" target="_blank">StackMob.Collection.Query: mustBeNear,isWithin,isWithinBox (radians, mi, km)</a></li>
       </ul>
     </div>
   </div>
@@ -1399,7 +1415,7 @@ Read more about <a href="/customcode-sdk/developer-guide" target="_blank">StackM
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/sdks/js/api#a-customcode" target="_blank">StackMob#customcode (StackMob#cc)</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-customcode" target="_blank">StackMob#customcode (StackMob#cc)</a></li>
       </ul>
     </div>
   </div>

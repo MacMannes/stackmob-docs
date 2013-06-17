@@ -1,4 +1,4 @@
-iOS Facebook
+iOS Facebook Integration
 ====================
 
 ## Overview

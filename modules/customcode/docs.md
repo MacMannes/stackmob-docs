@@ -7,7 +7,7 @@ StackMob's Custom Code service and SDK enables you to implement your own server-
 
 Using GitHub to link your Custom Code to StackMob allows you develop your code in a git repository and enables one click deployment of your code for quick iteration and a much easier experience than manually building and uploading JAR files.
 
-# Getting Started on GitHub
+## Getting Started on GitHub
 
 To set up GitHub, you're going to need to download Git and configure your SSH keys. Follow <a href="https://help.github.com/articles/set-up-git" target="_blank">the directions on the GitHub site</a> to get up and running.  They've done a great job showing you how to get started.
 
@@ -20,7 +20,7 @@ If you don't fork the starter repo, it's important to note that your repo must:
 
 For you sbt fans, sbt support is on the way!
 
-# Setting up GitHub with StackMob
+## Setting up GitHub with StackMob
 
 Once you have a repo set up, it's time to link StackMob to your GitHub repository. Linking the two means we can build and deploy your code automatically when you push new code, rather than having to manually builda dn upload a JAR file yourself.
 
@@ -32,7 +32,7 @@ Upon successfully authenticating, you'll be shown your GitHub details:  your org
 
 Your StackMob account is now linked to GitHub!
 
-# Deploying to StackMob via GitHub
+## Deploying to StackMob via GitHub
 
 As you continue to develop and commit your code to GitHub, you can either manually trigger StackMob to deploy your files or configure StackMob to automatically fetch files when you push to GitHub.
 

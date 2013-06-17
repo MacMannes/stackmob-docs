@@ -98,24 +98,34 @@ Code examples of the topics covered in this Developer Guide can be found in our 
 
 ### Try Custom Code in less than 5 minutes
 
-We've provided a ready-to-upload JAR so you can try Custom Code immediately.
+We've provided a ready-to-upload JAR so you can try Custom Code immediately. It will introduce a `hello_world` function on the server side that, when called, returns JSON `{ msg: "Hello, World!"}`.
 
-First <a href="https://marketplace.stackmob.com/module/customcode" target="_blank">Add the Custom Code module</a>.
+1. <a href="https://marketplace.stackmob.com/module/customcode" target="_blank">Add the Custom Code module</a>.
 
-Then <a href="" class="btn btn-info">Download the Example JAR</a> and <a href="https://dashboard.stackmob.com/module/customcode/upload" target="_blank">Upload it through the Dashboard</a>
+2. <a href="https://s3.amazonaws.com/static.stackmob.com/customcode/stackmob-customcode-build-0.1.0-SNAPSHOT.jar" class="btn btn-info">Download the Hello World example JAR</a>
 
-Once uploaded, you can try Custom Code in the <a href="https://dashboard.stackmob.com/data/console" target="_blank">Dashboard Console</a>
+3. <a href="https://dashboard.stackmob.com/module/customcode/upload" target="_blank">Upload it through the Dashboard</a>.
 
-[SCREENSHOT OF CONSOLE]
+That's it!  You can now try Custom Code in the <a href="https://dashboard.stackmob.com/data/console?method=hello_world&type=cm&avn=0" target="_blank">Dashboard Console</a>, a UI to help you make REST API requests against your StackMob API (and hence your custom code).
 
-We'll show you how to call it from the StackMob SDKs below.
+Below is the result of selecting the `hello_world` endpoint and submitting a `GET` request:
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/data/console?method=hello_world&type=cm&avn=0" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/console/dashboard-console-customcode-helloworld-overview.png" alt=""/></a></p>
+
+Notice that you're making a REST API call to `hello_world`.  Custom Code methods are converted into REST API endpoints and are accessible from anywhere you can make an HTTP request with headers.
+
+You just uploaded and ran your first Custom Code method!
+
+<p class="alert">
+  Custom Code methods are converted into REST API endpoints and are accessible from anywhere you can make an HTTP request with headers.
+</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="" target="_blank">Check out the Example Source</a></li>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-starter" target="_blank" rel="nofollow">View the example Custom Code Java Starter project</a></li>
       </ul>
     </div>
   </div>
@@ -124,11 +134,17 @@ We'll show you how to call it from the StackMob SDKs below.
 
 ## Setup
 
-Let's get a Custom Code project started.  We've provided an easy way to get started below.  It's a zip file with all the necessary files needed to build a project.
+Let's get a Custom Code project started so that you can start adding your own methods (API endpoints).  We've provided an easy way to get started below.  It's a zip file with all the necessary files needed to build a project.  (It's a <a href="http://maven.apache.org/" rel="nofollow" target="_blank">Maven</a> project, so be sure to <a href="http://maven.apache.org/download.cgi#Installation" target="_blank" rel="nofollow">install Maven</a>.)
 
-<a href="" class="btn btn-info">Download the Custom Code Starter Template zip</a> and unzip it.
+<a href="https://github.com/stackmob/stackmob-customcode-java-starter/archive/master.zip" class="btn btn-info">Download the Custom Code Java Starter Template zip</a> and unzip it.
 
-We've included an extra `HelloWorld.java` file at `src/main/java/com/stackmob/example` which you can remove.  But it's there as an example, and we'll use it here in this Developer Guide.
+If you want to build your JAR right away, simply run `mvn package` in the root folder (where `pom.xml` is).
+
+We've included `src/main/java/com/stackmob/customcode/HelloWorld.java` which you can remove.  But it's there as an example, and we'll use it here in this Developer Guide. (Note it's also referred to in `EntryPointExtender.java`)
+
+<p class="alert">
+  Use GitHub?  You can skip Maven and JARs.  Fork the <a href="https://github.com/stackmob/stackmob-customcode-java-starter">StackMob Custom Code Java Starter</a> repository and <a href="https://dashboard.stackmob.com/module/customcode/upload_github" target="_blank">link your Custom Code repository with StackMob</a>.  StackMob will automatically build your project for you.
+</p>
 
 
 ### Class Template
@@ -141,28 +157,29 @@ A method is represented by a class that extends the interface `CustomCodeMethod`
 
 Let's look at the basic class, represented by `HelloWorld.java`.
 
-```java,3,6,9
+```java,4,7,10
 public class HelloWorld implements CustomCodeMethod {
+
   @Override
   public String getMethodName() { return "hello_world"; }
 
   @Override
-  public List<String> getParams() { return Arrays.asList(); }
+  public List<String> getParams() { return new ArrayList<String>(); }
 
   @Override
   public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
-    return new ResponseToProcess(HttpURLConnection.HTTP_OK, 
-    	new HashMap<String, String>() {{
-    		put("message", "hello world!");
-    		}});
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("msg", "Hello, world!");
+    return new ResponseToProcess(HttpURLConnection.HTTP_OK, map);
   }
+
 }
 ```
 
 This method will return JSON when called:
 
 ```js
-{ message: "hello world!" }
+{ msg: "Hello, world!" }
 ```
 
 `getMethodName` defines your API endpoint: <i>https://api.stackmob.com/</i>`hello_world`.
@@ -184,7 +201,7 @@ This method will return JSON when called:
 
 ### Exposing the Method
 
-For StackMob to be aware of this method, you should add an entry for `HelloWorld` in `src/main/java/com/stackmob/example/EntryPointExtender.java`.  **This is a mandatory step.**
+For StackMob to be aware of this method, you should add an entry for `HelloWorld` in `src/main/java/com/stackmob/customcode/EntryPointExtender.java`.  **This is a mandatory step.**
 
 ```java,5
 public class EntryPointExtender extends JarEntryObject {
@@ -404,17 +421,20 @@ Let's get the parameters out of the request URL.  To start out, let's first make
 <span class="tab clientcallgetparams" title="iOS SDK"></span>
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
-	initGetRequestWithMethod:@"hello_world"];
-         
+    initGetRequestWithMethod:@"hello_world"];
+ 
+[request addQueryStringParameterWhere:@"name" equals:@"joe"];
+[request addQueryStringParameterWhere:@"age" equals:[NSNumber numberWithInt:10]];
+          
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
-  			  NSHTTPURLResponse *response, 
-  			  id JSON) {
-        NSLog(@"Success: %@",JSON);
+              NSHTTPURLResponse *response, 
+              id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
-  				NSHTTPURLResponse *response, 
-  				NSError *error, 
-  				id JSON){
+                NSHTTPURLResponse *response, 
+                NSError *error, 
+                id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```
@@ -422,10 +442,14 @@ SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 
 <span class="tab clientcallgetparams" title="Android SDK"></span>
 ```java
-StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
-    @Override public void success(String responseBody) {}
-    @Override public void failure(StackMobException e) {}
-});
+List<Map.Entry<String, String>> args = new ArrayList<Map.Entry<String, String>>();
+args.add(new AbstractMap.SimpleEntry<String, String>("name","joe"));
+args.add(new AbstractMap.SimpleEntry<String, String>("age","10"));
+ 
+List<Map.Entry<String, String>> headers = new ArrayList<Map.Entry<String, String>>();
+ 
+StackMobDatastore ds = client.getDatastore();
+ds.get("hello_world", args, headers, new StackMobCallback() {});
 ```
 <span class="tab"></span>
 
@@ -460,28 +484,40 @@ Perhaps you're sending up JSON.  Let's do that with the client SDKs.
 <span class="tab clientcallpostjson" title="iOS SDK"></span>
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
-	initGetRequestWithMethod:@"hello_world"];
-
+    initGetRequestWithMethod:@"hello_world"];
+ 
+NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:@"joe", @"name", [NSNumber numberWithInt:10], @"age"];
+NSErrtor *error = nil;
+NSData* jsonData = [NSJSONSerialization dataWithJSONObject:body 
+  options:NSJSONWritingPrettyPrinted error:&error];
+if (error) {
+  // Handle error
+}
+ 
+request.requestBody = [[NSString alloc] initWithData:jsonData enconding:NSUTF8StringEncoding];
+ 
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
-  			  NSHTTPURLResponse *response, 
-  			  id JSON) {
-        NSLog(@"Success: %@",JSON);
+              NSHTTPURLResponse *response, 
+              id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
-  				NSHTTPURLResponse *response, 
-  				NSError *error, 
-  				id JSON){
+                NSHTTPURLResponse *response, 
+                NSError *error, 
+                id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```
 <span class="tab"></span>
 
 <span class="tab clientcallpostjson" title="Android SDK"></span>
+
 ```java
-StackMob.getStackMob().getDatastore().get("hello_world", new StackMobCallback() {
-    @Override public void success(String responseBody) {}
-    @Override public void failure(StackMobException e) {}
-});
+//POST /hello_world with body {name:'joe',age:10}
+Map<String, String> body = new HashMap<String, String>();
+body.put("name", "joe");
+body.put("age", "10");
+ds.post("hello_world", body, new StackMobCallback() {});
 ```
 <span class="tab"></span>
 
@@ -815,7 +851,7 @@ Let's assume we have a `user` schema, and we've related the user to the `car` sc
 
 ### Adding related objects
 
-**Existing Objects**
+**Existing Child Object Instances**
 
 If the `car` already exists in the datastore, and you want to relate it with a `user`.  You just need to relate the two existing objects together with the primary keys.
 
@@ -854,7 +890,7 @@ No new objects are created in the datastores.  We're just linking existing objec
   </div>
 </div>
 
-**New Objects**
+**New Child Object Instances**
 
 If the cars *don't* exist in the `car` schema yet, we can create them and relate them to the `user` in one call.  Let's give a `user` two new `cars`.  The following will create the two `car` objects in the respective `car` schema and relate them to the user at the same time.
 
@@ -1422,46 +1458,64 @@ mvn package
 This will build the JAR which you can <a href="https://dashboard.stackmob.com/module/customcode/upload" target="_blank">upload to StackMob</a>.  Your JAR can be found at:
 
 ```xml
-your-project-folder-name/target/java-example-0.1.0-SNAPSHOT.jar
+your-project-folder-name/target/stackmob-customcode-build-0.1.0-SNAPSHOT.jar (configured in pom.xml)
 ```
 
 Upon uploading, StackMob will deploy your JAR to your development environment.
+
+All Maven files and folders are already configured for you in the <a href="#Setup">Starter project above</a>.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-example/tree/master/scala-maven" target="_blank" rel="nofollow">A Maven Custom Code Scala example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <span class="tab"></span>
 
 <span class="tab buildcc" title="GitHub"></span>
 
-<p><b>Connect StackMob with your GitHub repo</b></p>
+<p><b>Link StackMob with your GitHub repo</b></p>
 
-Once you have a repo set up, it's time to link StackMob to your GitHub repository. Linking the two means we can build and deploy your code automatically when you push new code, rather than having to manually build and upload a JAR file yourself.
+StackMob's Custom Code service and SDK enables you to implement your own server-side logic and still have access to all the same StackMob APIs for managing your app's data. We host and run your code so you never have to worry about configuring or managing your own servers.
 
-First, go to the <a href="https://dashboard.stackmob.com/module/customcode/view" target="_blank">Custom Code GitHub</a> page and click on "Link StackMob with GitHub".
+Using GitHub to link your Custom Code to StackMob allows you develop your code in a git repository.  StackMob can build your project f and enables one click deployment of your code for quick iteration and a much easier experience than manually building and uploading JAR files.
 
-<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-link-with-github-1.png" alt=""/></p>
+**Setting up GitHub with StackMob**
 
-A StackMob prompt will appear asking if you want to link StackMob with GitHub.  Accept the StackMob prompt's confirmation and you'll be redirect to GitHub site, where GitHub will ask permissions on its behalf.  Confirm there as well.
+You can first <a href="https://dashboard.stackmob.com/module/customcode/upload_github" target="_blank">Link your GitHub repository with StackMob</a>.
 
-<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-authorize-with-github.png" alt=""/></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/module/customcode/upload_github" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-link-with-github-1.png" alt=""/></a></p>
 
-Upon successfully authenticating, you'll be shown your GitHub details:  your organization and your repositories.  Your organization is likely just your username.  Your repositories are the projects you've created on GitHub. Select your organization and the repo you created for your custom code and hit "Save".
+Authorize access and then choose your repository:
 
-<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-link-with-github-2.png" alt=""/></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/module/customcode/upload_github" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-link-with-github-2.png" alt=""/></a></p>
 
-As you continue to develop and commit your code to GitHub, you can either manually trigger StackMob to deploy your files or configure StackMob to automatically fetch files when you push to GitHub.
+Save your configuration.  Your StackMob account is now linked to GitHub!
 
-To manually refresh your site after a fresh commit to GitHub, go to the <a href="https://dashboard.stackmob.com/module/customcode/view" target="_blank">Custom Code GitHub</a> page and click on "Deploy Latest to Development". That's it!
+**Deploying to Development**
 
-<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-deploy-latest.png" alt=""/></p>
+Now that your repository is linked, you can build and deploy your code to the Development environment.
+
+**Manual Deploy**
+
+You can click a button to deploy your Custom Code to Development.
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/module/customcode/upload_github" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-manual-deploy.png" alt=""/></a></p>
 
 
-Upon clicking, StackMob fetches your files from GitHub.  It takes a short while to deploy, however in a few seconds you'll be able to start using your updated API methods.
+**Enabling Automatic Build and Deploy**
 
-<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-deploy-history.png" alt=""/></p>
+You can optionally have StackMob build and deploy your latest custom code to your Development environment whenever you push changes to GitHub.  Just enable the GitHub Service Hook (tells GitHub to notify StackMob of when there are changes made).
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/module/customcode/upload_github" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-service-hook.png" alt=""/></a></p>
 
 
-To make things even easier, you can set your application to automatically update the development site anytime time code is pushed to the master branch of the connected repo. Just click the "Enable [Service Hook]" button to do so!
-
-<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/customcode/modules-customcode-enable-service-hook.png" alt=""/></p>
 <span class="tab"></span>
 
 
@@ -1474,20 +1528,33 @@ To make things even easier, you can set your application to automatically update
 libraryDependencies += "com.stackmob" % "customcode" % "0.5.6" % "provided"
 ```
 
-In our custom code example repo you'll find a sample scala-sbt project with the file <a href="https://github.com/stackmob/stackmob-customcode-example/blob/master/scala-sbt/build.sbt">build.sbt</a>. 
+In our <a href="https://github.com/stackmob/stackmob-customcode-example/tree/master/scala-sbt" target="_blank" rel="nofollow">Scala custom code example</a> you'll find a sample scala-sbt project with the file <a href="https://github.com/stackmob/stackmob-customcode-example/blob/master/scala-sbt/build.sbt">build.sbt</a>. 
 For those not familiar with sbt, here is the <a href="https://github.com/harrah/xsbt/wiki/Getting-Started-Setup">Getting Started with sbt</a>
 
 <span class="tab"></span>
 
+## Deploying to Production
 
-## Restrictions
-
-### Security Manager
+To get your Custom Code to the Production environment, just <a href="https://developers.stackmob.com/module/apiversions#HowdoIDeploytoProduction" target="_blank">deploy your API</a>.  Deploying your API will roll out both schemas and custom code.
 
 ## Testing Locally
 
-how to test the custom code locally (local runner)
+You can run Custom Code locally on a mock API server StackMob provides.  Read about the <a href="https://github.com/stackmob/stackmob-customcode-dev" rel="nofollow" target="_blank">StackMob Custom Code Development Environment</a>.
+
+It houses your JAR and proxies API calls.  You would treat this running server as your test API server and point your requests at it.
 
 ## Best Practices
 
-Read about Custom Code Best Practices.
+Be sure to read about <a href="https://developer.stackmob.com/customcode-sdk/best-practices-guide">Custom Code Best Practices</a>.  It'll keep your code running quickly and will help keep your code scalable!
+
+
+## Restrictions
+
+The Custom Code environment has some restrictions so as to ensure a secure environment.
+
+* can not create new threads
+* can not read/write files
+* can not read/write to socket (unless using <a href="#ExternalHTTPCalls">StackMob's HTTPService</a>)
+* can not read/write properties
+* can not use reflection
+* maximum execution time is 25 seconds

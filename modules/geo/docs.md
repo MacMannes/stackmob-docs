@@ -19,7 +19,11 @@ Click Add Field, then Save Schema, and you're set!
 
 ## Saving and Querying Geolocation data
 
-<a href="https://developer.stackmob.com/sdks">Check your SDK's</a> Developer Guide for more info on saving and querying.
+Read about how StackMob's mobile SDKs save and query geolocation data.
+
+* <a href="https://developer.stackmob.com/ios-sdk/developer-guide#Geolocation" target="_blank">iOS SDK</a>
+* <a href="https://developer.stackmob.com/android-sdk/developer-guide#Geolocation" target="_blank">Android SDK</a>
+* <a href="https://developer.stackmob.com/js-sdk/developer-guide#Geolocation" target="_blank">JS SDK</a>
 
 
 
