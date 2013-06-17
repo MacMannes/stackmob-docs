@@ -421,17 +421,20 @@ Let's get the parameters out of the request URL.  To start out, let's first make
 <span class="tab clientcallgetparams" title="iOS SDK"></span>
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
-	initGetRequestWithMethod:@"hello_world"];
-         
+    initGetRequestWithMethod:@"hello_world"];
+ 
+[request addQueryStringParameterWhere:@"name" equals:@"joe"];
+[request addQueryStringParameterWhere:@"age" equals:[NSNumber numberWithInt:10]];
+          
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
-  			  NSHTTPURLResponse *response, 
-  			  id JSON) {
-        NSLog(@"Success: %@",JSON);
+              NSHTTPURLResponse *response, 
+              id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
-  				NSHTTPURLResponse *response, 
-  				NSError *error, 
-  				id JSON){
+                NSHTTPURLResponse *response, 
+                NSError *error, 
+                id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```
@@ -481,17 +484,27 @@ Perhaps you're sending up JSON.  Let's do that with the client SDKs.
 <span class="tab clientcallpostjson" title="iOS SDK"></span>
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
-	initGetRequestWithMethod:@"hello_world"];
-
+    initGetRequestWithMethod:@"hello_world"];
+ 
+NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:@"joe", @"name", [NSNumber numberWithInt:10], @"age"];
+NSErrtor *error = nil;
+NSData* jsonData = [NSJSONSerialization dataWithJSONObject:body 
+  options:NSJSONWritingPrettyPrinted error:&error];
+if (error) {
+  // Handle error
+}
+ 
+request.requestBody = [[NSString alloc] initWithData:jsonData enconding:NSUTF8StringEncoding];
+ 
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
-  			  NSHTTPURLResponse *response, 
-  			  id JSON) {
-        NSLog(@"Success: %@",JSON);
+              NSHTTPURLResponse *response, 
+              id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
-  				NSHTTPURLResponse *response, 
-  				NSError *error, 
-  				id JSON){
+                NSHTTPURLResponse *response, 
+                NSError *error, 
+                id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```
