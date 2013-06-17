@@ -32,14 +32,14 @@ If you've logged into websites with Facebook or Twitter's JS SDKs, you've used O
 
 The following access levels are currently available in order of most restrictive to least.  You can assign these individually to each action (Create, Read, Update, Delete).
 
-* <a href="#a-not_allowed">Not Allowed</a>
-* <a href="#a-allowed_with_private_key">Allowed with Private Key</a>
-* <a href="#a-allowed_when_logged-in">Allowed when Logged-in</a>
-  * <a href="#a-allow_to_object_owner">Allow to Object Owner</a>
-  * <a href="#a-users_defined_in_a_role">Users defined in a Role</a>
-  * <a href="#a-any_user_with_a_relationship_to_the_object">Any User with a relationship to the object</a>
-  * <a href="#a-allow_to_any_logged_in_user">Allow to Any Logged In User</a>
-* <a href="#a-open__accessible_with_public_key_or_private_key_">Open</a>
+* <a href="#NotAllowed">Not Allowed</a>
+* <a href="#AllowedwithPrivateKey">Allowed with Private Key</a>
+* <a href="#LoggedInPermissions">Allowed when Logged-in</a>
+* <a href="#AllowtoObjectOwner">Allow to Object Owner</a>
+* <a href="#UsersdefinedinaRole">Users defined in a Role</a>
+* <a href="#RelatedUsersonthesmownerinstance">Any User with a relationship to the object</a>
+* <a href="#AllowtoAnyLoggedInUser">Allow to Any Logged In User</a>
+* <a href="#OpenAccessiblewithpublickeyORprivatekey">Open</a>
 
 
 Let's see what these do.
@@ -103,14 +103,13 @@ Also, if you are using an older SDK (before version 0.5.0), then your app is usi
 
 There are various levels of access for users who've logged-in.  These are generally listed from most to least restrictive.
 
-* <a href="#a-allow_to_object_owner">Allow to Object Owner</a>
-* <a href="#a-any_user_with_a_relationship_to_the_object">Any User with a relationship to the object</a>
-* <a href="#a-related_users_on_the_sm_owner_instance">Related Users on the sm_owner instance</a>
-* <a href="#a-users_defined_in_a_role">Users defined in a Role</a>
-* <a href="#a-allow_to_any_logged_in_user">Allow to Any Logged In User</a>
+* <a href="#LoggedInPermissions">Allowed when Logged-in</a>
+* <a href="#AllowtoObjectOwner">Allow to Object Owner</a>
+* <a href="#UsersdefinedinaRole">Users defined in a Role</a>
+* <a href="#RelatedUsersonthesmownerinstance">Any User with a relationship to the object</a>
+* <a href="#AllowtoAnyLoggedInUser">Allow to Any Logged In User</a>
 
-
-#### Allow to Object Owner
+### Allow to Object Owner
 
 At this permission level, only allow the logged in owner of the object instance to perform the action on the object.  For instance, if user `johndoe` created a new `todo` record, and the `todo` schema had `Read` set to this permission level, then only `johndoe` would be allowed to read this  `todo` record.
 
@@ -145,7 +144,7 @@ Available to the following SDKs:
 * JS SDK v0.5.0+
 
 
-#### Any User with a relationship to the object
+### Any User with a relationship to the object
 
 Only users defined in a user relationship to that object instance can perform the action (CREATE, READ, UPDATE or DELETE) on that object.
 
@@ -176,7 +175,7 @@ Here's an example of a todo object with related users.
 
 *Your users must be logged-in and related to the individual object in order to take advantage of this access level.*
 
-#### Related Users on the sm_owner instance
+### Related Users on the sm_owner instance
 
 `sm_owner` represents the user who created the object. Only allow access to users specified in a relationship field on the `sm_owner` user object.
 
@@ -190,7 +189,7 @@ For instance, to share a photo with the photo sm_owner's friends, the `user` sch
 <a href="https://dashboard.stackmob.com/schemas/" target="_blank"><img src="//s3.amazonaws.com/static.stackmob.com/images/tutorial/dashboard/acl-09.png" alt=""/></a>
 </p>
 
-#### Users defined in a Role
+### Users defined in a Role
 
 You can group your users by `Role`.  A role is basically a list of users grouped together.
 
@@ -229,10 +228,7 @@ Assume you've created a `role` named `Admins`.  You can limit `read` access to A
 
 *You will need to setup your roles in Production as well since your users differ in Development and Production.*
 
-
-
-
-#### Allow to Any Logged In User
+### Allow to Any Logged In User
 
 All objects in the schema are accessible to any logged-in user via the chosen REST actions (CREATE, READ, UPDATE, DELETE)
 
@@ -242,8 +238,6 @@ All objects in the schema are accessible to any logged-in user via the chosen RE
 
 
 *Your users must be logged-in in order to take advantage of this access level.*
-
-
 
 <p>&nbsp;</p>
 
