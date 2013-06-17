@@ -3,9 +3,9 @@ JavaScript Developer Guide
 
 ## Overview
 
-StackMob's JavaScript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
+StackMob's JavaScript SDK enables your application to take advantage of StackMob's REST API through convenient AJAX calls.  It's built upon <a href="http://documentcloud.github.com/backbone/" target="_blank" rel="nofollow">Backbone.js</a>, so you can leverage that framework if you choose.  You don't need to know how Backbone.js works to get started though!  We'll walk you through it.
 
-The <a href="https://developer.stackmob.com/js-sdk/api-docs">StackMob JavaScript SDK API Docs</a> are also available for reference.
+The <a href="https://developer.stackmob.com/js-sdk/api-docs" target="_blank" rel="nofollow">StackMob JavaScript SDK API Docs</a> are also available for reference.
 
 In each section of this guide you may see colored boxes which are meant to highlight important information:
 
@@ -18,14 +18,14 @@ In each section of this guide you may see colored boxes which are meant to highl
 
 ### Initializing the SDK
 
-Include <a href="https://developer.stackmob.com/js-sdk/api-docs#a-general_setup">jQuery (or Sencha or Zepto)</a> and the latest StackMob JavaScript SDK in your page:
+Include <a href="https://developer.stackmob.com/js-sdk/api-docs#a-general_setup" target="_blank">jQuery (or Sencha or Zepto)</a> and the latest StackMob JavaScript SDK in your page:
 
 ```html
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 ```
 
-<a href="https://dashboard.stackmob.com/settings">Find your public key on your app dashboard</a> to initialize the <abbr title="StackMob JavaScript SDK">JavaScript SDK</abbr>.
+<a href="https://dashboard.stackmob.com/settings" rel="nofollow" target="_blank">Find your public key on your app dashboard</a> to initialize the <abbr title="StackMob JavaScript SDK">JavaScript SDK</abbr>.
 
 ```js
 StackMob.init({
@@ -34,7 +34,7 @@ StackMob.init({
 });
 ```
 
-API Version 0 is your built in development environment. <a href="https://developer.stackmob.com/module/apiversions">Learn more about API Versions here.</a>
+API Version 0 is your built in development environment. <a href="https://developer.stackmob.com/module/apiversions" target="_blank">Learn more about API Versions here.</a>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -179,13 +179,13 @@ You can use `get(..)` to get a field's value on your object:
   todo.get('action'); //Take out the garbage!
 ```
 
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model">See the Backbone.Model docs</a>.</p>
+<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model" rel="nofollow" target="_blank">See the Backbone.Model docs</a>.</p>
 
 
 
 ### Asynchronous Calls
 
-Notice that there are `success` and `error` callback functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
+Notice that there are `success` and `error` call"_blank"back functions above.  Most StackMob calls are done asynchronously via an AJAX call. This means that your code in the browser continues to run while StackMob continues to process your request.  `success` and `error` are guaranteed to only execute **after** the AJAX call has returned.
 
 For example, let's try getting the JSON representation of an object after we've created it.
 
@@ -432,7 +432,7 @@ To work with an array of your objects, define your `Collection`.
   });
 ```
 
-<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank">methods of a Backbone.js Collection</a>.</p>
+<p class="alert">A <code>StackMob.Collection</code> is built upon Backbone.js's <code>Collection</code> and hence has all <a href="http://documentcloud.github.com/backbone/#Collection" target="_blank" rel="nofollow">methods of a Backbone.js Collection</a>.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
