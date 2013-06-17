@@ -20,12 +20,12 @@ SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
           NSHTTPURLResponse *response, 
-          id JSON) {
-        NSLog(@"Success: %@",JSON);
+          id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
           NSHTTPURLResponse *response, 
           NSError *error, 
-          id JSON){
+          id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```

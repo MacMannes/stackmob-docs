@@ -1,16 +1,16 @@
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/datastore-crud.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Create, Read, Update and Delete objects from StackMob using the **data store API directly and WITHOUT Core Data**. 
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~15 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -20,13 +20,13 @@ Beginner
 
 <h1>Let's Get Started</h1>
 
-<h2>The XCode Project</h2>
+## The XCode Project
 
 The project itself is based off of the **Single View Application** template, found with File > New > Project and choosing Application > Single View Application.
 <br><br>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/datastore-crud/datastore-crud-01a.png">
 
-<h2>Importing StackMob</h2>
+## Importing StackMob
 
 <a href="https://s3.amazonaws.com/static.stackmob.com/sdks/ios/stackmob-ios-sdk-v2.0.0.zip" class="button">Download StackMob v2.0.0</a>
 
@@ -48,7 +48,7 @@ Now under "Project > Build Settings", using the Search bar, search for `Other Li
     <p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/gettingstarted/StackMob-Getting-Started-iOS-Add-Linker-Flag.png" alt="set objc"/></p>
 
 
-<h2>Add CoreData, Security, SystemConfiguration, MobileCoreServices and CoreLocation Frameworks</h2>
+## Add CoreData, Security, SystemConfiguration, MobileCoreServices and CoreLocation Frameworks
 
 **While you aren't using Core Data directly in this tutorial, the SDK still needs the CoreData.Framework to compile.**
 
@@ -59,13 +59,13 @@ Under "Targets > Build Phases", add the `CoreData.Framework`
 Repeat and add the `Security.framework`, `SystemConfiguration.framework`, `MobileCoreServices.framework` and `CoreLocation.framework`.
 <br/>
 <br/>
-<h2>Import SystemConfiguration and MobileCoreServices Frameworks</h2>
+## Import SystemConfiguration and MobileCoreServices Frameworks
 
 Somewhere in your project, such as your project's .pch file, import the SystemConfiguration and MobileCoreServices frameworks.
      <p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/base-project/pchFile.png" alt=""/></p>
 
 <br/>
-<h2>Appdelegate.h</h2>
+## Appdelegate.h
 
 Here we add the SMClient variable for application-wide usage:
 
@@ -84,7 +84,7 @@ Here we add the SMClient variable for application-wide usage:
 
 **Important:** The reason we declare the StackMob client variable in AppDelegate, even though it will be used in ViewController, is because AppDelegate is a special file that allows us to access variables declared in its interface file from any other file, using a shared instance of AppDelegate. We declare that instance in ViewController.m.
 
-<h2>Appdelegate.m</h2>
+## Appdelegate.m
 
 Here we add our StackMob client variable and initialize it. 
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
@@ -108,7 +108,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 
-<h2>Create Your View</h2> 
+## Create Your View 
 
 Select the storyboard file and drag and drop a **text field** and **4 buttons** on to your view.  Double click each button and change their labels to "create", "read", "update" and "delete".
 <br />
@@ -144,7 +144,7 @@ In the menu, set the Connection to **Action** and enter the name **createObject*
 <br />
 
 
-<h2>Open ViewController.h</h2>
+## Edit ViewController.h
 
 
 The ViewController.h file should look like the following. First, you'll add the UITextFieldDelegate, so when you hit the return button on your virtual keyboard, it will dismiss the keyboard.  Then, you'll add a property called myObjectId to hold the id of the object last created.
@@ -165,7 +165,7 @@ The ViewController.h file should look like the following. First, you'll add the 
 @end
 ```
 
-<h2>Open ViewController.m</h2>
+## Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -178,7 +178,7 @@ Add the following **highlighted** code to your ViewController.m file:
 * Lines 68-74 Performs an updateObjectWithId method call passing in the schema name, myObjectId, arguments with field to update and declaring a success and failure method handlers. 
 * Lines 79-84 Performs an deleteObjectId method call passing in the schema name, myObjectId and declaring a success and failure method handlers. 
 
-<h3>&nbsp;</h3>
+### &nbsp;
 
 
 ```obj-c,2,3,11,13,14,15,16,21,22,38,39,40,41,42,46,47,48,49,50,51,52,53,58,59,60,61,62,68,69,70,71,72,73,74,79,80,81,82,83,84
@@ -271,7 +271,7 @@ Add the following **highlighted** code to your ViewController.m file:
 @end
 ```
 
-<h2>Build and Run!</h2>
+## Build and Run!
 
 Run your project, enter some text and click the create button.  You can view your results in the <a href="https://dashboard.stackmob.com/data/browser/todo" target="_blank">StackMob Object Browser</a>.  You can also read your object, update and delete your object.
 

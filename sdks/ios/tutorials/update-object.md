@@ -5,17 +5,17 @@ Update Object
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/update.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Update an existing object.
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~5 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -23,21 +23,21 @@ Beginner
 
 * [Download Base Xcode Project](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/base-project.zip)
 
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h1>Let's get started!</h1>
 
-<h2>Open the Base Xcode Project</h2>
+
+## Open the Base Xcode Project
 
 We’ve created an Xcode project for you as a starting place for this tutorial.  It has StackMob imported and the basic plumbing for Core Data.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the project, see <a href="https://developer.stackmob.com/tutorials/ios/Base-Xcode-Project-for-Tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
+For more information on what's inside of the project, see <a href="https://developer.stackmob.com/ios-sdk/base-xcode-project-for-tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
 
 Unzip the Base Project and open **base-project.xcodeproj**.
 
-<h3>Add your Public Key</h3>
+### Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -50,7 +50,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 }
 ```
 
-<h3>Create Your View</h3> 
+### Create Your View 
 
 Select the storyboard file and drag and drop a **text field** and **button** to your view.
 <br/>
@@ -80,7 +80,7 @@ In the menu, set the Connection to **Action** and enter the name **updateObject*
 
 <br />
 <br />
-<h3>Open ViewController.h</h3>
+### Edit ViewController.h
 
 
 Add the  **highlighted code** to your ViewController.h file. You'll notice we’ve declared an NSString instance to hold the ID of the managed object we will create so we can later retrieve and update it.  We have also made this file the **text field delegate**.
@@ -100,7 +100,7 @@ Add the  **highlighted code** to your ViewController.h file. You'll notice we’
 @end
 ```
 
-<h3>Open ViewController.m</h3>
+### Edit ViewController.m
 
 
 Add the  **highlighted code** to your ViewController.m file.  
@@ -213,7 +213,7 @@ Add the  **highlighted code** to your ViewController.m file.
 @end
 ```
 
-<h3>Build and Run!</h3>
+### Build and Run!
 Run your project. When ViewDidLoad is called a new object will be created for you.  Go to the <a href="https://dashboard.stackmob.com/data/browser/todo" target="_blank">StackMob Object Browser</a> to view it.  Now, enter some text and click the update button.  Go back to the <a href="https://dashboard.stackmob.com/data/browser/todo" target="_blank">StackMob Object Browser</a> and click the Query button to refresh your list.  You’ll notice the object has been updated.
 
 Remember that your Core Data attribute **todoId** will appear in the Object Browser as **todo_id**. See the <a href="http://stackmob.github.com/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">Entity and Property Naming Conventions</a> section of the Core Data Support Specifications for all the details.

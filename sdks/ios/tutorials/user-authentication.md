@@ -5,17 +5,17 @@ User Authentication
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/user-authentication.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 User login, logout and check their logged in status.
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~10 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -23,29 +23,23 @@ Beginner
 
 * [Download User Object App](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/user-object.zip)
 
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h3>Jump to:</h3>
+### Configure XCode Project
 
-* <a href="#login">Login</a>
-* <a href="#login_status">Check Login Status</a>
-* <a href="#logout">Logout</a>
-
-<h3>Configure XCode Project</h3>
-
-<h3>Open the StackMob User Object App</h3>
+### Open the StackMob User Object App
 
 We’ll use the project from the User Object Tutorial where we created a user object.  It has StackMob imported, Core Data and a User Entity defined for us.    This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the User Object app, see <a href="https://developer.stackmob.com/tutorials/ios/Create-a-User-Object" target="_blank">User Object Tutorial</a>.
+For more information on what's inside of the User Object app, see <a href="https://developer.stackmob.com/ios-sdk/create-user-object-tutorial" target="_blank">User Object Tutorial</a>.
 
 If you haven't already, download the User Object App from the link under **Prerequisites** above. 
 
 Unzip and open **user-object.xcodeproj**.
 
-<h3>Add your Public Key</h3>
+### Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -58,8 +52,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 }
 ```
 
-<a name="login">&nbsp;</a>
-<h2><font color="#357EC7">Login</font></h2>
+## Login
 
 Select the storyboard file and drag and drop  a **button** to your view.  Set the label of the button as **login**.
 <br/>
@@ -84,7 +77,7 @@ In the menu, set the Connection to **Action** and enter the name **login**.
 <br />
 <br />
 
-<h3>Open ViewController.h</h3>
+### Login: Edit ViewController.h
 
 
 Add the following **highlighted** code to your ViewController.h file:
@@ -109,7 +102,7 @@ Add the following **highlighted** code to your ViewController.h file:
 
 ```
 
-<h3>Open ViewController.m</h3>
+### Login: Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file. We set our local SMClient instance to the instance returned by the defaultClient class method.  By defualt this method returns the first initialized client,  which was done in our App Delegate.
 
@@ -212,16 +205,12 @@ Add the following **highlighted** code to your ViewController.m file. We set our
 @end
 ```
 
-<h3>Build and Run!</h3>
+### Build and Run!
 
 Run your project.  Create a user if you haven't already.  Then, enter the username and password and click the login button. In the XCode console log, you'll see the user object returned.
 
 
-
-
-
-<a name="login_status">&nbsp;</a>
-<h2><font color="#357EC7">Check the login status</font></h2>
+## Check the Login Status
 
 Select the storyboard file and drag and drop a **label** and a **button** to your view.  Set the label text to **Status Unknown** and the button label as **Check Status**.
 <br/>
@@ -253,7 +242,7 @@ In the menu, set the Connection to **Action** and enter the name **checkStatus**
 <br />
 <br />
 
-<h3>Open ViewController.h</h3>
+### Status: Edit ViewController.h
 
 Your ViewController.h file should look like the following:
 
@@ -278,7 +267,7 @@ Your ViewController.h file should look like the following:
 @end
 ```
 
-<h3>Open ViewController.m</h3>
+### Status: Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -397,13 +386,12 @@ Add the following **highlighted** code to your ViewController.m file:
 @end
 ```
 
-<h3>Build and Run!</h3>
+### Build and Run!
 
 Run your project.  Click the check status button, to see if anyone is logged in. You'll see the status label updated.
 
 
-<a name="logout">&nbsp;</a>
-<h2><font color="#357EC7">Logout</font></h2>
+## Logout
 
 Select the storyboard file and drag and drop a **button** to your view.  Set thebutton label as **logout**.
 <br/>
@@ -427,7 +415,7 @@ In the menu, set the Connection to **Action** and enter the name **logout**
 <br />
 <br />
 
-<h3>Open ViewController.h</h3>
+### Logout: Edit ViewController.h
 
 Your ViewController.h file should look like the following:
 
@@ -454,7 +442,7 @@ Your ViewController.h file should look like the following:
 
 ```
 
-<h3>Open ViewController.m</h3>
+### Logout: Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -581,7 +569,7 @@ Add the following **highlighted** code to your ViewController.m file:
 @end
 ```
 
-<h3>Build and Run!</h3>
+### Build and Run!
 
 Run your project.  Click the logout button, then click check status.
 

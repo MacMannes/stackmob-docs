@@ -3,7 +3,7 @@ Introduction to Apple Push Notifications
 
 Before you start using push notifications on StackMob, you should familiarize yourself with the client-side aspects of Apple Push Notification Service (APNS) by reading the <a target="_blank" href="https://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1">Local Notifications and Push Notification Programming Guide</a>. Don't worry about the server-side aspects of push - that's what we're here for.
 
-<h2>Apple Push Notifications on StackMob</h2>
+## Apple Push Notifications on StackMob
 
 StackMob helps you with your Push Notification process by providing you the backend to send push messages. Follow these steps to get Push running for your mobile application.
 
@@ -12,7 +12,7 @@ StackMob helps you with your Push Notification process by providing you the back
 3. Get a valid Device Token for your mobile device for testing
 4. Send push notifications to your mobile device from StackMob's web console
 
-<h2>Getting a Push Certificate</h2>
+## Getting a Push Certificate
 
 To use the push service you'll need to obtain push certificates from Apple and upload them to the StackMob server.
 
@@ -20,7 +20,7 @@ Follow the instructions in <a target="_blank" href="https://developer.apple.com/
 
 StackMob has a development and production environment for you. When you're interacting with the development version of StackMob's API, development certificates will be used to send push notifications. **When you're ready to deploy your app, you'll need to get a production certificate by following the same instructions.**
 
-<h2>Upload your Push Certificate to StackMob</h2>
+## Upload your Push Certificate to StackMob
 
 Because StackMob will be handling your push services, you will need to <a href="https://dashboard.stackmob.com/module/push/settings/android" target="_blank">upload your push certificates to StackMob</a>.
 
@@ -28,7 +28,7 @@ Because StackMob will be handling your push services, you will need to <a href="
 
 Browse to your saved .p12 file, select the appropriate environment, enter the certificate password, and upload your certificates. If everything went fine, you'll see a page confirming that you have a Development certificate on file.
 
-<h2>Using iOS Push SDK Version 1.0.1</h2>
+## Using iOS Push SDK Version 1.0.1
 
 With the release of the new iOS SDK, all push support has been moved into a seperate SDK.
 
@@ -36,9 +36,9 @@ For documentation and downloads, visit the [SMPushClient class reference](http:/
 
 **You do not need to read ahead unless you are using v0.5.x of the iOS SDK!**
 
-<h2>Push support for iOS SDK Version 0.5.x</h2>
+## Push support for iOS SDK Version 0.5.x
 
-<h3>Getting a valid Device Token for your mobile device</h3>
+### Getting a valid Device Token for your mobile device
 
 Now that you have a certificate, we want to test sending/receiving push notifications. To do so, you'll need to get a valid device token from Apple. You can retrieve one through a local test iOS app.
 
@@ -67,7 +67,7 @@ Set up an iOS app to register for remote notifications by calling `registerForRe
 }
 ```
 
-<h3>Sending Push Messages</h3>
+### Sending Push Messages
 
 You can send push messages to any registered device token, or any user that has a device token associated with the account (using the `registerForPushWithUser:andToken:andCallback` method above). You can also broadcast a message to every registered device token.
 

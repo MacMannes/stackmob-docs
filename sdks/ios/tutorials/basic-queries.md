@@ -23,19 +23,19 @@ Beginner
 
 * [Download StackMob Read into Table View App](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read-into-table.zip)
 
-### Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h2>Open the StackMob Read to TableView</h2>
+## Open the StackMob Read to TableView
 
 We’ll use the project from the Read into Table View Tutorial where we read all objects and display them in a table view.  It has StackMob imported, Core Data and a fetchRequest setup to display data in the table view.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the Read into Table View app, see <a href="https://developer.stackmob.com/tutorials/ios/Read-into-Table-View" target="_blank">StackMob iOS Read into Table View</a>.
+For more information on what's inside of the Read into Table View app, see <a href="https://developer.stackmob.com/ios-sdk/read-into-table-view-tutorial" target="_blank">StackMob iOS Read into Table View</a>.
 
 Unzip the StackMob Read into Table View App and open **read-into-table.xcodeproj**.
 
-<h2>Add your Public Key</h2>
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -48,7 +48,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 }
 ```
 
-<h2>Open ListViewController.m and add a NSPredicate to the fetchedResultsController</h2> 
+## Edit ListViewController.m
 
 The NSPredicate class is used to define logical conditions used to constrain a search  for a fetch.  
 
@@ -93,11 +93,11 @@ Add the following **highlighted** code to your ListViewController.m file:
 }
 ```
 
-<h2>Build and Run!</h2>
+## Build and Run!
 
 Replace "Hello World" with a Todo title that matches an object in your StackMob schema, then run your project.  You should only see results that match the query.
 
-<h2>Additional Predicates</h2>
+## Additional Predicates
 Below are more examples of NSPredicates we support.
 
 
@@ -137,9 +137,6 @@ Below are more examples of NSPredicates we support.
     NSPredicate *betweenPredicate =[NSPredicate predicateWithFormat:@"count between %@", range];
     [fetchRequest setPredicate:betweenPredicate];
 ```
-
-
-
 
 Congratulations on completing this tutorial!
 

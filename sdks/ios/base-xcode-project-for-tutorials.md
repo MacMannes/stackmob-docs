@@ -1,4 +1,5 @@
-<h1>Base Xcode Project for Tutorials</h1>
+Base Xcode Project for Tutorials
+=============
 
 <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/base-project.zip" class="button">Download Full Project</a>
 
@@ -9,11 +10,11 @@ The project has the latest StackMob SDK imported as well as the basic plumbing f
 
 Let's see how we got there...
 
-<h2>The XCode Project</h2>
+## The XCode Project
 
 The project itself is based off of the **Single View Application** template, found with File > New > Project and choosing Application > Single View Application.
 
-<h2>Importing StackMob</h2>
+## Importing StackMob
 
 <a href="https://s3.amazonaws.com/static.stackmob.com/sdks/ios/stackmob-ios-sdk-v2.0.0.zip" class="button">Download StackMob v2.0.0</a>
 
@@ -34,7 +35,7 @@ Resulting in...
 Now under "Project > Build Settings", using the Search bar, search for `Other Linker`, double click on the `Other Linker Flags` result, and set the value to `-ObjC`
     <p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/gettingstarted/StackMob-Getting-Started-iOS-Add-Linker-Flag.png" alt="set objc"/></p>
 
-<h2>Add CoreData, Security, SystemConfiguration, MobileCoreServices and CoreLocation Frameworks</h2>
+## Add CoreData, Security, SystemConfiguration, MobileCoreServices and CoreLocation Frameworks
 
 Under "Targets > Build Phases", add the `CoreData.Framework`.
      <p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/gettingstarted/StackMob-Getting-Started-iOS-Add-CoreData.png" alt=""/></p>
@@ -43,17 +44,17 @@ Under "Targets > Build Phases", add the `CoreData.Framework`.
 Repeat and add the `Security.framework`, `SystemConfiguration.framework`, `MobileCoreServices.framework` and `CoreLocation.framework`.
 <br/>
 <br/>
-<h2>Import SystemConfiguration and MobileCoreServices Frameworks</h2>
+## Import SystemConfiguration and MobileCoreServices Frameworks
 
 Somewhere in your project, such as your project's .pch file, import the SystemConfiguration and MobileCoreServices frameworks.
      <p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/base-project/pchFile.png" alt=""/></p>
 
 <br/>
-<h2>Add a Data Model</h2>
+## Add a Data Model
 
 File > New > File and add a **Data Model** under the iOS > Core Data section. Call it **mydatamodel**.
 
-<h3>Add an Entity to the Data Model</h3>
+### Add an Entity to the Data Model
 
 All of our tutorials will use at least one Entity called Todo, which will have a parent entity called StackMob. Let's add it so we don't have to for each tutorial:
 
@@ -72,7 +73,8 @@ Your StackMob entity should look like this:
     <p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/base-project/stackmob_entity.png" alt=""/></p>
 
 
-<h3>A Note About Property Names</h3>
+### A Note About Property Names
+
 StackMob field names can't actually contain uppercase letters, which our attribute **todoId** violates. However, we want to promote best practice and Apple's naming conventions prefer camelCase.
 
 The SDK will automatically translate Core Data camel-cased property names to and from their StackMob equivalents, which in this case will appear in the StackMob Object Browser as **todo_id**. You are still welcome name your Core Data properties using the StackMob convention, or even as one word, all lowercase. 
@@ -80,7 +82,7 @@ The SDK will automatically translate Core Data camel-cased property names to and
 Keep in mind that this translation only happens with the Core Data integration, so if you use the lower level Datastore API you must refer to the fields using StackMob naming conventions.  You can get the full details in the <a href="http://stackmob.github.com/stackmob-ios-sdk/CoreDataSupportSpecs.html" target="_blank">Entity and Property Naming Conventions</a> section of the Core Data Support Specifications.  
 
      
-<h2>Appdelegate.h</h2>
+## Edit Appdelegate.h
 
 Here we add the basic Core Data pieces as well as an SMClient variable for application-wide usage:
 
@@ -103,7 +105,7 @@ Here we add the basic Core Data pieces as well as an SMClient variable for appli
 
 **Important:** The reason we declare all of our variables in AppDelegate, even though they will be used in ViewController, is because AppDelegate is a special file that allows us to access variables declared in its interface file from any other file, using a shared instance of AppDelegate. We declare that instance in ViewController.m.
 
-<h2>Appdelegate.m</h2>
+## Edit Appdelegate.m
 
 Here we initialize all our variables:
 
@@ -139,7 +141,7 @@ Here we initialize all our variables:
 ```
 
 
-<h2>ViewController.h</h2>
+## ViewController.h
 
 Here we declare an NSManagedObjectContext variable:
 
@@ -153,7 +155,7 @@ Here we declare an NSManagedObjectContext variable:
 @end
 ```
 
-<h2>ViewController.m</h2>
+## ViewController.m
 
 Here we initialize our managed object context using the managed object context declared in our AppDelegate:
 
@@ -186,10 +188,12 @@ Here we initialize our managed object context using the managed object context d
 // Other methods below remain unedited
 ```
 
-<h2>Read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a></h2>
+## Read through Coding Practices
+
+<a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h2>Now we are ready to add to our project!</h2>
+<b>Now we are ready to add to our project!</b>
 
 

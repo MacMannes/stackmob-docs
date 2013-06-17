@@ -26,14 +26,7 @@ Beginner
 
 * [Download StackMob Read into Table View App](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read-into-table.zip)
 
-### Jump to:
-
-* <a href="#and">AND Compound NSPredicate</a>
-* <a href="#additional_methods">Additional Predicates</a>
-* <a href="#or">OR Compound NSPredicate</a>
-* <a href="#smpredicate">SMPredicate</a>
-
-**Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?**
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
@@ -42,7 +35,7 @@ There are a few coding practices to adhere to as well as general things to keep 
 
 We’ll use the project from the Read to TableView Tutorial where we read all objects and display them in a table view.  It has StackMob imported, Core Data and a fetchRequest setup to display data in the table view.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the Read into Table View app, see <a href="https://developer.stackmob.com/tutorials/ios/Read-into-Table-View" target="_blank">StackMob iOS Read into Table View</a>.
+For more information on what's inside of the Read into Table View app, see <a href="https://developer.stackmob.com/ios-sdk/read-into-table-view-tutorial" target="_blank">StackMob iOS Read into Table View</a>.
 
 Unzip the StackMob Read into Table View App and open **read-into-table.xcodeproj**.
 
@@ -70,7 +63,7 @@ Give the new attribute the name **count** with a data type of **Integer16**
 <br><br>
 
 
-## Open ListViewController.m and add code to create an object
+## Edit ListViewController.m
 
 Let's add some code to our ViewDidLoad method to create a new object that has both a title and a count.  Make sure to **import StackMob** at the top of the file.
 
@@ -106,9 +99,7 @@ Add the following **highlighted** code to your ListViewController.m file:
 }
 ```
 
-<a name="and"></a>
-
-## Add an AND Compound NSPredicate to the fetchedResultsController in ListViewController.m
+## Add an AND Compound NSPredicate
 
 The NSPredicate class is used to define logical conditions used to constrain a search  for a fetch.  You can pass an array of NSPredicates to NSCompoundPredicate to create a predicate in the form "predicate1" AND "predicate2".
 
@@ -160,8 +151,6 @@ Add the following **highlighted** code to your ListViewController.m file:
 
 Run your project.  You should only see results that match the query with a title of Hello World and a count greater than 2.
 
-<a name="additional_methods"></a>
-
 ## Additional Predicates
 
 Below are more examples of Comparison Predicates we support.
@@ -204,8 +193,6 @@ Below are more examples of Comparison Predicates we support.
     [fetchRequest setPredicate:betweenPredicate];
 
 ```
-
-<a name="or"></a>
 
 ## OR Compound Predicate
 
@@ -297,8 +284,6 @@ Here is a final, more complex example:
     }];         
 
 ```
-
-<a name="smpredicate"></a>
 
 ## SMPredicate 
 

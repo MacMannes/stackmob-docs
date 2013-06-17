@@ -5,17 +5,17 @@ Querying Geolocations
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/geo-query.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Query and return all objects based on their distance from a specified GeoPoint.
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~5 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -26,21 +26,19 @@ Beginner
 * [Download Geo Location App](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/geo-location.zip)
 
 
-<h1>Let's get started!</h1>
+## Configure XCode Project
 
-<h2>Configure XCode Project</h2>
-
-<h2>Open the StackMob Geo Location App</h2>
+## Open the StackMob Geo Location App
 
 We’ll use the project from the **Saving Geo Location Data Tutorial** where we added geo location objects to our datastore.  It has StackMob imported, Core Data and a GeoPoint field defined for us.    This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the Geo Location app, see <a href="https://developer.stackmob.com/tutorials/ios/Saving-Geo-Location-Data" target="_blank">Saving Geo Location Data Tutorial</a>.
+For more information on what's inside of the Geo Location app, see <a href="https://developer.stackmob.com/ios-sdk/saving-geolocation-tutorial" target="_blank">Saving Geolocation Data Tutorial</a>.
 
 If you haven't already, download the Geo Location App from the link under **Prerequisites** above. 
 
 Unzip and open **geo-location.xcodeproj**.
 
-<h2>Add your Public Key</h2>
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -53,7 +51,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 }
 ```
 
-<h2>Add Geo Query Button</h2>
+## Add Geo Query Button
 
 Select the storyboard file and drag and drop  a **bar button item** to your toolbar.  Set the label of the toolbar button as **Within 10 miles**.
 <br/>
@@ -76,7 +74,7 @@ In the menu, set the Connection to **Action** and enter the name **geoQuery**.
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/geoquery/geoquery-03.png">
 
 
-<h2>Open ViewController.h</h2>
+## Edit ViewController.h
 
 Your ViewController.h file should look like the following:
 
@@ -97,7 +95,7 @@ Your ViewController.h file should look like the following:
 
 ```
 
-<h2>Open ViewController.m</h2>
+## Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file. We create a special SMPredicate to perform geo-queries.
 
@@ -219,7 +217,7 @@ Add the following **highlighted** code to your ViewController.m file. We create 
 @end
 ```
 
-<h2>Build and Run!</h2>
+## Build and Run!
 
 Run your project. 
 
@@ -234,7 +232,7 @@ Allow the app to use your current location and click the **save location** butto
 
 Watch the debug output for a response from StackMob. 
 
-<h3>Other types of queries</h3>
+### Other types of queries
 You can also perform other types of geo queries. Check out the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMPredicate.html">SMPredicate</a> class for more information.
 
 Congratulations on completing this tutorial!

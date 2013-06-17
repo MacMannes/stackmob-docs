@@ -17,7 +17,7 @@ Intermediate
 ### Estimated time to complete
 ~15 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.5 and greater
 
@@ -27,36 +27,22 @@ Intermediate
 
 * [Download Base Xcode Project](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/base-project.zip)
 
-<h3>Jump to:</h3>
 
-* <a href="#addkey">Add your Public Key</a>
-* <a href="#download">Download Facebook SDK</a>
-* <a href="#addframework">Add required Frameworks to our project</a>
-* <a href="#setflag">Set Other Linker Flag</a>
-* <a href="#createview">Create Your View</a>
-* <a href="#createapp">Create Facebook App</a>
-* <a href="#addid">Add your Facebook AppID to your XCode project</a>
-* <a href="#additional_methods">Additional Facebook Integration Methods</a>
-
-
-
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h1>Let's get started!</h1>
 
-<h2>Open the Base Xcode Project</h2>
+## Open the Base Xcode Project
 
 We’ve created an Xcode project for you as a starting place for this tutorial.  It has StackMob imported and the basic plumbing for Core Data.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the project, see <a href="https://developer.stackmob.com/tutorials/ios/Base-Xcode-Project-for-Tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
+For more information on what's inside of the project, see <a href="https://developer.stackmob.com/ios-sdk/base-xcode-project-for-tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
 
 Unzip the Base Project and open **base-project.xcodeproj**.
 
 
-<a name="addkey"></a>
-<h2>Add your Public Key</h2>
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -70,8 +56,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 
-<a name="download"></a>
-<h2>Download Facebook SDK</h2>
+## Download Facebook SDK
 
 If you haven't already, <a href="http://developers.facebook.com/ios/"> download the Facebook iOS SDK</a>.
 <br/>
@@ -88,8 +73,7 @@ Double-click the **.pkg** file to install the SDK.  The default location is **~/
 <br/>
 <br/>
 
-<a name="addframework"></a>
-<h2>Add required Frameworks to our project</h2>
+## Add required Frameworks to our project
 
 In XCode, go to **Targets > Build Phases** and select **Link Binary with Libraries**
 <br/>
@@ -113,8 +97,7 @@ Then click on **Add Other ...** button, and browse to the FacebookSDK folder, in
 <br/>
 <br/>
 
-<a name="setflag"></a>
-<h2>Set Other Linker Flag</h2> 
+## Set Other Linker Flag 
 
 In XCode, go to **Targets > Build Settings** and search for **Other Linker Flags**.  You should see the **-ObjC** flag,  Let's add one for the FacebookSDK.  **Double-click** and enter on a new line, **-lsqlite3.0**
 <br/>
@@ -124,8 +107,7 @@ In XCode, go to **Targets > Build Settings** and search for **Other Linker Flags
 <br/>
 <br/>
 
-<a name="createview"></a>
-<h2>Create Your View</h2> 
+## Create Your View 
 
 Select the storyboard file and drag and drop  **2 buttons** on to your view.  No need to change the label for the first button, we are going to dynamically set it to either "login" or "logout".  Change the label on the second button to **check status**
 <br/>
@@ -160,7 +142,7 @@ In the menu, set the Connection to **Action** and enter the name **checkStatus**
 <br/>
 
 
-<h2>Open AppDelegate.h</h2>
+## Edit AppDelegate.h
 
 Add the following **highlighted** code to your AppDelegate.h file: 
 
@@ -187,7 +169,7 @@ Add the following **highlighted** code to your AppDelegate.h file:
 ```
 
 
-<h2>Open AppDelegate.m</h2>
+## Edit AppDelegate.m
 
 Add the following **highlighted** code to your AppDelegate.m file: 
 
@@ -258,7 +240,7 @@ Add the following **highlighted** code to your AppDelegate.m file:
 
 ```
 
-<h2>Open ViewController.m</h2>
+## Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file.  
 <br>
@@ -410,8 +392,8 @@ The view will update based on the user's logged in status.  You'll login to Stac
 
 ```
 
-<a name="createapp"></a>
-<h2>Create Facebook App</h2>
+## Create Facebook App
+
 Go to <a href="https://developers.facebook.com/apps" target="_blank">developers.facebook.com</a> to create a Facebook App. Click the **create new app** button.
 <br/>
 <br/>
@@ -435,8 +417,7 @@ Give your Facebook app a name and click continue.
 <br/>
 <br/>
 
-<a name="addid"></a>
-<h2>Add your Facebook AppID to your XCode project</h2>
+## Add your Facebook AppID
 
 In the **Project Navigator**, look in the **supporting files folder** for your project **.plist** file.  Add your Facebook App ID, in the two places indicated in the screenshot below.
 <br/>
@@ -445,7 +426,7 @@ In the **Project Navigator**, look in the **supporting files folder** for your p
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/facebook/fb-15.png">
 <br/>
 
-<h2>Build and Run!</h2>
+## Build and Run!
 
 Run your project, click the **Login with Facebook** button. A browser will open and you will be prompted to login to facebook and authorize your application.  When returned, the login button will update to a logout button.  Click **Check Status** to confirm you are now logged into Stackmob.
 
@@ -455,37 +436,36 @@ Run your project, click the **Login with Facebook** button. A browser will open 
 <br/>
 <br/>
 
-<a name="additional_methods"></a>
-<h2>Additional Facebook Integration Methods</h2>
+## Additional Facebook Integration Methods
 
 This tutorial has gone over the simplest way to create a StackMob user and log them in using Facebook credentials.  However, there may be cases when you want to create a user with Facebook credentials seperately, or unlink a Facebook token from a user so they can no longer login using that particular service.  Let's look at the other Facebook integration methods StackMob provides:
 
 **Note:** The methods shown below have multiple signatures with additional parameters for providing request options, callback queues, etc.  All methods are listed in the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMClient.html" target="_blank">SMClient Class Reference</a>.
 
-<h3>createUserWithFacebookToken:username:onSuccess:onFailure:</h3>
+### createUserWithFacebookToken:username:onSuccess:onFailure:
 
 This will create a new StackMob user and link them with the Facebook token provided.  An error will occur if a user linked to the provided token already exists.  Pass nil to the username parameter to default the username to the user ID provided by Facebook.
 
-<h3>loginWithFacebookToken:onSuccess:onFailure:</h3>
+### loginWithFacebookToken:onSuccess:onFailure:
 
 Login the user to StackMob linked with the Facebook token provided.  The method calls loginWithFacebookToken:createUserIfNeeded:usernameForCreate:onSuccess:onFailure: with createUserIfNeeded:NO and usernameForCreate:nil.
 
-<h3>linkLoggedInUserWithFacebookToken:onSuccess:onFailure:</h3>
+### linkLoggedInUserWithFacebookToken:onSuccess:onFailure:
 
 After logging in a user to StackMob using a StackMob username/password, this links the logged in user with the Facebook token provided.  Upon success, that user can then be logged in using the loginWithFacebookToken:onSuccess:onFailure: method.
 
-<h3>unlinkLoggedInUserFromFacebookOnSuccess:onFailure:</h3>
+### unlinkLoggedInUserFromFacebookOnSuccess:onFailure:
 
 Removes any linked Facebook token from the currently logged in user.  Upon success, that user can no longer login using the loginWithFacebookToken:onSuccess:onFailure: method.
 
-<h3>updateFacebookStatusWithMessage:onSuccess:onFailure:</h3>
+### updateFacebookStatusWithMessage:onSuccess:onFailure:
 
 Updates the currently logged in Facebook user's status.  Requires write permissions.
 
-<h3>getLoggedInUserFacebookInfoWithOnSuccess:onFailure:</h3>
+### getLoggedInUserFacebookInfoWithOnSuccess:onFailure:
 
 Returns the Facebook user info for the currently logged in user.
 
-<h2>Congratulations on completing this tutorial!</h2>
+## Congratulations on completing this tutorial!
 
 <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/facebook-login-logout.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>

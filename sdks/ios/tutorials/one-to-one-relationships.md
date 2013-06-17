@@ -5,17 +5,17 @@ One to One Relationships
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/one-to-one-relationship.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 How to create and save two objects with a one to one relationship.
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~10 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -23,21 +23,21 @@ Beginner
 
 * [Download Base Xcode Project](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/base-project.zip)
 
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h1>Let's get started!</h1>
 
-<h2>Open the Base Xcode Project</h2>
+
+## Open the Base Xcode Project
 
 We’ve created an Xcode project for you as a starting place for this tutorial.  It has StackMob imported and the basic plumbing for Core Data.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the project, see <a href="https://developer.stackmob.com/tutorials/ios/Base-Xcode-Project-for-Tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
+For more information on what's inside of the project, see <a href="https://developer.stackmob.com/ios-sdk/base-xcode-project-for-tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
 
 Unzip the Base Project and open **base-project.xcodeproj**.
 
-<h2>Add your Public Key</h2>
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -50,7 +50,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 }
 ```
 
-<h2>Add the Category Entity</h2>
+## Add the Category Entity
 In the XCode project navigator, select **mydatamodel.xcdatamodelId**.  Click the **plus sign** next to **Add Entity** near the bottom of the screen.  **Name** your new entity **Category**. 
 <br/>
 <br/>
@@ -63,21 +63,21 @@ Add two **Attributes: categoryId** and **name**. Give them both the data type **
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-02.png">
 <br/>
 <br/>
-<h2>Add Relationship on Category Entity</h2>
+## Add Relationship on Category Entity
 Select the **Category** entity. **Under relationships, click the plus icon** to added a new relationship attribute.  Since this is a one-to-one relationship with the Todo entity call the **relationship todo** (sigular).  Set the **destination to Todo**.  Set the **inverse as No Inverse**.
 <br/>
 <br/>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-03.png">
 <br/>
 <br/>
-<h2>Add Relationship on Todo</h2>
+## Add Relationship on Todo
 Select the **Todo** entity.  **Under relationships, click the plus icon** to added a new relationship attribute.  Since this is a one-to-one relationship with the Category entity call the **relationship category** (sigular).  Set the **destination to Category**.  Set the **inverse as todo**.
 <br/>
 <br/>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-04.png">
 <br/>
 <br/>
-<h2>Create NSManagedObject subclass for each entity</h2>
+## Create NSManagedObject subclass for each entity
 **Right click** on the **base-project** project folder and select **New File**. 
 <br/>
 <br/>
@@ -102,16 +102,16 @@ Check the box next to **Todo** and click **Next**.
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-07.png">
 <br/>
 <br/>
-<h3>** Repeat the above steps for the Category Entity **</h3>
+### ** Repeat the above steps for the Category Entity **
 
-<h2>Not quite done</h2>
+## Not quite done
 When you created the Todo NSManagedObject subcass, the Category subclass didn't exist so the Todo subclass files created could not reference it.  Instead it used the generic NSManagedObject class.  
 <br/>
 To fix this, **repeat the Create NSManagedObject subclass steps** one more time for the **Todo entity**, replacing your existing files.
 <br/><br/>
 When you are done, the files should look like the following.
 
-<h3>Todo.h</h3>
+### Todo.h
 
 ```obj-c
 
@@ -128,7 +128,7 @@ When you are done, the files should look like the following.
 
 @end
 ```
-<h3>Todo.m</h3>
+### Todo.m
 
 ```obj-c
 
@@ -145,7 +145,7 @@ When you are done, the files should look like the following.
 ```
 
 
-<h3>Category.h</h3>
+### Category.h
 
 ```obj-c
 
@@ -162,7 +162,7 @@ When you are done, the files should look like the following.
 
 @end
 ```
-<h3>Category.m</h3>
+### Category.m
 
 ```obj-c
 
@@ -179,7 +179,7 @@ When you are done, the files should look like the following.
 ```
 
 
-<h2>Open ViewController.m</h2>
+## Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -259,7 +259,7 @@ Add the following **highlighted** code to your ViewController.m file:
 @end
 ```
 
-<h2>Build and Run!</h2>
+## Build and Run!
 
 Run your project, A new Todo and Category will be created when the view loads and these objects will have a one to one relationship.  You can view your results in the <a href="https://dashboard.stackmob.com/data/browser/todo" target="_blank">StackMob Object Browser</a>.
 

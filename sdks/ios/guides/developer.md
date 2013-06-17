@@ -1075,7 +1075,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 }];
 ```
 
-<p class="alert">Geo Location in iOS relies on the <b>MapKit</b> framework.</p>
+<p class="alert">Geolocation in iOS relies on the <b>MapKit</b> framework.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -1096,7 +1096,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 
 <!--- Read Geo-Location -->
 
-### Reading Geo-Location Values
+### Reading Geolocation Values
 
 Because managed object geopoint data will be contained in a `Tranformable` attribute type, it must be unarchived to be properly read:
 
@@ -1108,7 +1108,7 @@ SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
 <!--- Query Geo-Location -->
 
-### Query based on Geo-Location
+### Query based on Geolocation
 
 To query using `SMGeoPoint`, use the special predicate methods provided by the `SMPredicate` class:
 
@@ -1303,6 +1303,16 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
     </div>
   </div>
 </div>
+
+### Reading Binary Data
+
+Once you have saved an object to StackMob containing a field with binary data, the value will then contain a string representation of the S3 URL. You will most likely convert this string into an instance of `NSURL`, and in turn use that URL to get and set data to a variable. For example, suppose we have saved an image in our attribute `photo`, and now want to set an image for our UI. After reading the object we would convert the string URL to an image like this:
+
+```obj-c
+NSURL *imageURL = [NSURL URLWithString:[object valueForKey:@"photo"]]; 
+NSData *imageData = [NSData dataWithContentsOfURL:imageURL]; 
+UIImage *image = [UIImage imageWithData:imageData];
+```
 
 ### Working Offline
 

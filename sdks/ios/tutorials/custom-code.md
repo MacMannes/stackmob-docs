@@ -5,17 +5,17 @@ Custom Code
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/custom-code-request.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Perform a Custom Code request which returns the message hello world.
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~5 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -25,25 +25,25 @@ Beginner
 
 * [Download Base Xcode Project](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/base-project.zip)
 
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h2>Build and Upload your Custom Code</h2> 
+## Build and Upload your Custom Code 
 You'll need to build and upload a JAR based on the StackMob Custom Code examples.
 
 We've created a separate tutorial called <a href="https://developer.stackmob.com/tutorials/customcode/Build-and-Upload-Custom-Code-Example">Build and Upload Custom Code Example</a>. If you haven't done this step before, complete that tutorial before continuing.
 
 
-<h2>Open the Base Xcode Project</h2>
+## Open the Base Xcode Project
 
 We’ve created an Xcode project for you as a starting place for this tutorial.  It has StackMob imported and the basic plumbing for Core Data.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the project, see <a href="https://developer.stackmob.com/tutorials/ios/Base-Xcode-Project-for-Tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
+For more information on what's inside of the project, see <a href="https://developer.stackmob.com/ios-sdk/base-xcode-project-for-tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
 
 Unzip the Base Project and open **base-project.xcodeproj**.
 
-<h2>Add your Public Key</h2>
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -56,7 +56,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 }
 ```
 
-<h2>Create Your View</h2> 
+## Create Your View 
 
 Select the storyboard file and drag and drop a  **button** to your view.  Double-click the button to change its label to **Hello World**
 <br/>
@@ -79,7 +79,7 @@ In the menu, set the Connection to **Action** and enter the name **sendHelloWorl
 <br />
 <br />
 
-<h2>Open ViewController.h</h2>
+## Edit ViewController.h
 
 The ViewController.h file should look like the following:
 
@@ -94,7 +94,7 @@ The ViewController.h file should look like the following:
 @end
 ```
 
-<h2>Open ViewController.m</h2>
+## Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -153,7 +153,7 @@ ViewController.m
 
 ```
 
-<h2>Build and Run!</h2>
+## Build and Run!
 
 Run your project, click the Hello World button.  You'll see the message appear in the Xcode output console.
 
