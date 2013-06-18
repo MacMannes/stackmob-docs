@@ -36,12 +36,14 @@ StackMob.init({
 
 API Version 0 is your built in development environment. <a href="https://developer.stackmob.com/module/apiversions" target="_blank">Learn more about API Versions here.</a>
 
+Optionally read more on <a href="https://developer.stackmob.com/js-sdk/configure" target="_blank">configuring the JS SDK</a>.
+
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-init" target="_blank">StackMob.init()</a></li>
+        <li><a href="https://developer.stackmob.com/js-sdk/api-docs#a-init" target="_blank">StackMob.init() and configuration options</a></li>
       </ul>
     </div>
   </div>
