@@ -2339,13 +2339,13 @@ Read about how to <a href="https://developer.stackmob.com/tutorials/dashboard/De
 
 <p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
 
-After deploying, you would point your iOS SDK to your production API Version - in this case `1`:
+After deploying, you'll point your iOS SDK to your production API Version (in this case `1`) as well as your Production public key:
 
 ```obj-c
-self.client = [[SMClient alloc] initWithAPIVersion:@"1" publicKey:@"YOUR_PUBLIC_KEY"];
+self.client = [[SMClient alloc] initWithAPIVersion:@"1" publicKey:@"YOUR_PRODUCTION_PUBLIC_KEY"];
 ```
 
-That's it! With your server rolled out to API Version 1 and your iOS SDK pointing to your production version all requests will be funneled to your production database.  Your production environment uses a separate database than your development one, so you'll be able to continue developing in API Version 0 without affecting your customers using the production version of your app.
+That's it! With your server rolled out to API Version 1 and your iOS SDK pointing to your production public key, all requests will be funneled to your production database.  Your production environment uses a separate database than your development one, so you'll be able to continue developing in API Version 0 without affecting your customers using the production version of your app.
 
 <p class="alert">
   With StackMob's <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">Multiple API Versions module</a> you can have multiple Productions running concurrently, ensuring backwards compatibility with apps already on the market.
