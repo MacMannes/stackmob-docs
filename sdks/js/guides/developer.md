@@ -1287,7 +1287,9 @@ Let's take an expanded example and get a file from the local filesystem with the
 
 ## Geolocation
 
-StackMob supports geolocations, allowing you to save and search geo data.  Geolocations are saved to a `geopoint` field type on your schema.  Add a 
+StackMob supports geolocations, allowing you to save and search geo data.  Geolocations are saved to a `geopoint` field type on your schema.  Add a `geopoint` field to your schema via the UI.
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/schemas/dashboard-schemas-geopoint-place.png" alt=""/></a></p>
 
 
 ### Saving Geopoints
