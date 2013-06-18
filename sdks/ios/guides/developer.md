@@ -540,6 +540,8 @@ When you create relationships between entities in your Core Data model, they wil
 * Core Data supports <a href="http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/coredata/Articles/cdRelationships.html">Delete Rules</a>. Take this into consideration if you are building cross-platform.
 * The great thing about Core Data handling relationship logic is that it will all translate from the client to StackMob, so no extra work is necessary.
 
+When you eventually save objects which include relationships to other entities, those relationships will get inferred by the server i.e. StackMob will detect that those relationships do not exist and create them on the fly. This is a feature included only in development. If you need to create relationships manually, see <a href="#CreatingRelationshipswiththeDashboard">Creating Relationships with the Dashboard</a>.
+
 <!--- One To One -->
 
 ### One to One
@@ -585,6 +587,30 @@ In the data model, be sure to check the box for a To-Many relationship, as shown
 ### Many to Many
 
 You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
+
+
+<!--- Creating through dashboard -->
+
+
+### Creating Relationships with the Dashboard
+
+While relationships, like fields and schemas, are inferred by StackMob, sometimes you'll want to manually create them yourself.  Here we'll assume that we have both `todo` and `user` schemas already defined.
+
+<a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank">Edit the user schema</a> and add a new relationship.
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
+
+Fill in relationship details:
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-todo-modal.png" alt=""/></a></p>
+
+And you'll get:
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-todo-field.png" alt=""/></a></p>
+
+**Save the schema** and that's it - you have a relationship.
+
+When you work with Core Data, you'll want to make sure you define inverse relationships as well, so in this case you'll also add a relationship to the `todo` schema pointing back to the `user` schema.
 
 <!---
 	///////////////////
