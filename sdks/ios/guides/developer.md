@@ -2031,9 +2031,7 @@ StackMob integrates with Apple's APNS service for push notifications on iOS. Bef
 
 The first step in getting push notifications working is to set up the Push Module for you StackMob application.
 
-Work through the <a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a>, which will walk you through the steps of setting up Apple Push certs, uploading them to the Push Module settings, writing the code to register your device, and finally broadcasting to your device from the dashboard push console.
-
-When you're finished come back here to learn how to send pushes from a device.
+The <a href="https://developer.stackmob.com/ios-sdk/push-guide" target="_blank">iOS Push Notifications Guide</a> will walk you through the steps of setting up Apple Push certs and uploading them to the Push Module settings.
 
 <!--- Init -->
 
@@ -2307,6 +2305,20 @@ If you need to delete a token registered on the StackMob server from the client,
     </div>
   </div>
 </div>
+
+### Push Dev vs. Prod
+
+Once you set your version to 1 and use the production keys, StackMob will use Apple's production push server instead of the Apple sandbox.
+
+You should only use the dev keys with version 0 and the production keys with version 1.
+
+The user tokens don't change, so you would still test in the same manner.
+
+Here is some additional info on <a href="https://developer.stackmob.com/module/apiversions">API versioning with development and production environments</a>.
+
+### Using StackMob For Push Only
+
+While the Push API comes built into the Core SDK, a separate Push SDK is available for those using StackMob only for push notifications.  You can download the library from [Github](https://github.com/downloads/stackmob/stackmob-ios-push-sdk/stackmob-ios-push-sdk-v1.0.2.zip).  Drag the StackMobPush-vx.x.x folder into your project with the **Copy items into destination group's folder** checkbox selected, and set your Target's **Other Linker Flags** build setting to **-ObjC**.
 
 <!---
   ///////////////////
