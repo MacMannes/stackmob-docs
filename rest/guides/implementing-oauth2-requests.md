@@ -133,7 +133,7 @@ You can store the above into Local Storage, for instance.
 
 ### Making Requests with OAuth 2.0 Signature (After Logging In)
 
-Make API request as you normally would (see REST API docs for StackMob functionality).  If the user is logged in, you'll want to include an extra header: `Authorization`.  Below, we'll go over how to generate the `Authorization` string.  Example of request to get all books.
+Make API requests as you normally would (see REST API docs for StackMob functionality).  If the user is logged in, you'll want to include an extra header: `Authorization`.  Below, we'll go over how to generate the `Authorization` string.  Example of request to get all books.
 
 ```xml,8
 Request URL:
@@ -259,7 +259,7 @@ With signed requests, you'll be able to login users and take advantage of the <a
 
 ## Help
 
-Need help figuring out how to implement OAuth 2.0?  First check to see if there's an SKD for you already:  <a href="https://developer.stackmob.com/sdks">Check out all SDKs.</a>
+Need help figuring out how to implement OAuth 2.0?  First check to see if there's an SDK for you already:  <a href="https://developer.stackmob.com/sdks">Check out all SDKs.</a>
 
 If you think you'll need to write your own OAuth 2.0 client and are running into problems, perhaps a <a href="http://support.stackmob.com/entries/22511348-REST-API-login-documentation-incorrect" target="_blank" rel="nofollow">forum discussion on OAuth 2.0 implementation</a> covers the topic.
 
