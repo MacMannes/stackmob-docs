@@ -602,11 +602,11 @@ While relationships, like fields and schemas, are inferred by StackMob, sometime
 
 Fill in relationship details:
 
-<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-todo-modal.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/add_relationship_dashboard.png" alt=""/></a></p>
 
 And you'll get:
 
-<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-todo-field.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/todos_relationship_added.png" alt=""/></a></p>
 
 **Save the schema** and that's it - you have a relationship.
 
