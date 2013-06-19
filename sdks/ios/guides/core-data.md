@@ -290,7 +290,7 @@ Support Table is based on `NSFetchRequest` methods.  Additional support, especia
         <td>NO</td>
     </tr>
     <tr>
-        <td>returnsDistinctRestults / setReturnsDistinctResults:</td>
+        <td>returnsDistinctResults / setReturnsDistinctResults:</td>
         <td>NO</td>
     </tr>
     <tr>
