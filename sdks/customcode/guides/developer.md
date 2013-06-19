@@ -151,7 +151,7 @@ We've included `src/main/java/com/stackmob/customcode/HelloWorld.java` which you
 
 A method is represented by a class that extends the interface `CustomCodeMethod`, of which there are three methods to implement:
 
-* `getMethodName`
+* `getMethodName` (no spaces or dashes allowed)
 * `getParams`
 * `execute`
 
@@ -188,6 +188,10 @@ This method will return JSON when called:
 
 `execute` runs when the REST API point for `https://api.stackmob.com/hello_world` is hit.  The hashmap that is returned will translate to a JSON object in the response.
 
+<p class="alert">
+  <i class="icon-warning-sign"></i> We do not support dashes (`-`) in method names, but we do support underscores (`_`).
+</p>
+
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
@@ -216,7 +220,7 @@ public class EntryPointExtender extends JarEntryObject {
 ```
 
 <p class="alert">
-  Methods <b>must be entered</b> in <code>EntryPointExtender</code> in order for StackMob to discover them.
+  <i class="icon-warning-sign"></i> Methods <b>must be entered</b> in <code>EntryPointExtender</code> in order for StackMob to discover them.
 </p>
 
 ## Datastore
