@@ -151,17 +151,19 @@ We've included `src/main/java/com/stackmob/customcode/HelloWorld.java` which you
 
 A method is represented by a class that extends the interface `CustomCodeMethod`, of which there are three methods to implement:
 
-* `getMethodName` (no spaces or dashes allowed)
+* `getMethodName`
 * `getParams`
 * `execute`
 
 Let's look at the basic class, represented by `HelloWorld.java`.
 
-```java,4,7,10
+```java,4,9,12
 public class HelloWorld implements CustomCodeMethod {
 
   @Override
-  public String getMethodName() { return "hello_world"; }
+  public String getMethodName() { 
+    return "hello_world"; //no dashes or spaces allowed
+  }
 
   @Override
   public List<String> getParams() { return new ArrayList<String>(); }
@@ -189,7 +191,7 @@ This method will return JSON when called:
 `execute` runs when the REST API point for `https://api.stackmob.com/hello_world` is hit.  The hashmap that is returned will translate to a JSON object in the response.
 
 <p class="alert">
-  <i class="icon-warning-sign"></i> We do not support dashes (`-`) in method names, but we do support underscores (`_`).
+  <i class="icon-warning-sign"></i> <b>getMethodName</b>: we do not support dashes (`-`) in method names, but we do support underscores (`_`).
 </p>
 
 <div class="alert alert-info">
