@@ -28,7 +28,6 @@ Beginner
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
 
-
 ## Open the Base Xcode Project
 
 We’ve created an Xcode project for you as a starting place for this tutorial.  It has StackMob imported and the basic plumbing for Core Data.  This allows you to focus on the objective of this tutorial.
@@ -51,6 +50,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 ## Add the Category Entity
+
 In the XCode project navigator, select **mydatamodel.xcdatamodelId**.  Click the **plus sign** next to **Add Entity** near the bottom of the screen.  **Name** your new entity **Category**. 
 <br/>
 <br/>
@@ -58,19 +58,25 @@ In the XCode project navigator, select **mydatamodel.xcdatamodelId**.  Click the
 <br/>
 <br/>
 Add two **attributes categoryId** and **name** and give them both the **data type string**.
+
+<p class="alert">If you plan on using the cache, add the <b>createddate</b> and <b>lastmoddate</b> attributes of data type <b>Date</b> as well.</p>
 <br />
 <br/>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-02.png">
 <br/>
 <br/>
-## Add Relationship on Category Entity
+
+### Add Relationship on Category Entity
+
 Select the **Category** entity. **Under relationships, click the plus icon** to added a new relationship attribute.  Since the Category entity has a one-to-one relationship with the Todo entity, call the **relationship todo** (sigular).  Set the **destination to Todo**.  Set the **inverse as No Inverse**.
 <br/>
 <br/>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-03.png">
 <br/>
 <br/>
-## Add Relationship on Todo
+
+### Add Relationship on Todo
+
 Select the **Todo** entity.  **Under relationships, click the plus icon** to added a new relationship attribute.  Since the Todo entity has a one-to-many relationship with the Category entity call the **relationship categories** (plural).  Set the **destination to Category**.  Set the **inverse as todo**.
 <br/>
 <br/>
@@ -83,7 +89,9 @@ Now select the new categories attribute and look at the Data Model Inspector on 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-many/one-to-many-03.png">
 <br/>
 <br/>
-## Create NSManagedObject subclass for each entity
+
+## Create Subclasses
+
 **Right click** on the **base-project** project folder and select **New File**. 
 <br/>
 <br/>
@@ -108,16 +116,17 @@ Check the box next to **Todo** and click **Next**.
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-07.png">
 <br/>
 <br/>
-### ** Repeat the above steps for the Category Entity **
 
-## Not quite done
+** Repeat the above steps for the Category Entity. **
+
+
 When you created the Todo NSManagedObject subcass, the Category subclass didn't exist so the Todo subclass files created could not reference it.  Instead it used the generic NSManagedObject class.  
 <br/>
 To fix this, **repeat the Create NSManagedObject subclass steps** one more time for the **Todo entity**.
 <br/><br/>
-When you are done, the files should look like the following.
+When you are done, the files should look like the following:
 
-### Todo.h
+<h5>Todo.h</h5>
 
 ```obj-c
 
@@ -142,7 +151,8 @@ When you are done, the files should look like the following.
 
 @end
 ```
-### Todo.m
+
+<h5>Todo.m</h5>
 
 ```obj-c
 
@@ -158,8 +168,7 @@ When you are done, the files should look like the following.
 @end
 ```
 
-
-### Category.h
+<h5>Category.h</h5>
 
 ```obj-c
 
@@ -176,7 +185,8 @@ When you are done, the files should look like the following.
 
 @end
 ```
-### Category.m
+
+<h5>Edit Category.m</h5>
 
 ```obj-c
 

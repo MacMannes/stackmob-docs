@@ -1,4 +1,4 @@
-iOS SDK Offline Sync
+iOS SDK Caching and Offline Sync
 ====================
 
 ## Overview

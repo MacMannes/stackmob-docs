@@ -59,7 +59,7 @@ Give the new attribute the name **count** with a data type of **Integer16**
 
 
 <br><br>
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/adv-query/adv-query.png">
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/queries/todo_entity.png">
 <br><br>
 
 

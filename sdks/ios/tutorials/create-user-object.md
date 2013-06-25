@@ -67,10 +67,12 @@ In the XCode project navigator, select **mydatamodel.xcdatamodeld**.  Click the 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/user-object/user-object-01.png">
 <br/>
 <br/>
-Add a **username** attribute with data type **String**.  The username will be your primary key. 
+Add a **username** attribute with data type **String**.  The username will be your primary key.
+
+If you plan on using the cache, be sure to add the **createddate** and **lastmoddate** attributes with data type **Date**.
 <br />
 <br/>
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/user-object/user-object-02.png">
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/user_object/user_entity.png">
 <br/>
 <br/>
 ## Create NSManagedObject subclass for the User entity
@@ -101,7 +103,7 @@ Check the box next to **User** and click **Next**.
 ## User.h
 Add the following **highlighted code** to your User.h file:<br>
 
-```obj-c,5-9,13-16
+```obj-c,5-9,15-18
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
@@ -114,6 +116,8 @@ Add the following **highlighted code** to your User.h file:<br>
 @interface User : SMUserManagedObject
 
 @property (nonatomic, retain) NSString * username;
+@property (nonatomic, retain) NSDate * createddate;
+@property (nonatomic, retain) NSDate * lastmoddate;
 
 /*
     We also declare an init method for easy initialization of our managed object.
@@ -126,13 +130,15 @@ Add the following **highlighted code** to your User.h file:<br>
 ## User.m
 Add the following **highlighted code** to your User.m file:<br>      
 
-```obj-c,7-19
+```obj-c,9-21
 
 #import "User.h"
 
 @implementation User
 
 @dynamic username;
+@dynamic createddate;
+@dynamic lastmoddate;
 
 /*
     In our init method we insert a new User managed object in the provided managed object context.

@@ -60,17 +60,10 @@ All of our tutorials will use at least one Entity called Todo, which will have a
 
 Select **mydatamodel.xcdatamodeld**, press the **Add Entity** button at the bottom, and add an Entity called **Todo**.
 
-Add two attributes: one called **todoId** and one called **title**, both of type **String**.
-
-Repeat this process and add a **StackMob** entity with two attributes: one called **createddate** and one called **lastmoddate**, both of type **Date**.
-
-Finally, in the **Data Model Inspector** of the StackMob entity, check the box for **Abstract Entity**. In the **Data Model Inspector** of the Todo entity, select StackMob as the **Parent Entity**.
+Add four attributes: one called **todoId** and one called **title**, both of type **String**, and **createddate** and **lastmoddate**, both of type **Date**.
 
 Your Todo entity should look like this:
 	<p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/base-project/todo_entity.png" alt=""/></p>
-
-Your StackMob entity should look like this:
-    <p class="screenshot"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/base-project/stackmob_entity.png" alt=""/></p>
 
 
 ### A Note About Property Names

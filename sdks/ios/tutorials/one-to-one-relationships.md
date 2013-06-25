@@ -58,26 +58,33 @@ In the XCode project navigator, select **mydatamodel.xcdatamodelId**.  Click the
 <br/>
 <br/>
 Add two **Attributes: categoryId** and **name**. Give them both the data type **String**.
+
+<p class="alert">If you plan on using the cache, add the <b>createddate</b> and <b>lastmoddate</b> attributes of data type <b>Date</b> as well.</p>
+
 <br />
 <br/>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-02.png">
 <br/>
 <br/>
-## Add Relationship on Category Entity
+
+### Add Relationship on Category Entity
 Select the **Category** entity. **Under relationships, click the plus icon** to added a new relationship attribute.  Since this is a one-to-one relationship with the Todo entity call the **relationship todo** (sigular).  Set the **destination to Todo**.  Set the **inverse as No Inverse**.
 <br/>
 <br/>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-03.png">
 <br/>
 <br/>
-## Add Relationship on Todo
+
+### Add Relationship on Todo
 Select the **Todo** entity.  **Under relationships, click the plus icon** to added a new relationship attribute.  Since this is a one-to-one relationship with the Category entity call the **relationship category** (sigular).  Set the **destination to Category**.  Set the **inverse as todo**.
 <br/>
 <br/>
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-04.png">
 <br/>
 <br/>
-## Create NSManagedObject subclass for each entity
+
+## Create Subclasses
+
 **Right click** on the **base-project** project folder and select **New File**. 
 <br/>
 <br/>
@@ -102,16 +109,17 @@ Check the box next to **Todo** and click **Next**.
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/one-to-one/one-to-one-07.png">
 <br/>
 <br/>
-### ** Repeat the above steps for the Category Entity **
 
-## Not quite done
+** Repeat the above steps for the Category Entity.**
+
+
 When you created the Todo NSManagedObject subcass, the Category subclass didn't exist so the Todo subclass files created could not reference it.  Instead it used the generic NSManagedObject class.  
 <br/>
 To fix this, **repeat the Create NSManagedObject subclass steps** one more time for the **Todo entity**, replacing your existing files.
 <br/><br/>
-When you are done, the files should look like the following.
+When you are done, the files should look like the following:
 
-### Todo.h
+<h5>Todo.h</h5>
 
 ```obj-c
 
@@ -128,7 +136,8 @@ When you are done, the files should look like the following.
 
 @end
 ```
-### Todo.m
+
+<h5>Todo.m</h5>
 
 ```obj-c
 
@@ -145,7 +154,7 @@ When you are done, the files should look like the following.
 ```
 
 
-### Category.h
+<h5>Category.h</h5>
 
 ```obj-c
 
@@ -162,7 +171,8 @@ When you are done, the files should look like the following.
 
 @end
 ```
-### Category.m
+
+<h5>Category.m</h5>
 
 ```obj-c
 

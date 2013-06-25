@@ -53,9 +53,10 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 ## Add a property to your model 
+
 Add a property to the **Todo** entity  with the data-type **Transformable**.
 
-<p ><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/geopoint/geopoint-11.png" alt=""/></p>
+<p ><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/geolocation/todo_entity_with_location.png" alt=""/></p>
 
 ## Add an NSManagedObject subclass
 With the **Todo** entity selected in your data model, choose "File > New > File". In the Core Data template section, select **NSManagedObject subclass** to create class files for the entity.

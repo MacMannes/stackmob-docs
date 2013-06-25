@@ -92,6 +92,9 @@ Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, dec
     return _managedObjectModel;
 }
 ```
+
+<p class="alert">If you are using the cache, make sure you include the <b>createddate</b> and <b>lastmoddate</b> attributes as <b>Date</b> types in your entities. We also recommend not inheriting from a parent entity to do so, as it drastically affects cache performance.<br/><br/>Also, if there are fields on StackMob you don't plan on interacting with through the client, don't include them in your model.</p>
+
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
@@ -1396,7 +1399,7 @@ NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234
 
 ## Network Reachability
 
-The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#OfflineSync">Offline Sync</a>).
+The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#CachingandOfflineSync">Caching and Offline Sync</a>).
 
 <!--- SMNetworkReachability -->
 
@@ -1522,11 +1525,11 @@ Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:
   //////////////////
 -->
 
-## Offline Sync
+## Caching and Offline Sync
 
 Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
 
-Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Offline Sync Guide</a> for all information.
+Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Caching and Offline Sync Guide</a> for all information.
 
 <!---
 	///////////////////
