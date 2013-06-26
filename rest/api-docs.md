@@ -1446,7 +1446,7 @@ The user will receive an email with a temporary password valid for 24 hours. The
 
 Request URL:
     
-    GET http://api.stackmob.com/user/login?password=temppassword&username=johndoe&new_password=newpassword
+    GET http://api.stackmob.com/user/accessToken?password=temppassword&username=johndoe&new_password=newpassword
 
 Request Headers:
     
