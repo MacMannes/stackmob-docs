@@ -309,7 +309,7 @@ HTTP/1.1 200 OK
 
 ## Optional Headers
 
-Occasionally you'll come across an API or SDK that has restrictions on the requests you send, such as not being able to access full RESTful capabilities. Thankfully, there are ways to circumvent these restrictions in the form of special headers.
+Occasionally you'll come across SDKs like Unity that have restrictions on the requests you send, such as not being able to access full RESTful capabilities. Thankfully, there are ways to circumvent these restrictions in the form of special headers.
 
 X-HTTP-Method-Override:
 
