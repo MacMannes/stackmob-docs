@@ -42,11 +42,11 @@ Define a property of type `SMClient`, most likely in your `AppDelegate` file whe
 self.client = [[SMClient alloc] initWithAPIVersion:@"YOUR_API_VERSION" publicKey:@"YOUR_PUBLIC_KEY"];
 ```
 
+<p class="alert">If you haven't found your public key yet, check out <b>Manage App Info</b> under the <b>App Settings</b> sidebar on the <a href="https://dashboard.stackmob.com" target="_blank">Dashboard page</a>.</p>
+
 For `YOUR_API_VERSION`, pass `@"0"` for Development, `@"1"` or higher for the corresponding version in Production.
 
-From then on you can either pass your client instance around, or use `[SMClient defaultClient]` to retrieve it at any point.
-
-<p class="alert">If you haven't found your public key yet, check out <b>Manage App Info</b> under the <b>App Settings</b> sidebar on the <a href="https://dashboard.stackmob.com" target="_blank">Dashboard page</a>.</p>
+You should only instantiate one instance of `SMClient`. You can use `[SMClient defaultClient]` to retrieve the instance at any point after its been initialized, in conjunction with standard techniques like passing it between controllers or accessing it through an instance of the shared app delegate.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -2066,13 +2066,15 @@ The <a href="https://developer.stackmob.com/ios-sdk/push-guide" target="_blank">
 
 ### Initializing a Push Client
 
-The StackMob push notification API is accessed through an instance of `SMPushClient`. It's best to initialize an instance of this class at the same time you initialize an `SMClient` instance:
+The StackMob push notification API is accessed through an instance of `SMPushClient`:
 
 ```obj-c
 SMPushClient *pushClient = [[SMPushClient alloc] initWithAPIVersion:@"0" publicKey:@"YOUR_PUBLIC_KEY" privateKey:@"YOUR_PRIVATE_KEY"];
 ```
 
 <p class="alert">You supply your private key to the init methods because Push Notifications on StackMob use the Oauth 1 protocol.</p>
+
+You should only instantiate one instance of `SMPushClient` and use it throughout your application, and it's easiest to initialize it at the same time you initialize the `SMClient` instance.
 
 <div class="alert alert-info">
   <div class="row-fluid">
