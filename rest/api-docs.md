@@ -305,6 +305,20 @@ Response Headers:
 HTTP/1.1 200 OK
 ```
 
+# Special Headers
+
+## Optional Headers
+
+Occasionally you'll come across an API or SDK that has restrictions on the requests you send, such as not being able to access full RESTful capabilities. Thankfully, there are ways to circumvent these restrictions in the form of special headers.
+
+X-HTTP-Method-Override:
+
+```bash
+Content-Type: application/json
+Accept: application/vnd.stackmob+json; version=0
+X-HTTP-Method-Override: /* Your desired verb */
+```
+
 # Special Operations
 
 ## Binary File Upload
