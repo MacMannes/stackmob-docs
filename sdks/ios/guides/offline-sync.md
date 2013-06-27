@@ -25,29 +25,17 @@ The easiest way to do this is the following:
 
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/addmodelversion.png" />
 
-<p>2. In the new model version, define a new entity named StackMob.</li>
-<p>3. Add 2 attributes, <code>createddate</code> and <code>lastmoddate</code>, both of type <code>Date</code>.</p>
+<p>2. In the new model version, add 2 attributes to every entity, <code>createddate</code> and <code>lastmoddate</code>, both of type <code>Date</code>.</p>
 
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/stackmobentity.png" />
+<p>3. Highlight your data model file and in the <b>File Inspector</b>, under <b>Versioned Core Data Model -> Current</b>, select your new version.</p>
 
-<p>4. In the <b>Data Model Inspector</b>, check <b>Abstract Entity</b>.</p>
-
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/absractentity.png" />
-
-<p>5. In the <b>Data Model Inspector</b> of every other entity in your model, choose <b>StackMob</b> as the <b>Parent Entity</b>.</p>
-
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/tutorial/ios-offline-sync-guide/parententity.png" />
-
-<p>6. Highlight your data model file and in the <b>File Inspector</b>, under <b>Versioned Core Data Model -> Current</b>, select your new version.</p>
-<p>7. Finally, clean and build your Xcode project.</p>
-
-If you choose the Parent Entity route, be sure to remove any existing attributes that map to `createddate` or `lastmoddate`, as to avoid duplicates.
+<p>4. Finally, clean and build your Xcode project.</p>
 
 Lightweight migration should take care of merging your new model with your old database.  If you run into the "Cannot Find Source Store" error, remove the application from the device/simulator (this removes the local database and cache mapping table files) and try running the application again.
 
 <b>Important:</b> If your application currently uses the cache and you are upgrading to v2.0.0+, the internal cache mapping table will be inconsistent with the new version. You should either remove the application from the device or call the <code>SMCoreDataStore</code> <code><i>resetCache</i></code> method once. Improved migration functionality is in development.
 
-Now you're ready to use offline sync.
+Now you're ready to use the caching and offline sync systems.
 
 <h2>Turning On/Off the Cache</h2>
 
