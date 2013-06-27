@@ -307,7 +307,7 @@ HTTP/1.1 200 OK
 
 # Special Headers
 
-## Optional Headers
+## X-HTTP-Method-Override
 
 Occasionally you'll come across SDKs that have restrictions on the requests you send, such as not being able to access full RESTful capabilities. In the case of Unity, the only requests you can make are `GET` and `POST`. Thankfully, there are ways to circumvent these restrictions in the form of special headers.
 
