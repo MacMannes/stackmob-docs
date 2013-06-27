@@ -320,6 +320,7 @@ X-HTTP-Method-Override: /* Your desired verb */
 Please note that only `GET` and `POST` verbs can be overridden. These overrides fall into two categories, the 'payload' category and the 'no payload' category. What this means is that a no-payload request like `GET` can be overridden with `DELETE` and `HEAD`, whereas `POST` can only be overridden by `PUT`.
 
 GET Override:
+
 ```bash
 GET http://api.stackmob.com/user/1 HTTP/1.1
 Content-Type: application/json
@@ -327,7 +328,8 @@ Accept: application/vnd.stackmob+json; version=0
 X-HTTP-Method-Override: /* DELETE or HEAD */
 ```
 
-POST Override
+POST Override:
+
 ```bash
 POST http://api.stackmob.com/user HTTP/1.1
 Content-Type: application/json
