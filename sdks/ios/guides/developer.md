@@ -592,10 +592,216 @@ In the data model, be sure to check the box for a To-Many relationship, as shown
 You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
 
 
+<!--- Datastore api relationships -->
+
+### Relationships using Datastore API
+
+#### Relate Objects Via Primary Keys
+
+You can create or update objects with relationships by specifying the primary keys of the related objects as the values.
+
+Suppose your `todo` schema has a one to one relationship named `thecategory` which relates to objects in the `category` schema. You can create a new `todo` object with a relationship to a `category` object like so:
+
+```obj-c
+// Assumes the category object with primary key 1234 exists
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", @"1234", @"thecategory", nil];
+
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *result) {
+  // Handle success
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+Suppose the relationship was one-to-many and called `thecategories`. You can create the todo object and relate it to many `category` objects like so:
+
+```obj-c
+// Assumes the category object with primary key 1234 exists
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", [NSArray arrayWithObjects:@"1234", @"5678", nil], @"thecategories", nil];
+
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *result) {
+  // Handle success
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+<br/>
+**A Note About Inference**
+
+While working in your **Development** environment, if the `thecategory` or `thecategories` relationships didn't exist in the `todo` schema, the methods above would infer a field of type `String`. 
+
+To specify that relationships should get inferred, you'll create an instance of `SMRequestOptions` and use the `associateKey:withSchema:` method to manually specify which schema the relationship key relates to. Regardless of whether you are sending a create or update, you need to use the `createObject:...` method, which translates to a POST. For updates, simply add a key/value pair for the primary key.
+
+Here's an example using our one-to-one example above:
+
+```obj-c
+// Assumes the category object with primary key 1234 exists
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", @"1234", @"thecategory", nil];
+
+// Specify that "thecategory" is a relationship to the "category" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"thecategory" withSchema:@"category"];
+
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject options:options inSchema:@"todo" onSuccess:^(NSDictionary *result) {
+  // Handle success
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+Behind the scenes the SDK will build a request header that lets StackMob know that `thecategory` is a relationship key on the `category` schema, and the relationship will get properly inferred.
+
+<!-- Creating and Appending Related Objects -->
+
+#### Create and Append Related Objects
+
+You can create and save related objects, then subsequently save them to their parent object, all in one call.
+
+This is instead of making a single call for each object, then another call to update the parent object with the relationships.
+
+
+
+#### Fetch with Expand
+
+#### Append Existing Objects
+
+#### Deleting Related Objects
+
+
+<!-- Upsert -->
+
+#### Upsert with Nested Objects
+
+There might be times when you want create or update an object while creating or updating related objects, all in one request.
+
+To do so, in the top level dictionary you would include a key/value pair where the key is the relationship name and the value is a nested dictionary or array of dictionaries.
+
+However, you must manually define what schemas the related objects are associated with.
+
+The first thing to note is that you will always send this type of request as a POST. Even if you are updating an object, you'll pass the dictionary object to the `createObject:...` method and simply include a key/value pair for the existing primary key.
+
+To manually specify what schema a related object is associated with, you'll create an instance of `SMRequestOptions` and use the `associateKey:withSchema:` method for each relationship key in the request dictionary.
+
+Lets create a new `todo` object which has a one to one relationship named `category`, associated with the schema `category`. In the same request we will be creating the new `category` object and relating it to the `todo` object:
+
+```obj-c
+// Create category object. We can specify a manual primary key if we wish, otherwise one will be automatically assigned when it's created.
+NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Home Projects", @"name", nil];
+
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
+
+// Correlate the key "category" to the StackMob "category" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"category" withSchema:@"category"];
+
+// Execute request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
+  // Result will contain the entire todo object, as well as the entire nested category object.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+The dictionary payload will end up looking like this:
+
+```bash
+// Request to "todo" schema
+{
+  title : "new todo",
+  category : {
+                name : "Home Projects"
+             }
+}
+```
+
+Behind the scenes the SDK will build a request header that lets StackMob know that the `category` key contains an object that should be created in the `category` schema.
+
+<p class="alert">If you are working in development and the "category" relationship doesn't exist, it will be inferred and automatically created as a one-to-one relationship. If you send an array of objects as the value and the relationship doesn't exist yet, it will be inferred and automatically created as a one-to-many relationship.</p>
+
+Here's an example of creating a new `todo` object while updating a related `category` object with a new name:
+
+```obj-c
+// Create category object. We can specify a manual primary key if we wish, otherwise one will be automatically assigned when it's created.
+NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Updated Name", @"name", @"1234", @"category_id", nil];
+
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
+
+// Associate the key "category" with the StackMob "category" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"category" withSchema:@"category"];
+
+// Execute request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
+  // Result will contain the entire todo object, as well as the entire updated category object as a nested value.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+The payload will end up looking like this:
+
+```bash
+// Request to "todo" schema
+{
+  title : "new todo",
+  category : {
+                category_id : "1234",
+                name : "Updated Name"
+             }
+}
+```
+<br/>
+Finally, you can also nest full related objects within full related objects. The trick is that all associated keys need to be specified with the top level relationship key as the reference, using dot notation.
+
+Here's an example of creating a `todo` object while updating a one-to-one relationship to the `category` schema, and also updating a one-to-one relationship `genre` in that object:
+
+```obj-c
+NSDictionary *genreObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Home and Living", @"type", @"5678", @"genre_id", nil];
+
+NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Updated Name", @"name", genreObject, @"genre", @"1234", @"category_id", nil];
+
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
+
+// Associate the key "category" with the "category" schema as well as the key "genre" with the "genre" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"category" withSchema:@"category"];
+[options associateKey:@"category.genre" withSchema:@"genre"];
+
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
+  // Result will contain the entire todo object, as well as the entire updated category and genre objects as a nested values.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+The payload will end up looking like this:
+
+```bash
+// Request to "todo" schema
+{
+  title : "new todo",
+  category : {
+                category_id : "1234",
+                name : "Updated Name",
+                genre : {
+                          genre_id : @"5678",
+                          type : "Home and Living"
+                        }
+             }
+}
+```
+
+<p class="alert">This all works for one-to-many relationships as well. Just use an array of dictionaries to specify that the relationship is one-to-many.</p>
+
+
 <!--- Creating through dashboard -->
 
 
-### Creating Relationships with the Dashboard
+### Dashboard Relationship Creation
 
 While relationships, like fields and schemas, are inferred by StackMob, sometimes you'll want to manually create them yourself.  Here we'll assume that we have both `todo` and `user` schemas already defined.
 
