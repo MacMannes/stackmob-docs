@@ -85,7 +85,7 @@ The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a s
 
 Save an instance of your `todo` object to the server.
 
-```javascript
+```javascript,13-16
   // Associate s Model with the Schema
   var Todo = StackMob.Model.extend({ schemaName: 'todo' });
 
@@ -226,8 +226,13 @@ todo.create({
 
 To fetch your `todo` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.
 
-```js
+```js,7-11
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
+
 todo.fetch({
   success: function(model, result, options) {
     console.debug(model.toJSON());
@@ -265,8 +270,13 @@ todo.fetch({
 
 You can edit existing objects easily.  Let's update `todo` object `1234` with a new field: `done` and let's mark it as `true`.
 
-```javascript
+```javascript,7-10
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
+
 todo.save({ done: true }, {
   success: function(model, result, options) { console.debug(model.toJSON()); }
   error: function(model, result, options) {}
@@ -280,6 +290,10 @@ todo.save({ done: true }, {
 You can also set fields and save things later.
 
 ```javascript
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
 
 todo.set({ done: true });
@@ -307,8 +321,14 @@ todo.save({
 Let's now delete your object.
 
 
-```javascript
+```javascript,8-11
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
+
+// Delete object
 user.destroy({
   success: function(model, result, options) { console.debug(model.toJSON()); },
   error: function(model, result, options) {}
@@ -331,13 +351,18 @@ user.destroy({
 
 You can save arrays.
 
-```js,3
+```js,8
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo();
+
 todo.save({
   subtasks: ['do A', 'do B']
 }, {
-  success: ...
-  error: ...
+  success: function(){ /* ... */ }
+  error: function(){ /* ... */ }
 });
 ```
 
@@ -348,7 +373,12 @@ e.g. John saves `['do A', 'do B']` and Jill saves `['do C']`.  Whoever calls `sa
 But sometimes you want to append to an array.  StackMob provides ways of *appending* to arrays so that the end result will be `['do A', 'do B', 'do C']`, even if multiple users are operating on that field.
 
 ```javascript
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '12345' });
+
 todo.appendAndSave('subtasks', ['do C']);
 ```
 
