@@ -409,18 +409,16 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
   </div>
 </div>
 
-
-## Queries
-
-Let's make some queries against the datastore.
-
-### Request Bodies and Parameters
+## Request Data
 
 Whether making queries or performing CRUD operations, you'll likely want to take user input to do so.
 
-You can fetch parameters out of the URL for GET and DELETE requests.  You can fetch parameters out of the request body for PUT and POST requests.
+You can:
 
-#### Fetching Parameters
+* fetch parameters out of the URL for GET and DELETE requests.  
+* fetch data/JSON out of the request body for PUT and POST requests.
+
+### Fetching Parameters
 
 Let's get the parameters out of the request URL.  To start out, let's first make a GET request from the client SDKs with a few parameters.
 
@@ -462,8 +460,8 @@ ds.get("hello_world", args, headers, new StackMobCallback() {});
 <span class="tab clientcallgetparams" title="JS SDK"></span>
 ```js
 StackMob.customcode('hello_world', { name: 'joe', age: 10 }, 'GET', {
-	success: function(result) {},
-	error: function(result) {}
+  success: function(result) {},
+  error: function(result) {}
 })
 ```
 <span class="tab"></span>
@@ -474,16 +472,16 @@ Now let's get the parameters out of the request in custom code.
 
 ```java,4,5
 public ResponseToProcess execute(ProcessedAPIRequest request, 
-		SDKServiceProvider serviceProvider) {
+    SDKServiceProvider serviceProvider) {
 
-	String name = request.getParams().get("name"); //this will be a String
-	String age = request.getParams().get("age"); //this will be a String
+  String name = request.getParams().get("name"); //this will be a String
+  String age = request.getParams().get("age"); //this will be a String
 
-	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+  return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
 }
 ```
 
-#### Fetching JSON Body
+### Fetching JSON Body
 
 Perhaps you're sending up JSON.  Let's do that with the client SDKs.
 
@@ -530,8 +528,8 @@ ds.post("hello_world", body, new StackMobCallback() {});
 <span class="tab clientcallpostjson" title="JS SDK"></span>
 ```js
 StackMob.customcode('hello_world', { name: 'joe', age: 10 }, 'POST', {
-	success: function(result) {},
-	error: function(result) {}
+  success: function(result) {},
+  error: function(result) {}
 })
 ```
 <span class="tab"></span>
@@ -558,23 +556,23 @@ import org.json.JSONObject;
 ...
 
 public ResponseToProcess execute(ProcessedAPIRequest request, 
-		SDKServiceProvider serviceProvider) {
+    SDKServiceProvider serviceProvider) {
 
-	try {
-	  JSONObject jsonObj = new JSONObject(request.getBody());
-	  if (!jsonObj.isNull("places")) {
-	  	places = Arrays.asList(jsonObj.getString("places").split(","));
-	  }
-	} catch (JSONException e) {
-	  logger.error("Doh!  Problem parsing the JSON.", e);
-	}
+  try {
+    JSONObject jsonObj = new JSONObject(request.getBody());
+    if (!jsonObj.isNull("places")) {
+      places = Arrays.asList(jsonObj.getString("places").split(","));
+    }
+  } catch (JSONException e) {
+    logger.error("Doh!  Problem parsing the JSON.", e);
+  }
 
-	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+  return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
 }
 ```
 
 <p class="alert">
-	StackMob returns <code>request.getBody()</code> as a plain String, so you'll need to mold it into the format you want - in this case JSON.
+  StackMob returns <code>request.getBody()</code> as a plain String, so you'll need to mold it into the format you want - in this case JSON.
 </p>
 
 <div class="alert alert-info">
@@ -588,6 +586,12 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
   </div>
 </div>
 
+
+
+
+## Queries
+
+Let's make some queries against the datastore.
 
 ### Fetching Multiple Results
 

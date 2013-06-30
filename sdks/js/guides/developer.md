@@ -687,6 +687,13 @@ Let's work with relationships in the code.
 
 ### Adding Related Objects
 
+Let's cover adding related objects.  We'll cover:
+
+* creating and associating new related bojects
+* associating existing related objects
+
+#### Creating and Associating New Related Objects
+
 You can create objects and add them to a related parent object in one swoop.
 
 Let's assign some more chores for `Marty`. 
@@ -740,6 +747,21 @@ todos.fetch();
     </div>
   </div>
 </div>
+
+
+#### Associating existing related objects
+
+If your related object already exists in the datastore and you simply want to add the relationship between the parent, use `appendAndSave`.  StackMob saves relationships as an array of primary key strings, so we're simply adding the primary key of the related object to the array.
+
+We created and assigned `todo` objects to `Marty` already, so the `todo` objects already exist in the datastore.  Let's also add them to Doc's todo list by adding them by reference.
+
+```js
+var user = new StackMob.User({ username: 'Doc' });
+user.appendAndSave('todos', ['1','2','3'], {
+  success: function(..) {},
+  error: function(...) {}
+});
+```
 
 
 ### Fetching Related Objects (Join)
