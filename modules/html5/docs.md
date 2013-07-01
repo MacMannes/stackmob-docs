@@ -68,6 +68,16 @@ StackMob can also automatically deploy your development environment whenever you
 <div class="screenshot"><a href="https://dashboard.stackmob.com/module/html5/settings" target="_blank"><img src="//s3.amazonaws.com/static.stackmob.com/images/modules/html5/modules-html5-service-hook.png" /></a>
 </div>
 
+
+## Deploying from development to production
+
+Once you've completed developing your app, you'll want to deploy it to the production environment.  For HTML5 Hosted apps, this involved deploying both your API and your HTML5 app.  Deploying to production allows you to continue working in develpment without affecting your users.
+
+This video walks through the process of deploying to production.
+<p>
+<iframe src="http://player.vimeo.com/video/69334370" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+</p>
+
 ## New to GitHub?
 
 Of course you'll need to <a href="https://github.com/signup/free" target="_blank">sign up for a free GitHub account</a>.
