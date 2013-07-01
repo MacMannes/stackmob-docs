@@ -68,7 +68,7 @@ Each time you deploy your changes, StackMob quickly and easily lets you revision
 We walk you through how to deploy your API in the video below.
 
 <p>
-<iframe src="http://player.vimeo.com/video/69104851" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/69104851" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 </p>
 
 
