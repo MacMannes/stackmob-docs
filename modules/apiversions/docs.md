@@ -65,6 +65,13 @@ Deployment happens through StackMob's UI Platform via the [Deploy page](https://
 
 Each time you deploy your changes, StackMob quickly and easily lets you revision and deploy your API as a particular version.
 
+We walk you through how to deploy your API in the video below.
+
+<p>
+<iframe src="http://player.vimeo.com/video/69104851" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+</p>
+
+
 Here's an example of the deploy page.  Select what API version you want to deploy to, enter a description, and deploy!
 
 <p class="screenshot">
