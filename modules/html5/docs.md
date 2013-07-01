@@ -26,11 +26,12 @@ It's great to save your code there and collaborate with team members and can gre
 Here's a short video showing how a user like you can link your GitHub account to StackMob, and how StackMob can start seamlessly serving your web app for you automatically:
 
 <p>
-<iframe src="http://player.vimeo.com/video/69333500" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/69333500" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 
 <!--
 <iframe width="560" height="315" src="//www.youtube.com/embed/2KlW_ynQMDQ" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 -->
+
 </p>
 
 
