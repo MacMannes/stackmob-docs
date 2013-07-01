@@ -71,7 +71,7 @@ StackMob can also automatically deploy your development environment whenever you
 
 ## Deploying from development to production
 
-Once you've completed developing your app, you'll want to deploy it to the production environment.  For HTML5 Hosted apps, this involved deploying both your API and your HTML5 app.  Deploying to production allows you to continue working in develpment without affecting your users.
+Once you've completed developing your app, you'll want to deploy it to production.  For HTML5 Hosted apps, this involves deploying both your API and  HTML5 app.  Deploying to production allows you to continue working in develpment without affecting your users.
 
 This video walks through the process of deploying to production.
 <p>
