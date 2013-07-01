@@ -71,7 +71,7 @@ Once you've completed developing your app, you'll want to deploy it to productio
 
 This video walks through the process of deploying to production.
 <p>
-<iframe src="http://player.vimeo.com/video/69334370" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/69334370" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 </p>
 
 ## New to GitHub?
