@@ -21,11 +21,16 @@ From the AWS account menu and select Security Credentials.
 
 <img src="//s3.amazonaws.com/static.stackmob.com/images/tutorial/s3-01.png"></img>
 
+Once in the Security Credentials area, you'll need to create a new user.  You should download the security credentials which include your Access Key ID and Secret.  They will only be available upon user creation.
 
-Click on the link Access Credentials.  You'll be taken to your Access Keys.
+Next, you will grant the user Permission to read and write to your Amazon S3 bucket.
 
-<img src="//s3.amazonaws.com/static.stackmob.com/images/tutorial/s3-02.png"></img>
 
+This video walksthrough creating a user and granting them full access to Amazon S3.
+
+<p>
+<iframe src="http://player.vimeo.com/video/69504620" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+</p>
 
 
 Copy the **Access Key Id** and **Secret Access Key** and paste them into the <a href="https://dashboard.stackmob.com/module/s3/settings">S3 Settings page</a> in the StackMob dashboard.
