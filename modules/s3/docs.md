@@ -29,7 +29,7 @@ Next, you will grant the user Permission to read and write to your Amazon S3 buc
 This video walks through creating a user and granting them full access to Amazon S3.
 
 <p>
-<iframe src="http://player.vimeo.com/video/69504620" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/69504620" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 </p>
 
 
