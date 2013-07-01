@@ -26,7 +26,7 @@ Once in the Security Credentials area, you'll need to create a new user.  You sh
 Next, you will grant the user Permission to read and write to your Amazon S3 bucket.
 
 
-This video walksthrough creating a user and granting them full access to Amazon S3.
+This video walks through creating a user and granting them full access to Amazon S3.
 
 <p>
 <iframe src="http://player.vimeo.com/video/69504620" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
