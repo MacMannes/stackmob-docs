@@ -648,15 +648,17 @@ Defining relationships lets you fetch and save information more easily.  You can
 * create related objects and attach them to a parent object in one call
 * fetch a parent object and have the full JSON objects returned as well, not just the ids.
 
-    ```js
-    {
-      username: 'john',
-      chores: [
-         { todo_id: '123', action: '...', ...}, 
-         { todo_id: '234', action: '...', ...}, 
-         { todo_id: '345', action: '...', ...}]
-    }
-    ```
+Example JSON:
+
+```js
+{
+  username: 'john',
+  chores: [
+     { todo_id: '123', action: '...', ...}, 
+     { todo_id: '234', action: '...', ...}, 
+     { todo_id: '345', action: '...', ...}]
+}
+```
 
 Let's get to it.
 
