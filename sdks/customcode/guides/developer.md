@@ -721,6 +721,51 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
   </div>
 </div>
 
+### Or Queries
+
+You can include `or` statements in your query logic. Let's try to find a `car` that is either a Ferrari or newer than 2010.
+
+```java,11
+public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
+  List<SMCondition> orArguments = new ArrayList<SMCondition>();
+  orArguments.add(new SMGreaterOrEqual("year", new SMInt(2000L)));
+  orArguments.add(new SMEquals("make", new SMString(make)));
+
+  SMOr orStatement = new SMOr(orArguments);
+
+  List<SMCondition> query = new ArrayList<SMCondition>();
+  DataService ds = serviceProvider.getDataService();
+  List<SMObject> results;
+
+  try {
+    // add the OR statement (containing the conditions from orArguments) to our query
+    query.add(orStatement);
+    results = ds.readObjects("car", query);
+  } catch (InvalidSchemaException ise) {}
+    catch (DatastoreException dse) {}
+
+    return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+}
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMOr.html" target="_blank">SMGreater</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://github.com/stackmob/stackmob-customcode-java-examples/blob/master/src/main/java/com/stackmob/example/CRUD/OrQuery.java" target="_blank">Or Query Example</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 ### Array Queries
 
 You can query for objects to see if an array or relationship contains a value.
