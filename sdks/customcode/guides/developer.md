@@ -753,7 +753,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMOr.html" target="_blank">SMGreater</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-customcode-sdk/0.5.6/apidocs/index.html?com/stackmob/sdkapi/SMOr.html" target="_blank">SMOr</a></li>
       </ul>
     </div>
     <div class="span6">
