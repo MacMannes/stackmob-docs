@@ -723,7 +723,7 @@ public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider
 
 ### Or Queries
 
-You can include `or` statements in your query logic. Let's try to find a `car` that is either a Ferrari or newer than 2010.
+You can include `or` statements in your query logic. Let's try to find `car`s whose `make` is `Ferrari` `or` whose `year` is newer than `2010`.
 
 ```java,11
 public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
