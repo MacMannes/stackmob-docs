@@ -607,7 +607,7 @@ Suppose your `todo` schema has a one to one relationship named `thecategory` whi
 NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", @"1234", @"thecategory", nil];
 
 // Make request
-[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *result) {
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *theObject, NSString *) {
   // Handle success
 } onFailure:^(NSError *error) {
   // Handle error
@@ -658,17 +658,140 @@ Behind the scenes the SDK will build a request header that lets StackMob know th
 
 #### Create and Append Related Objects
 
-You can create and save related objects, then subsequently save them to their parent object, all in one call.
+You can create and save related objects, then subsequently save them to another object's relationship value, all in one call.
 
-This is instead of making a single call for each object, then another call to update the parent object with the relationships.
+This is instead of making a single call for each object, then another call to update the related object with the relationships.
 
+Suppose we have an existing `todo` object with primary key `1234`. The `todo` schema has a one-to-many relationship `categories` to the `category` schema. Lets go ahead and create and two new `category` objects and relate them to the `todo` object:
+
+```obj-c
+NSDictionary *category1 = [NSDictionary dictionaryWithObjectsAndKeys:@"category1", @"name", nil];
+NSDictionary *category2 = [NSDictionary dictionaryWithObjectsAndKeys:@"category2", @"name", nil];
+NSArray *categories = [NSArray arrayWithObjects:category1, category2, nil];
+            
+[[[SMClient defaultClient] dataStore] createAndAppendRelatedObjects:categories toObjectWithId:@"1234" inSchema:@"todo" relatedField:@"categories" onSuccess:^(NSArray *succeeded, NSArray *failed) {
+  // The succeeded array contains a list of the IDs for the objects which were persisted.
+  // the failed array contains a list of the IDs for the objects which failed, either because of a duplicate key or internal server error.
+} onFailure:^(NSError *error) {
+  // Handle Error
+}];
+```
+
+<!-- Fetch Expand -->
 
 
 #### Fetch with Expand
 
+Relationships are represented in an object dictionary as either a string primary ID for one-to-one relationships or arrays of string primary IDs for one-to-many relationships. 
+
+You can opt to fetch an object with an expand depth set; this will cause related objects to be returned as full dictionary objects rather than just primary IDs. The expand depth you set determines how deep related objects are expanded out. This is useful when you know you will be working with an object's related objects directly because you will only have to make one network call.
+
+<p class="alert">The expand depth limit is 3.</p>
+
+Suppose you have a `user` schema with a `friends` relationship field, which is a one-to-many relationship to the schema `user`. Normally the friends relationship value is represented as an array of primary keys (usernames in this case), but you can use the expand feature to have that array expanded as an array of full user objects instead.
+
+To do this, define an instance of `SMRequestOptions`, set the `setExpandDepth:` method, and pass the instance to your datastore request.
+
+Lets do a read on our user `john`, who has 3 friends: `jane`, `jill`, and `jack`:
+
+```obj-c
+SMRequestOptions *options = [SMRequestOptions options];
+[options setExpandDepth:1];
+
+[[[SMClient defaultClient] dataStore] readObjectWithId:@"john" inSchema:@"user" options:options onSuccess:^(NSDictionary *object, NSString *schema) {
+  // object contains the expanded john object
+} onFailure:^(NSError *error, NSString *objectId, NSString *schema) {
+  // Handle Error
+}];
+```
+
+`object` would have the following structure:
+
+```bash
+{
+  username : "john"
+  age : 25
+  friends: [
+            {
+              username : "jane",
+              age : 26,
+              friends : [1234,5678,...]
+            },
+            {
+              username : "jill",
+              age : 29,
+              friends : [4753,3855,...]
+            },
+            {
+              username : "jack",
+              age : 28,
+              friends : [1734,7465,...]
+            }
+           ]
+}
+```
+
+If we would have set expand depth `2`, we would have also got full objects for all of `jane`, `jill`, and `jack`'s friends, too.
+
+
+<!-- Append Existing object -->
+
+
 #### Append Existing Objects
 
+You can append objects to an array without needing to update the entire object at once. This goes for fields of type `Array` as well as one-to-many relationships.
+
+This method also handles any concurrency issues if two users are modifying the same object at the same time by doing atomic appending.
+
+If the field is an array, the objects will be appended to it with no uniqueness constraint.
+
+If the field is a relationship, just append the object primary IDs to the array, not the objects themselves. The resulting array will be deduped so that there are no duplicate references to related object IDs.
+
+Suppose you have an `Array` field called `lucky_numbers` in the `user` schema. You can append new lucky numbers to the array atomically like so:
+
+```obj-c
+NSArray *newLuckyNumbers = [NSArray arrayWithObjects:[NSNumber numberWithInt:13], [NSNumber numberWithInt:36], [NSNumber numberWithInt:23], nil];
+
+[[[SMClient defaultClient] dataStore] appendObjects:newLuckyNumbers toObjectWithId:@"Bob" inSchema:@"user" field:@"lucky_numbers" onSuccess:^(NSDictionary* object, NSString *schema) {
+  // object contains the parent object dictionary
+} onFailure:^(NSError *error, NSString *objectId, NSArray* values, NSString *schema) {
+  // Handle error
+}];
+```
+
+
+<!-- Deleting Related Objects -->
+
 #### Deleting Related Objects
+
+Just like you can append relationship references to an object, you can delete them in the same fashion as well.
+
+You also have the option of not only removing the reference of a relationship, but deleting that object in its entirety at the same time.
+
+Lets delete 2 `category` related object references from our `todo` object with primary key `12345678`:
+
+```obj-c
+NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
+
+[[[SMClient defaultClient] dataStore] deleteRelatedObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" onSuccess:^(){
+  // We have deleted the category references from the relationship value, but the category objects still exist.
+} onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
+  // Handle error
+}];
+```
+
+If, in the same call, we also want to delete those category objects altogether, we just set the `cascadeDelete:` parameter to `YES`:
+
+```obj-c
+```obj-c
+NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
+
+[[[SMClient defaultClient] dataStore] deleteRelatedObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" cascadeDelete:YES onSuccess:^(){
+  // We have deleted the category references from the relationship value as well as the category objects themselves.
+} onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
+  // Handle error
+}];
+```
 
 
 <!-- Upsert -->
