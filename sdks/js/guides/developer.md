@@ -135,7 +135,7 @@ var Todo = StackMob.Model.extend({ schemaName: 'todo' });
 This tells StackMob to save your object in the `todo` schema.
 
 <p class="alert">
-  If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a `create` call. (This only occurs in the development environment.)
+  If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a <code>create</code> call. (This only occurs in the development environment.)
 </p>
 
 <div class="alert alert-info">
@@ -181,7 +181,7 @@ You can use `get(..)` to get a field's value on your object:
   todo.get('action'); //Take out the garbage!
 ```
 
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model" rel="nofollow" target="_blank">See the Backbone.Model docs</a>.</p>
+<p class="alert">StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, <code>StackMob.Model</code> inherits from <code>Backbone.Model</code> so you can use any <code>Backbone.Model</code> method.  <a href="http://backbonejs.org/#Model" rel="nofollow" target="_blank">See the Backbone.Model docs</a>.</p>
 
 
 
@@ -252,6 +252,9 @@ todo.fetch({
 
 <p class="alert">
   Don't forget that StackMob calls are asynchronous, so you'll need to operate on your objects in your success/error callbacks.
+</p>
+<p class="alert">
+  Querying by a field that <b>is not</b> the primary key?  Check out <a href="#Queries">querying multiple objects</a>.
 </p>
 
 <div class="alert alert-info">
@@ -476,6 +479,28 @@ To work with an array of your objects, define your `Collection`.
     </div>
   </div>
 </div>
+
+### Reading all objects
+
+To get all objects of one type, use `StackMob.Collection`.
+
+```js
+  var Todo = StackMob.Model.extend({
+    schemaName: 'todo'
+  });
+
+  var Todos = StackMob.Collection.extend({
+    model: Todo
+  });
+
+  var todos = new Todos();
+  todos.fetch({
+    success: function(results) { //StackMob.Collection is returned
+      console.debug(results.toJSON());
+    },
+    error: function(..) {}
+  });
+```
 
 
 ## Queries
@@ -1234,7 +1259,7 @@ So now if you call `todos.fetch(..)`, you'll get a 401 Unauthorized error if you
 
 You can upload files to StackMob.  The files are saved to your Amazon S3 account, which you link with StackMob.  This'll allow you to more easily manage your files and retain content.
 
-<a href="https://developer.stackmob.com/modules/s3/docs">Link StackMob with your S3 account and create a `binary` field on your schema.</a>
+<a href="https://developer.stackmob.com/modules/s3/docs">Link StackMob with your S3 account and create a <code>binary</code> field on your schema.</a>
 
 A file is represented as a `Binary` file type field on your schema.  To save the file, you'll call `setBinaryFile` with three parameters:
 
