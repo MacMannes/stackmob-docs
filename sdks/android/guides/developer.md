@@ -53,7 +53,7 @@ Need to download and setup the SDK?
 
 <p><b>Java SDK</b></p>
 
-The Java SDK runs in OAuth 1.0 mode or OAuth 2.0 mode.  Read <a href="" target="_blank">how StackMob uses OAuth 1.0 and OAuth 2.0</a> to decide which one you would like to use.
+The Java SDK runs in OAuth 1.0 mode or OAuth 2.0 mode.  Read <a href="https://developer.stackmob.com/rest-api/oauth1-and-oauth2-guide" target="_blank">how StackMob uses OAuth 1.0 and OAuth 2.0</a> to decide which one you would like to use.
 
 <p><b>Initialize the SDK for OAuth 2.0</b></p>
 
@@ -139,7 +139,7 @@ Here's the data on the server, as seen through the Object Browser:
 
 StackMob created a schema for you on the fly by inferring it from the JSON sent to the API.  Here's the brand new `task` schema being listed in the Schemas UI.
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/schemas/schema-list-task.png" alt="List of schemas with your new Task schema"></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/schemas/schema-list-task.png" alt="List of schemas with your new Task schema"></a></p>
 
 And here're the fields.
 
@@ -711,15 +711,15 @@ Let's give a `user` object several `todo` items.  We'll assume that we have both
 
 <a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank">Edit the user schema</a> and add a Relationship to the user.
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
 
 Fill in relationship details:
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-task-modal.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add-task-modal.png" alt=""/></a></p>
 
 And you'll get:
 
-<p class="screenshot"><a href="" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-task-field.png" alt=""/></a></p>
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-task-field.png" alt=""/></a></p>
 
 **Save the schema** and that's it - you have a relationship.
 
@@ -1167,7 +1167,7 @@ myTask.destroy()
 
 To use geopoints, you first need to create a geopoint field in your schema. Go to [Manage Schemas](), edit your schema, and create a field of type Geopoint.
 
-![Add a Geopoint field](http://static.stackmob.com/images/android/geopoint.png)
+![Add a Geopoint field](https://s3.amazonaws.com/static.stackmob.com/images/android/geopoint.png)
 
 For this example we've got a Geopoint field named location on the schema `task` and a corresponding field on our `Task` object of type `StackMobGeoPoint`.
 

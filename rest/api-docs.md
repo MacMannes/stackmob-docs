@@ -305,6 +305,38 @@ Response Headers:
 HTTP/1.1 200 OK
 ```
 
+# Special Headers
+
+## X-HTTP-Method-Override
+
+Occasionally you'll come across SDKs that have restrictions on the requests you send, such as not being able to access full RESTful capabilities. In the case of Unity, the only requests you can make are `GET` and `POST`. Thankfully, there are ways to circumvent these restrictions in the form of special headers.
+
+X-HTTP-Method-Override:
+
+```bash
+X-HTTP-Method-Override: /* Your desired verb */
+```
+
+Please note that only `GET` and `POST` verbs can be overridden. These overrides fall into two categories, the 'payload' category and the 'no payload' category. What this means is that a no-payload request like `GET` can be overridden with `DELETE` and `HEAD`, whereas `POST` can only be overridden by `PUT`.
+
+GET Override:
+
+```bash
+GET http://api.stackmob.com/user/1 HTTP/1.1
+Content-Type: application/json
+Accept: application/vnd.stackmob+json; version=0
+X-HTTP-Method-Override: /* DELETE or HEAD */
+```
+
+POST Override:
+
+```bash
+POST http://api.stackmob.com/user HTTP/1.1
+Content-Type: application/json
+Accept: application/vnd.stackmob+json; version=0
+X-HTTP-Method-Override: PUT
+```
+
 # Special Operations
 
 ## Binary File Upload
@@ -1446,7 +1478,7 @@ The user will receive an email with a temporary password valid for 24 hours. The
 
 Request URL:
     
-    GET http://api.stackmob.com/user/login?password=temppassword&username=johndoe&new_password=newpassword
+    GET http://api.stackmob.com/user/accessToken?password=temppassword&username=johndoe&new_password=newpassword
 
 Request Headers:
     

@@ -3,7 +3,12 @@ Running the JavaScript SDK in OAuth 1.0 Mode
 
 ## Overview
 
-This guide will show you how to run the StackMob JavaScript SDK in OAuth v1.
+This guide will show you how to run the StackMob JavaScript SDK in OAuth v1.0.  This would be useful if you're running a NodeJS application or want to access data without any permissions **internally** and not on a public website where someone can "view source" and get access to your private keys.
+
+**DO NOT RUN IN OAUTH 1.0 MODE unless you know what you're doing.**
+
+<p class="alert">
+  You <b>should not run the JS SDK in OAuth 1.0 mode</b> if you are serving a public site.  Running your JS SDK in OAuth 1.0 mode also exposes your private keys.  With private keys, anybody can get access to any of your app data.  With JavaScript, all it takes is a simple "View Source"!</p>
 
 ## HTML
 
@@ -80,3 +85,7 @@ _.extend(StackMob, {
 ```
 
 You can now use the JS SDK as you normally would, but your requests are now signed as OAuth 1.0 requests, given you complete access to your data.
+
+<p class="alert">
+  Anyone with your private keys can access any of your application data.  DO NOT RUN IN OAUTH 1.0 MODE unless you know what you're doing.
+</p>

@@ -20,12 +20,12 @@ SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
           NSHTTPURLResponse *response, 
-          id JSON) {
-        NSLog(@"Success: %@",JSON);
+          id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
           NSHTTPURLResponse *response, 
           NSError *error, 
-          id JSON){
+          id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```
@@ -157,11 +157,13 @@ A method is represented by a class that extends the interface `CustomCodeMethod`
 
 Let's look at the basic class, represented by `HelloWorld.java`.
 
-```java,4,7,10
+```java,4,9,12
 public class HelloWorld implements CustomCodeMethod {
 
   @Override
-  public String getMethodName() { return "hello_world"; }
+  public String getMethodName() { 
+    return "hello_world"; //no dashes or spaces allowed
+  }
 
   @Override
   public List<String> getParams() { return new ArrayList<String>(); }
@@ -187,6 +189,10 @@ This method will return JSON when called:
 `getParams` whitelists the parameters you would pass into the method from the URL.  (It does not fetch parameters from the POST body because StackMob custom code doesn't support www-url-form-encoded requests at this time)
 
 `execute` runs when the REST API point for `https://api.stackmob.com/hello_world` is hit.  The hashmap that is returned will translate to a JSON object in the response.
+
+<p class="alert">
+  <i class="icon-warning-sign"></i> <b>getMethodName</b>: we do not support dashes (`-`) in method names, but we do support underscores (`_`).
+</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -216,7 +222,7 @@ public class EntryPointExtender extends JarEntryObject {
 ```
 
 <p class="alert">
-  Methods <b>must be entered</b> in <code>EntryPointExtender</code> in order for StackMob to discover them.
+  <i class="icon-warning-sign"></i> Methods <b>must be entered</b> in <code>EntryPointExtender</code> in order for StackMob to discover them.
 </p>
 
 ## Datastore
@@ -403,35 +409,36 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
   </div>
 </div>
 
-
-## Queries
-
-Let's make some queries against the datastore.
-
-### Request Bodies and Parameters
+## Request Data
 
 Whether making queries or performing CRUD operations, you'll likely want to take user input to do so.
 
-You can fetch parameters out of the URL for GET and DELETE requests.  You can fetch parameters out of the request body for PUT and POST requests.
+You can:
 
-#### Fetching Parameters
+* fetch parameters out of the URL for GET and DELETE requests.  
+* fetch data/JSON out of the request body for PUT and POST requests.
+
+### Fetching Parameters
 
 Let's get the parameters out of the request URL.  To start out, let's first make a GET request from the client SDKs with a few parameters.
 
 <span class="tab clientcallgetparams" title="iOS SDK"></span>
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
-	initGetRequestWithMethod:@"hello_world"];
-         
+    initGetRequestWithMethod:@"hello_world"];
+ 
+[request addQueryStringParameterWhere:@"name" equals:@"joe"];
+[request addQueryStringParameterWhere:@"age" equals:[NSNumber numberWithInt:10]];
+          
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
-  			  NSHTTPURLResponse *response, 
-  			  id JSON) {
-        NSLog(@"Success: %@",JSON);
+              NSHTTPURLResponse *response, 
+              id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
-  				NSHTTPURLResponse *response, 
-  				NSError *error, 
-  				id JSON){
+                NSHTTPURLResponse *response, 
+                NSError *error, 
+                id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```
@@ -453,8 +460,8 @@ ds.get("hello_world", args, headers, new StackMobCallback() {});
 <span class="tab clientcallgetparams" title="JS SDK"></span>
 ```js
 StackMob.customcode('hello_world', { name: 'joe', age: 10 }, 'GET', {
-	success: function(result) {},
-	error: function(result) {}
+  success: function(result) {},
+  error: function(result) {}
 })
 ```
 <span class="tab"></span>
@@ -465,33 +472,43 @@ Now let's get the parameters out of the request in custom code.
 
 ```java,4,5
 public ResponseToProcess execute(ProcessedAPIRequest request, 
-		SDKServiceProvider serviceProvider) {
+    SDKServiceProvider serviceProvider) {
 
-	String name = request.getParams().get("name"); //this will be a String
-	String age = request.getParams().get("age"); //this will be a String
+  String name = request.getParams().get("name"); //this will be a String
+  String age = request.getParams().get("age"); //this will be a String
 
-	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+  return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
 }
 ```
 
-#### Fetching JSON Body
+### Fetching JSON Body
 
 Perhaps you're sending up JSON.  Let's do that with the client SDKs.
 
 <span class="tab clientcallpostjson" title="iOS SDK"></span>
 ```obj-c
 SMCustomCodeRequest *request = [[SMCustomCodeRequest alloc]
-	initGetRequestWithMethod:@"hello_world"];
-
+    initGetRequestWithMethod:@"hello_world"];
+ 
+NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:@"joe", @"name", [NSNumber numberWithInt:10], @"age"];
+NSErrtor *error = nil;
+NSData* jsonData = [NSJSONSerialization dataWithJSONObject:body 
+  options:NSJSONWritingPrettyPrinted error:&error];
+if (error) {
+  // Handle error
+}
+ 
+request.requestBody = [[NSString alloc] initWithData:jsonData enconding:NSUTF8StringEncoding];
+ 
 [[[SMClient defaultClient] dataStore] performCustomCodeRequest:request 
   onSuccess:^(NSURLRequest *request, 
-  			  NSHTTPURLResponse *response, 
-  			  id JSON) {
-        NSLog(@"Success: %@",JSON);
+              NSHTTPURLResponse *response, 
+              id responseBody) {
+        NSLog(@"Success: %@",responseBody);
   } onFailure:^(NSURLRequest *request, 
-  				NSHTTPURLResponse *response, 
-  				NSError *error, 
-  				id JSON){
+                NSHTTPURLResponse *response, 
+                NSError *error, 
+                id responseBody){
         NSLog(@"Failure: %@",error);
 }];
 ```
@@ -511,8 +528,8 @@ ds.post("hello_world", body, new StackMobCallback() {});
 <span class="tab clientcallpostjson" title="JS SDK"></span>
 ```js
 StackMob.customcode('hello_world', { name: 'joe', age: 10 }, 'POST', {
-	success: function(result) {},
-	error: function(result) {}
+  success: function(result) {},
+  error: function(result) {}
 })
 ```
 <span class="tab"></span>
@@ -539,23 +556,23 @@ import org.json.JSONObject;
 ...
 
 public ResponseToProcess execute(ProcessedAPIRequest request, 
-		SDKServiceProvider serviceProvider) {
+    SDKServiceProvider serviceProvider) {
 
-	try {
-	  JSONObject jsonObj = new JSONObject(request.getBody());
-	  if (!jsonObj.isNull("places")) {
-	  	places = Arrays.asList(jsonObj.getString("places").split(","));
-	  }
-	} catch (JSONException e) {
-	  logger.error("Doh!  Problem parsing the JSON.", e);
-	}
+  try {
+    JSONObject jsonObj = new JSONObject(request.getBody());
+    if (!jsonObj.isNull("places")) {
+      places = Arrays.asList(jsonObj.getString("places").split(","));
+    }
+  } catch (JSONException e) {
+    logger.error("Doh!  Problem parsing the JSON.", e);
+  }
 
-	return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
+  return new ResponseToProcess(HttpURLConnection.HTTP_OK, ...);
 }
 ```
 
 <p class="alert">
-	StackMob returns <code>request.getBody()</code> as a plain String, so you'll need to mold it into the format you want - in this case JSON.
+  StackMob returns <code>request.getBody()</code> as a plain String, so you'll need to mold it into the format you want - in this case JSON.
 </p>
 
 <div class="alert alert-info">
@@ -569,6 +586,12 @@ public ResponseToProcess execute(ProcessedAPIRequest request,
   </div>
 </div>
 
+
+
+
+## Queries
+
+Let's make some queries against the datastore.
 
 ### Fetching Multiple Results
 
@@ -1537,4 +1560,11 @@ Be sure to read about <a href="https://developer.stackmob.com/customcode-sdk/bes
 
 ## Restrictions
 
-### Security Manager
+The Custom Code environment has some restrictions so as to ensure a secure environment.
+
+* can not create new threads
+* can not read/write files
+* can not read/write to socket (unless using <a href="#ExternalHTTPCalls">StackMob's HTTPService</a>)
+* can not read/write properties
+* can not use reflection
+* maximum execution time is 25 seconds

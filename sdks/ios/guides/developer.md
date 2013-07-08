@@ -42,11 +42,11 @@ Define a property of type `SMClient`, most likely in your `AppDelegate` file whe
 self.client = [[SMClient alloc] initWithAPIVersion:@"YOUR_API_VERSION" publicKey:@"YOUR_PUBLIC_KEY"];
 ```
 
+<p class="alert">If you haven't found your public key yet, check out <b>Manage App Info</b> under the <b>App Settings</b> sidebar on the <a href="https://dashboard.stackmob.com" target="_blank">Dashboard page</a>.</p>
+
 For `YOUR_API_VERSION`, pass `@"0"` for Development, `@"1"` or higher for the corresponding version in Production.
 
-From then on you can either pass your client instance around, or use `[SMClient defaultClient]` to retrieve it at any point.
-
-<p class="alert">If you haven't found your public key yet, check out <b>Manage App Info</b> under the <b>App Settings</b> sidebar on the <a href="https://dashboard.stackmob.com" target="_blank">Dashboard page</a>.</p>
+You should only instantiate one instance of `SMClient`. You can use `[SMClient defaultClient]` to retrieve the instance at any point after its been initialized, in conjunction with standard techniques like passing it between controllers or accessing it through an instance of the shared app delegate.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -92,6 +92,9 @@ Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, dec
     return _managedObjectModel;
 }
 ```
+
+<p class="alert">If you are using the cache, make sure you include the <b>createddate</b> and <b>lastmoddate</b> attributes as <b>Date</b> types in your entities. We also recommend not inheriting from a parent entity to do so, as it drastically affects cache performance.<br/><br/>Also, if there are fields on StackMob you don't plan on interacting with through the client, don't include them in your model.</p>
+
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
@@ -293,7 +296,7 @@ If you wish to return managed object IDs rather than objects, use the following 
       <strong>Resources</strong>
       <ul>
         <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read.zip">Download Sample Project</a></li>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Read-into-Table-View" target="_blank">Read Into Tableview Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/read-into-table-view-tutorial" target="_blank">Read Into Tableview Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -446,7 +449,7 @@ If you want to make direct REST-based calls to the Datastore, check out the <a h
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Lower-Level-CRUD-API" target="_blank">Lower Level CRUD API Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/lower-level-crud-api-tutorial" target="_blank">Lower Level CRUD API Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -479,8 +482,8 @@ For a list of StackMob supported predicate types, visit the <a href="https://dev
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Basic-Queries" target="_blank">Basic Queries Tutorial</a></li>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Advanced-Queries" target="_blank">Advanced Queries Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/basic-queries-tutorial" target="_blank">Basic Queries Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/advanced-queries-tutorial" target="_blank">Advanced Queries Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -540,6 +543,8 @@ When you create relationships between entities in your Core Data model, they wil
 * Core Data supports <a href="http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/coredata/Articles/cdRelationships.html">Delete Rules</a>. Take this into consideration if you are building cross-platform.
 * The great thing about Core Data handling relationship logic is that it will all translate from the client to StackMob, so no extra work is necessary.
 
+When you eventually save objects which include relationships to other entities, those relationships will get inferred by the server i.e. StackMob will detect that those relationships do not exist and create them on the fly. This is a feature included only in development. If you need to create relationships manually, see <a href="#CreatingRelationshipswiththeDashboard">Creating Relationships with the Dashboard</a>.
+
 <!--- One To One -->
 
 ### One to One
@@ -553,7 +558,7 @@ Add a relationship from one entity to another by creating a new entry in the **R
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/One-to-One-Relationships" target="_blank">One-To-One Relationships Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-one-relationships-tutorial" target="_blank">One-To-One Relationships Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -574,7 +579,7 @@ In the data model, be sure to check the box for a To-Many relationship, as shown
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/One-to-Many-Relationships" target="_blank">One-To-Many Relationships Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-many-relationships-tutorial" target="_blank">One-To-Many Relationships Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -585,6 +590,30 @@ In the data model, be sure to check the box for a To-Many relationship, as shown
 ### Many to Many
 
 You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
+
+
+<!--- Creating through dashboard -->
+
+
+### Creating Relationships with the Dashboard
+
+While relationships, like fields and schemas, are inferred by StackMob, sometimes you'll want to manually create them yourself.  Here we'll assume that we have both `todo` and `user` schemas already defined.
+
+<a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank">Edit the user schema</a> and add a new relationship.
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
+
+Fill in the relationship details:
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/add_relationship_dashboard.png" alt=""/></a></p>
+
+Press **Add Relationship** and you'll get:
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/todos_relationship_added.png" alt=""/></a></p>
+
+**Save the schema** and that's it - you have a relationship.
+
+When you work with Core Data, you'll want to make sure you define inverse relationships as well, so in this case you'll also add a relationship to the `todo` schema pointing back to the `user` schema.
 
 <!---
 	///////////////////
@@ -689,7 +718,7 @@ The above example assumes an entity `User` with attributes `username` and `age`.
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Create-a-User-Object" target="_blank">Create a User Object Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/create-user-object-tutorial" target="_blank">Create a User Object Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -720,7 +749,7 @@ Logging into StackMob using the standard username/password pattern is done throu
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/User-Authentication" target="_blank">User Authentication Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/user-authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -799,7 +828,7 @@ To see whether your user is logged in, use the `SMClient` `isLoggedIn` and `isLo
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/User-Authentication" target="_blank">User Authentication Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/user-authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -861,7 +890,7 @@ Here's how to log a user out of StackMob:
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/User-Authentication" target="_blank">User Authentication Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/user-authentication-tutorial" target="_blank">User Authentication Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1075,7 +1104,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 }];
 ```
 
-<p class="alert">Geo Location in iOS relies on the <b>MapKit</b> framework.</p>
+<p class="alert">Geolocation in iOS relies on the <b>MapKit</b> framework.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -1088,7 +1117,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
     <div class="span6">
       <strong>Examples</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Saving-Geo-Location-Data" target="_blank">Saving Geo Location Data</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/saving-geolocation-tutorial" target="_blank">Saving Geolocation Data Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1096,7 +1125,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 
 <!--- Read Geo-Location -->
 
-### Reading Geo-Location Values
+### Reading Geolocation Values
 
 Because managed object geopoint data will be contained in a `Tranformable` attribute type, it must be unarchived to be properly read:
 
@@ -1108,7 +1137,7 @@ SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
 <!--- Query Geo-Location -->
 
-### Query based on Geo-Location
+### Query based on Geolocation
 
 To query using `SMGeoPoint`, use the special predicate methods provided by the `SMPredicate` class:
 
@@ -1155,7 +1184,7 @@ All <code>SMPredicate</code> methods to query based on an instance of <code>SMGe
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Querying-Geo-Location-Data" target="_blank">Querying Geo Location Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/querying-geolocation-tutorial" target="_blank">Querying Geolocation Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1298,11 +1327,21 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Upload-to-S3" target="_blank">Upload To S3 Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/upload-files-to-s3-tutorial" target="_blank">Upload Files to S3 Tutorial</a></li>
       </ul>
     </div>
   </div>
 </div>
+
+### Reading Binary Data
+
+Once you have saved an object to StackMob containing a field with binary data, the value will then contain a string representation of the S3 URL. You will most likely convert this string into an instance of `NSURL`, and in turn use that URL to get and set data to a variable. For example, suppose we have saved an image in our attribute `photo`, and now want to set an image for our UI. After reading the object we would convert the string URL to an image like this:
+
+```obj-c
+NSURL *imageURL = [NSURL URLWithString:[object valueForKey:@"photo"]]; 
+NSData *imageData = [NSData dataWithContentsOfURL:imageURL]; 
+UIImage *image = [UIImage imageWithData:imageData];
+```
 
 ### Working Offline
 
@@ -1360,7 +1399,7 @@ NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234
 
 ## Network Reachability
 
-The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#OfflineSync">Offline Sync</a>).
+The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#CachingandOfflineSync">Caching and Offline Sync</a>).
 
 <!--- SMNetworkReachability -->
 
@@ -1486,11 +1525,11 @@ Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:
   //////////////////
 -->
 
-## Offline Sync
+## Caching and Offline Sync
 
 Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
 
-Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Offline Sync Guide</a> for all information.
+Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Caching and Offline Sync Guide</a> for all information.
 
 <!---
 	///////////////////
@@ -1512,7 +1551,7 @@ StackMob provides integrations with Facebook and Twitter to allow users to login
 
 You will need to download the Facebook SDK and follow their tutorials to get login working in your application. Once you have a Facebook session open you will direct the application in the `sessionStateChanged:state:error` Facebook method to login to StackMob using the provided Facebook access token.
 
-All the implementation details for Facebook's SDK can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Facebook" target="_blank">Facebook Tutorial</a>.
+All the implementation details for Facebook's SDK can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-facebook-tutorial" target="_blank">Facebook Integration Tutorial</a>.
 
 <!--- SUB: Login with Facebook -->
 
@@ -1556,7 +1595,7 @@ Alternatively, you can implement a more manual workflow using the methods listed
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Facebook" target="_blank">Integrating With Facebook Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/integrating-with-facebook-tutorial" target="_blank">Facebook Integration Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1684,7 +1723,7 @@ Sometimes you may want to get the logged in user's Facebook info, either for UI 
 
 You will need to download the Twitter SDK and follow their tutorials to get login working in your application. Once you have a Twitter session open you will direct the application to login to StackMob using the provided Twitter access token.
 
-All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Twitter" target="_blank">Twitter Tutorial</a>.
+All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Twitter Integration Tutorial</a>.
 
 <!--- SUB: Login with Facebook -->
 
@@ -1717,7 +1756,7 @@ Alternatively, you can implement a more manual workflow using the methods listed
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Integrating-with-Twitter" target="_blank">Integrating With Twitter Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Twitter Integration Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1897,7 +1936,7 @@ You can expect the `responseBody` parameter of the success callback to be in the
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Custom-Code-Requests" target="_blank">Custom Code Requests Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/custom-code-tutorial" target="_blank">Custom Code Requests Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -2021,21 +2060,21 @@ StackMob integrates with Apple's APNS service for push notifications on iOS. Bef
 
 The first step in getting push notifications working is to set up the Push Module for you StackMob application.
 
-Work through the <a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a>, which will walk you through the steps of setting up Apple Push certs, uploading them to the Push Module settings, writing the code to register your device, and finally broadcasting to your device from the dashboard push console.
-
-When you're finished come back here to learn how to send pushes from a device.
+The <a href="https://developer.stackmob.com/ios-sdk/push-guide" target="_blank">iOS Push Notifications Guide</a> will walk you through the steps of setting up Apple Push certs and uploading them to the Push Module settings.
 
 <!--- Init -->
 
 ### Initializing a Push Client
 
-The StackMob push notification API is accessed through an instance of `SMPushClient`. It's best to initialize an instance of this class at the same time you initialize an `SMClient` instance:
+The StackMob push notification API is accessed through an instance of `SMPushClient`:
 
 ```obj-c
 SMPushClient *pushClient = [[SMPushClient alloc] initWithAPIVersion:@"0" publicKey:@"YOUR_PUBLIC_KEY" privateKey:@"YOUR_PRIVATE_KEY"];
 ```
 
 <p class="alert">You supply your private key to the init methods because Push Notifications on StackMob use the Oauth 1 protocol.</p>
+
+You should only instantiate one instance of `SMPushClient` and use it throughout your application, and it's easiest to initialize it at the same time you initialize the `SMClient` instance.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -2048,7 +2087,7 @@ SMPushClient *pushClient = [[SMPushClient alloc] initWithAPIVersion:@"0" publicK
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -2106,7 +2145,7 @@ Once your token is registered with StackMob, you can begin sending pushes to tha
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -2151,7 +2190,7 @@ To receive remote notifications in your app, implement the `UIApplication` `didR
     <div class="span6">
       <strong>Resources</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/tutorials/ios/Push-Notifications" target="_blank">iOS Push Notifications Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/push-notifications-tutorial" target="_blank">iOS Push Notifications Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -2298,6 +2337,20 @@ If you need to delete a token registered on the StackMob server from the client,
   </div>
 </div>
 
+### Push Dev vs. Prod
+
+Once you set your version to 1 and use the production keys, StackMob will use Apple's production push server instead of the Apple sandbox.
+
+You should only use the dev keys with version 0 and the production keys with version 1.
+
+The user tokens don't change, so you would still test in the same manner.
+
+Here is some additional info on <a href="https://developer.stackmob.com/module/apiversions">API versioning with development and production environments</a>.
+
+### Using StackMob For Push Only
+
+While the Push API comes built into the Core SDK, a separate Push SDK is available for those using StackMob only for push notifications.  You can download the library from [Github](https://github.com/downloads/stackmob/stackmob-ios-push-sdk/stackmob-ios-push-sdk-v1.0.2.zip).  Drag the StackMobPush-vx.x.x folder into your project with the **Copy items into destination group's folder** checkbox selected, and set your Target's **Other Linker Flags** build setting to **-ObjC**.
+
 <!---
   ///////////////////
   DEPLOY
@@ -2317,13 +2370,13 @@ Read about how to <a href="https://developer.stackmob.com/tutorials/dashboard/De
 
 <p class="screenshot"><a href="https://dashboard.stackmob.com/deploy" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/modules/apiversions/modules-apiversions-deploy.png" alt=""/></a></p>
 
-After deploying, you would point your iOS SDK to your production API Version - in this case `1`:
+After deploying, you'll point your iOS SDK to your production API Version (in this case `1`) as well as your Production public key:
 
 ```obj-c
-self.client = [[SMClient alloc] initWithAPIVersion:@"1" publicKey:@"YOUR_PUBLIC_KEY"];
+self.client = [[SMClient alloc] initWithAPIVersion:@"1" publicKey:@"YOUR_PRODUCTION_PUBLIC_KEY"];
 ```
 
-That's it! With your server rolled out to API Version 1 and your iOS SDK pointing to your production version all requests will be funneled to your production database.  Your production environment uses a separate database than your development one, so you'll be able to continue developing in API Version 0 without affecting your customers using the production version of your app.
+That's it! With your server rolled out to API Version 1 and your iOS SDK pointing to your production public key, all requests will be funneled to your production database.  Your production environment uses a separate database than your development one, so you'll be able to continue developing in API Version 0 without affecting your customers using the production version of your app.
 
 <p class="alert">
   With StackMob's <a href="https://marketplace.stackmob.com/module/apiversions" target="_blank">Multiple API Versions module</a> you can have multiple Productions running concurrently, ensuring backwards compatibility with apps already on the market.

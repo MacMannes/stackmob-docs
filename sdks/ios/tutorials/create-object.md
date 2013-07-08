@@ -5,17 +5,17 @@ Create an Object
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/create.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Create and save a new object.
 
-<h3>Experience Level</h3>
+### Experience Level
 Beginner
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~5 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.x and greater
 
@@ -23,19 +23,19 @@ Beginner
 
 * [Download Base Xcode Project](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/base-project.zip)
 
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h2>Open the Base Xcode Project</h2>
+## Open the Base Xcode Project
 
 We’ve created an Xcode project for you as a starting place for this tutorial.  It has StackMob imported and the basic plumbing for Core Data.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the project, see <a href="https://developer.stackmob.com/tutorials/ios/Base-Xcode-Project-for-Tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
+For more information on what's inside of the project, see <a href="https://developer.stackmob.com/ios-sdk/base-xcode-project-for-tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
 
 Unzip the Base Project and open **base-project.xcodeproj**.
 
-<h2>Add your Public Key</h2>
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -48,7 +48,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 }
 ```
 
-<h2>Create Your View</h2> 
+## Create Your View 
 
 Select the storyboard file and drag and drop a **text field** and **button** to your view.
 <br/>
@@ -78,7 +78,7 @@ In the menu, set the Connection to **Action** and enter the name **createNewObje
 <br />
 <br />
 
-<h2>Open ViewController.h</h2>
+## Edit ViewController.h
 
 
 Make the ViewController.h file the **text field delegate**:
@@ -96,7 +96,7 @@ Make the ViewController.h file the **text field delegate**:
 @end
 ```
 
-<h2>Open ViewController.m</h2>
+## Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file:
 
@@ -159,7 +159,7 @@ Add the following **highlighted** code to your ViewController.m file:
 @end
 ```
 
-<h2>Build and Run!</h2>
+## Build and Run!
 
 Run your project, enter some text and click the save button.  You can view your results in the <a href="https://dashboard.stackmob.com/data/browser/todo" target="_blank">StackMob Object Browser</a>. 
 

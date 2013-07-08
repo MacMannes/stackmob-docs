@@ -5,17 +5,17 @@ iOS Twitter
 
 Just want the full project? <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/twitter.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
-<h3>Objective</h3>
+### Objective
 
 Login with Twitter and if necessary create a new user on StackMob and link to their Twitter account.  You can check their logged in status and logout a user.
 
-<h3>Experience Level</h3>
+### Experience Level
 Intermediate
 
-<h3>Estimated time to complete</h3>
+### Estimated time to complete
 ~15 minutes
 
-<h3>Prerequisites</h3>
+### Prerequisites
 
 * XCode 4.5 and greater
 
@@ -25,36 +25,22 @@ Intermediate
 
 * [Download Base Xcode Project](https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/base-project.zip)
 
-<h3>Jump to:</h3>
 
-* <a href="#addkey">Add your Public Key</a>
-* <a href="#download">Download Twitter Reverse OAuth repo</a>
-* <a href="#addreverseoauth">Add Reverse OAuth files to our project</a>
-* <a href="#addframework">Add required Frameworks to our project</a>
-* <a href="#editapp">Create a Twitter App</a>
-* <a href="#addkeystomodule">Add Keys To Twitter Module</a>
-* <a href="#createview">Edit Your View</a>
-* <a href="#addcode">Add Login, Logout and Check Status code</a>
-* <a href="#additional_methods">Additional Twitter Integration Methods</a>
-
-
-<h3>Have you read through the <a href="http://stackmob.github.com/stackmob-ios-sdk/#coding_practices" target="_blank">StackMob <—> Core Data Coding Practices</a>?</h3>
+**Have you read through the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#CodingPractices" target="_blank">Core Data Integration Coding Practices</a>?**
 
 There are a few coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data. This allows StackMob to seamlessly translate to and from the language that Core Data speaks. Make sure to familiarize yourself with these practices, as you'll be using them often.
 
-<h1>Let's get started!</h1>
 
-<h2>Open the Base Xcode Project</h2>
+## Open the Base Xcode Project
 
 We’ve created an Xcode project for you as a starting place for this tutorial.  It has StackMob imported and the basic plumbing for Core Data.  This allows you to focus on the objective of this tutorial.
 
-For more information on what's inside of the project, see <a href="https://developer.stackmob.com/tutorials/ios/Base-Xcode-Project-for-Tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
+For more information on what's inside of the project, see <a href="https://developer.stackmob.com/ios-sdk/base-xcode-project-for-tutorials" target="_blank">Base Xcode Project for Tutorials</a>.
 
 Unzip the Base Project and open **base-project.xcodeproj**.
 
 
-<a name="addkey"></a>
-<h2>Add your Public Key</h2>
+## Add your Public Key
 Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage App Info</a> in the StackMob Dashboard and copy the **Development Public Key** and paste it  into the **AppDelegate.m** file where is says **YOUR\_PUBLIC\_KEY** in the method:
 
 ```obj-c,4
@@ -68,8 +54,7 @@ Go to <a href="https://dashboard.stackmob.com/settings" target="_blank">Manage A
 ```
 
 
-<a name="download"></a>
-<h2>Download Twitter Reverse OAuth project</h2>
+## Download Twitter Reverse OAuth project
 
 iOS 6 introduced Social integration that allows users to store their login credentials for Twitter on an iOS device.  StackMob-Twitter login uses the Twitter consumer key and secret provided via the OAuth process.  We'll use a bit of code to perform a reverse OAuth to get the key and secret from Twitter based on the Twitter accounts setup on the device. 
 If you haven't already,  <a href="https://github.com/seancook/TWReverseAuthExample" target="_blank">download the Twitter Reverse OAuth</a> github project.
@@ -78,8 +63,7 @@ If you haven't already,  <a href="https://github.com/seancook/TWReverseAuthExamp
 For more background on Twitter Reverse OAuth, checkout the <a href="https://dev.twitter.com/docs/ios/using-reverse-auth" target="_blank">Twitter Developer docs</a>.
 
 
-<a name="addreverseoauth"></a>
-<h2>Add reverse OAuth files to our project</h2>
+## Add reverse OAuth files to our project
 
 Drag and drop to copy the following files from the Twitter Reverse OAuth project into the **base-project** folder.
 
@@ -115,8 +99,7 @@ If they are not already listed, add **TWSignedRequest.m** and **TWAPIManager.m**
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/twitter/twitter-04.png">
 </p>
 
-<a name="addframework"></a>
-<h2>Add required Frameworks to our project</h2>
+## Add required Frameworks
 
 In XCode, go to **Targets > Build Phases** and select **Link Binary with Libraries**
 <br/>
@@ -129,8 +112,7 @@ Search for the **Social.framework** library and add it to your project.
 Repeat this step for the **Twitter.framework** and **Accounts.framework** libraries.
 <br/>
 
-<a name="createapp"></a>
-<h2>Create Twitter App</h2>
+## Create Twitter App
 Head over to <a href="https://dev.twitter.com/" target="_blank">dev.twitter.com</a> and sign in. 
 
 Select **my applications** under your account menu.
@@ -149,7 +131,7 @@ After your application is created, copy the **Consumer key** and **Consumer Secr
 <img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/tutorials/twitter/twitter-07.png">
 </p>
 
-<h3>TWSignedRequest.m</h3> 
+### TWSignedRequest.m 
 
 ```obj-c,9,10
 #import "OAuthCore.h"
@@ -168,13 +150,11 @@ After your application is created, copy the **Consumer key** and **Consumer Secr
 @end
 ```
 
-<a name="addkeystomodule"></a>
-<h2>Add Keys To Twitter Module</h2>
+## Add Keys To Twitter Module
 
 Head over to the <a href="https://dashboard.stackmob.com/module/twittersm/settings" target="_blank">Twitter Module Settings</a> for your StackMob app and add the Twitter Consumer Key and Secret (Develpment section for now).  This allows StackMob to authenticate the request signature when you login with twitter credentials.
 
-<a name="editview"></a>
-<h2>Edit Your View</h2> 
+## Edit Your View 
 
 Select the storyboard file and drag and drop  **3 buttons** on to your view.  Change the label on the  buttons to **Login with Twitter**, **Check Status** and **Logout User**
 <p class="screenshot"> 
@@ -194,9 +174,7 @@ On the **other buttons** hold the **Control** key and click on the **button** an
 In the menu, set the Connection to **Action** and enter the name **checkStatus** and  **logoutUser**.
 
 
-
-<a name="addcode"></a>
-<h2>Open ViewController.h</h2>
+## Edit ViewController.h
 
 Add the following **highlighted** code to your ViewController.h file: 
 
@@ -217,7 +195,7 @@ Add the following **highlighted** code to your ViewController.h file:
 @end
 ```
 
-<h2>Open ViewController.m</h2>
+## Edit ViewController.m
 
 Add the following **highlighted** code to your ViewController.m file: 
 
@@ -496,7 +474,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
 ```
 
 
-<h2>Build and Run!</h2>
+## Build and Run!
 You must have a Twitter account already set up on your device/simulator before you run your project.  To set one up go to Settings -> Twitter.
 
 <p class="screenshot"> 
@@ -506,38 +484,38 @@ You must have a Twitter account already set up on your device/simulator before y
 
 Now, run your project and click the **Login with Twitter** button. An accounts panel will slide onto the screen.  Select your twitter account. If your user doesn't have an account in your StackMob app, one will be created, then you will be logged in automatically.  If one exists, the user will just be logged in.  Click **Check Status** to confirm you are now logged into Stackmob.  It will also return your Twitter Info into the debug console.  Lastly, click **Logout User** and check your status again to confirm you are logged out.
 
-<a name="additional_methods"></a>
-<h2>Additional Twitter Integration Methods</h2>
+
+## Additional Twitter Integration Methods
 
 This tutorial has gone over the simplest way to create a StackMob user and log them in using Twitter credentials.  However, there may be cases when you want to create a user with Twitter credentials seperately, or unlink a Twitter token from a user so they can no longer login using that particular service.  Let's look at the other Twitter integration methods StackMob provides:
 
 **Note:** The methods shown below have multiple signatures with additional parameters for providing request options, callback queues, etc.  All methods are listed in the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMClient.html" target="_blank">SMClient Class Reference</a>.
 
-<h3>createUserWithTwitterToken:twitterSecret:username:onSuccess:onFailure:</h3>
+### createUserWithTwitterToken:twitterSecret:username:onSuccess:onFailure:
 
 This will create a new StackMob user and link them with the Twitter token provided.  An error will occur if a user linked to the provided token already exists.  Pass nil to the username parameter to default the username to the user ID provided by Twitter.
 
-<h3>loginWithTwitterToken:twitterSecret:onSuccess:onFailure:</h3>
+### loginWithTwitterToken:twitterSecret:onSuccess:onFailure:
 
 Login the user to StackMob linked with the Twitter token provided.  The method calls loginWithTwitterToken:twitterSecret:createUserIfNeeded:usernameForCreate:onSuccess:onFailure: with createUserIfNeeded:NO and usernameForCreate:nil.
 
-<h3>linkLoggedInUserWithTwitterToken:twitterSecret:onSuccess:onFailure:</h3>
+### linkLoggedInUserWithTwitterToken:twitterSecret:onSuccess:onFailure:
 
 After logging in a user to StackMob using a StackMob username/password, this links the logged in user with the Twitter token provided.  Upon success, that user can then be logged in using the loginWithTwitterToken:twitterSecret:onSuccess:onFailure: method.
 
-<h3>unlinkLoggedInUserFromTwitterOnSuccess:onFailure:</h3>
+### unlinkLoggedInUserFromTwitterOnSuccess:onFailure:
 
 Removes any linked Twitter token from the currently logged in user.  Upon success, that user can no longer login using the loginWithTwitterToken:twitterSecret:onSuccess:onFailure: method.
 
-<h3>updateTwitterStatusWithMessage:onSuccess:onFailure:</h3>
+### updateTwitterStatusWithMessage:onSuccess:onFailure:
 
 Updates the currently logged in Twitter user's status.  Requires write permissions.
 
-<h3>getLoggedInUserTwitterInfoWithOnSuccess:onFailure:</h3>
+### getLoggedInUserTwitterInfoWithOnSuccess:onFailure:
 
 Returns the Twitter user info for the currently logged in user.
 
-<h2>Congratulations on completing this tutorial!</h2>
+## Congratulations on completing this tutorial!
 
 <a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/twitter.zip" class="gs-button green-text"><i class="icon-download-alt icon-medium"></i> Download Source Code</a>
 
