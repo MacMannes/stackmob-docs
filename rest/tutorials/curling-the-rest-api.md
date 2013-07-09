@@ -40,7 +40,7 @@ We'll create a new `message` object via a POST call to StackMob. Let's go to the
 
 Formatted, your JSON response should look something like:
 
-```json
+```javascript
 {
   "content": "Hello World",
   "lastmoddate": 1314777270642,
@@ -61,7 +61,7 @@ To show that it's persisted, let's retrieve the object now via a GET request.
 
 This makes a request to the REST API saying you want an object instance of `message` with `message_id` of message1, which we specified. The result should look like:
 
-```json
+```javascript
 {
   "content": "Hello World!",
   "lastmoddate": 1314777270642,
@@ -76,7 +76,7 @@ To get *all* objects of type `message`, simply leave off the id parameter.
 
 The result will look similar, but notice it's now in an array with one item (since so far we've only created one instance).
 
-```json
+```javascript
 [
   {
     "content": "Hello World!",
@@ -95,7 +95,7 @@ Now that we know we have the object saved in the datastore, let's update it with
 
 The response should look like:
 
-```json
+```javascript
 {
   "content": "Goodbye World!",
   "lastmoddate": 1314777270642,
@@ -112,7 +112,7 @@ Now that we've said our proper goodbye's, let's delete message1 from the datasto
 
 This produces:
 
-```json
+```javascript
 {
   "status": "OK"
 }
