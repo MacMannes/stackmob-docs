@@ -66,7 +66,7 @@ Let's test the hello world example using the <a href="https://dashboard.stackmob
 
 Click on **hello_world** under the Custom Methods heading.  Click the submit button.  Scroll down the page to see the Response Body.  The response should be:
 
-```json
+```javascript
 {
   "error": "Your custom code instance has been scheduled for start, and should be ready shortly" 
 }
@@ -77,7 +77,7 @@ Our SDKs, will automatically retry when encountering this "startup" message.
 
 Click the submit button a second time and you'll see the following.
 
-```json
+```javascript
 {
   "msg": "Hello, world!" 
 }
