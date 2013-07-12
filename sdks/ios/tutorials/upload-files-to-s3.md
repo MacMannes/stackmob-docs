@@ -56,7 +56,7 @@ Select the **mydatamodel.xcdatamodeld** file.  Click the plus sign under the **a
 ## Add a binary field to your schema 
 You'll need to configure Amazon S3 and add a binary field to your Todo schema in the StackMob dashboard.
 
-We've created a separate tutorial called <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-Binary-Field-to-Schemas">Adding a Binary Field to Schemas</a>. If this is the first time you've setup a binary field on StackMob, follow that tutorial before continuing.
+We've created a separate tutorial called <a href="https://developer.stackmob.com/module/s3">Adding a Binary Field to Schemas</a>. If this is the first time you've setup a binary field on StackMob, follow that tutorial before continuing.
 
 
 ## Create Your View 

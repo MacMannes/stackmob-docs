@@ -10,21 +10,27 @@ Below we'll show you how to test your new StackMob enabled API with a few simple
 
 Now, let's install <a href="https://github.com/mojodna/oauth-proxy">oauth-proxy</a>. If you're a mac user, you can simply type the following in the command prompt:
 
+```
     > easy_install oauth-proxy
+```    
 
 That should do it! The oauth-proxy utility is a proxy server that will generate proper OAuth headers for your cURL requests when provided with your <a href="https://dashboard.stackmob.com/settings">StackMob public and private API keys</a>.
 
 Using your Development API keys, let's start the oauth-proxy in the command prompt:
 
+```
     > oauth-proxy --consumer-key [your public key] --consumer-secret [your private key]
+```
 
 You should get output similar to below:
 
+```
     > 2011-08-31 00:41:49-0700 [-] Log opened.
     > 2011-08-31 00:41:49-0700 [-] twistd 8.2.0 (/usr/bin/python2.6 2.6.1) starting up.
     > 2011-08-31 00:41:49-0700 [-] reactor class: twisted.internet.selectreactor.SelectReactor.
     > 2011-08-31 00:41:49-0700 [-] oauth_proxy.oauth_proxy.OAuthProxyFactory starting on 8001
     > 2011-08-31 00:41:49-0700 [-] Starting factory <oauth_proxy.oauth_proxy.OAuthProxyFactory instance at 0x1011fd878>
+```
 
 ## Making REST API calls with cURL
 
@@ -36,11 +42,13 @@ Assuming you now have a `message` object created, let's proxy an API call via th
 
 We'll create a new `message` object via a POST call to StackMob. Let's go to the command prompt and type in the example below. Replace the subdomain and app name with your <a href="https://dashboard.stackmob.com/settings">subdomain and app name</a>.
 
+```
     > curl -svx localhost:8001 -H "Accept: application/vnd.stackmob+json; version=0" -H "Content-Type: application/json" -X POST -d  "{\"content\":\"Hello World\"}"  http://api.[YOUR APPNAME].stackmob.com/message
+```
 
 Formatted, your JSON response should look something like:
 
-```json
+```javascript
 {
   "content": "Hello World",
   "lastmoddate": 1314777270642,
@@ -57,11 +65,13 @@ Note: If you don't set a `message_id` in the JSON object when creating an object
 
 To show that it's persisted, let's retrieve the object now via a GET request.
 
+```
     > curl -sx localhost:8001 http://[YOUR APPNAME].mob1.stackmob.com/api/0/[YOUR APPNAME]/message/200d1ede917e43fda9319630ffd3e57a
+```
 
 This makes a request to the REST API saying you want an object instance of `message` with `message_id` of message1, which we specified. The result should look like:
 
-```json
+```javascript
 {
   "content": "Hello World!",
   "lastmoddate": 1314777270642,
@@ -72,11 +82,13 @@ This makes a request to the REST API saying you want an object instance of `mess
 
 To get *all* objects of type `message`, simply leave off the id parameter.
 
+```
     > curl -sx localhost:8001 http://[YOUR SUBDOMAIN].mob1.stackmob.com/api/0/[YOUR APPNAME]/message
+```
 
 The result will look similar, but notice it's now in an array with one item (since so far we've only created one instance).
 
-```json
+```javascript
 [
   {
     "content": "Hello World!",
@@ -91,11 +103,13 @@ The result will look similar, but notice it's now in an array with one item (sin
 
 Now that we know we have the object saved in the datastore, let's update it with a PUT request.
 
+```
     > curl -sx localhost:8001 -H "Accept: application/vnd.stackmob+json; version=0" -H "Content-Type: application/json" -X PUT -d  "{\"content\":\"Hello Bodie\"}"  http://api.[YOUR SUBDOMAIN].stackmob.com/message/200d1ede917e43fda9319630ffd3e57a
+```
 
 The response should look like:
 
-```json
+```javascript
 {
   "content": "Goodbye World!",
   "lastmoddate": 1314777270642,
@@ -108,11 +122,13 @@ The response should look like:
 
 Now that we've said our proper goodbye's, let's delete message1 from the datastore.
 
+```
     > curl -sx localhost:8001  -X DELETE http://[YOUR APPNAME].mob1.stackmob.com/api/0/[YOUR APPNAME]/message/200d1ede917e43fda9319630ffd3e57a
+```
 
 This produces:
 
-```json
+```javascript
 {
   "status": "OK"
 }

@@ -28,7 +28,7 @@ Content-Type: application/json
 
 Request Body:
 
-```json
+```javascript
 {
   "message": "hello world!",
   "author": "johndoe"
@@ -37,7 +37,7 @@ Request Body:
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 /*
  * Leave the primary key (chatmessage_id) out of the request body
  * and StackMob will generate a unique ID for you.
@@ -73,7 +73,7 @@ Content-Type: application/json
 
 Request Body:
 
-```json
+```javascript
 [
 	{
 		"message": "hello world!",
@@ -110,7 +110,7 @@ Content-Type: application/json
 
 Request Body:
 
-```json
+```javascript
 [
 	{
 		"message": "hello world!",
@@ -144,7 +144,7 @@ Content-Type: application/json
 
 Request Body:
 
-```json
+```javascript
 [
 	{
 		"message": "hello world!",
@@ -186,7 +186,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -230,7 +230,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 {
   "username": "johndoe",
   "age": 25,
@@ -269,7 +269,7 @@ Request Body:
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 {
   "username": "johndoe",
   "age": 26, //updated with new value
@@ -362,7 +362,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 //POST
 {
   "username": "john",
@@ -382,7 +382,7 @@ Request Body:
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //StackMob will save the file to your S3 account and return the web path in its place:
 {
   "username": "john",
@@ -488,7 +488,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -539,7 +539,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -585,7 +585,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -617,7 +617,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "john123",
@@ -652,7 +652,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "notjohn123",
@@ -689,7 +689,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "john123",
@@ -765,7 +765,7 @@ X-StackMob-Select: username,age
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //Note that fields other than username and age are excluded
 [
   {
@@ -805,7 +805,7 @@ X-StackMob-Select: username,interest_ref,interest_ref.interest_type
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //Note that other fields are excluded
 [
   {
@@ -853,7 +853,7 @@ X-StackMob-Select: username,friend,friend.username,friend.interest_ref,friend.in
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //Note that other fields are excluded
 [
   {
@@ -923,7 +923,7 @@ X-StackMob-OrderBy: age:asc,createddate:desc
 Response shown in JSON notation for illustration.
 
 
-```json
+```javascript
 //Order by age ascending, then by date descending
 [
   {
@@ -972,7 +972,7 @@ Range: objects=0-9
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   { //result 0
     "username": "jeff",
@@ -1048,7 +1048,7 @@ X-StackMob-Expand: /* 1 - 3 */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 // Get without "expand"
 {
   "username": "john",
@@ -1167,7 +1167,7 @@ Response (Success):
   HTTP/1.1 200 OK
   Content-Type: application/vnd.stackmob+json; version=X
 
-```json
+```javascript
 [
   {
     ...,
@@ -1182,7 +1182,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -1225,7 +1225,7 @@ Response (Success):
   HTTP/1.1 200 OK
   Content-Type: application/vnd.stackmob+json; version=X
 
-```json
+```javascript
 [
   {
     ...,
@@ -1240,7 +1240,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -1468,7 +1468,7 @@ Response (Failure):
     HTTP/1.1 401 Unauthorized
     Content-Type: application/vnd.stackmob+json; version=X
     
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1502,13 +1502,13 @@ Response (Failure):
     HTTP/1.1 401 Unauthorized
     Content-Type: application/vnd.stackmob+json; version=X
     
-```json
+```javascript
 {"error":"<message>"}
 ```
 
 Your user may also close the app and attempt to use the regular login screen with their temporary password. When this happens your call to login will fail with the following error:
 
-```json
+```javascript
 { "error": "Temporary password reset required" }
 ```
 
@@ -1546,7 +1546,7 @@ Response (Failure):
     HTTP/1.1 401 Unauthorized
     Content-Type: application/vnd.stackmob+json; version=X
     
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1589,7 +1589,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1728,7 +1728,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1760,7 +1760,7 @@ Response:
     HTTP/1.1 200 OK
     Content-Type: application/vnd.stackmob+json; version=X
     
-```json
+```javascript
 {<Facebook user info>}
 ```
 
@@ -1831,7 +1831,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -1876,7 +1876,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1918,7 +1918,7 @@ Response (Success):
   Set-Cookie: <cookie>
   Content-Type: application/vnd.stackmob+json; version=X
 
-```json
+```javascript
 {"username":"johndoe","tw":{<Twitter user info>}}
 ```
 
@@ -1927,7 +1927,7 @@ Response (Failure):
   HTTP/1.1 401 Unauthorized
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1969,7 +1969,7 @@ Response (Success):
   Set-Cookie: <cookie>
   Content-Type: application/vnd.stackmob+json; version=X
 
-```json
+```javascript
 {"username":"johndoe","tw":{<Twitter user info>}}
 ```
 
@@ -1978,7 +1978,7 @@ Response (Failure):
   HTTP/1.1 401 Unauthorized
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2015,7 +2015,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -2047,7 +2047,7 @@ Response:
     HTTP/1.1 200 OK
     Content-Type: application/vnd.stackmob+json; version=X
     
-```json
+```javascript
 {<Twitter user info>}
 ```
 
@@ -2118,7 +2118,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -2176,7 +2176,7 @@ Response (Failure):
   HTTP/1.1 401 Unauthorized
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2216,7 +2216,7 @@ Response (Failure):
   HTTP/1.1 401 Unauthorized
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2259,7 +2259,7 @@ Response (Failure):
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2297,7 +2297,7 @@ Response:
     HTTP/1.1 200 OK
     Content-Type: application/vnd.stackmob+json; version=X
     
-```json
+```javascript
 JSON: Your Custom Code Method Response
 ```
 
@@ -2324,7 +2324,7 @@ Request Headers:
 ```
 Request Body:
 
-```json
+```javascript
 //Optional.  You can pass any string, e.g., JSON
 {
   param1: value1,
@@ -2338,7 +2338,7 @@ Response:
     HTTP/1.1 200 OK
     Content-Type: application/vnd.stackmob+json; version=X
     
-```json
+```javascript
 JSON: Your Custom Code Method Response
 ```
 
@@ -2360,7 +2360,7 @@ This older, deprecated Android Push framework can still be used for legacy apps.
 
 The core abstraction that the push API uses is called the device token. A device token looks like this in JSON (note that this example doesn't have a real token in it!):
 
-```json
+```javascript
   {
     "type": "androidgcm",
     "token": "a88fqsdg8as87rgq87wrg8as8dg78zDf8a98sdf98asd8fa7sdf"
@@ -2387,7 +2387,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   "user": "johnsmith"
 }
@@ -2429,7 +2429,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   "payload": {
     "badge": 1,
@@ -2471,7 +2471,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   
   "payload": {
@@ -2514,7 +2514,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   "payload": {
     "badge": 1,
