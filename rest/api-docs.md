@@ -2371,7 +2371,7 @@ Currently, we support "androidgcm" and "ios" in the type field, and the "token" 
 
 ## Register a Device to Receive Push Notifications
 
-StackMob will help you manage the device tokens for users who have subscribed to receive push notifications. We also allow you to optionally link a StackMob username to a device token so that you can send a message to all devices that belong to a specific user, or even send a message to all users.
+StackMob will help you manage the device tokens for users who have subscribed to receive push notifications. When registering a token while logged in via OAuth2 the token will be owned by the logged in user. We also allow you to tag your token with a group name, which can just be an arbitrary string. You'll be able to send a message to all devices that belong to particular group or owner.
 
 ```bash
 POST http://push.stackmob.com/tokens/android/a88fqsdg8as87rgq87wrg8as8dg78zDf8a98sdf98asd8fa7sdf
@@ -2389,12 +2389,9 @@ Request Body:
 
 ```javascript
 {
-  "user": "johnsmith"
+  "group": "subscribers"
 }
 ```
-
-The `user` field does not need to correspond to a valid user object in your app. In fact, your app need not even include a user schema at all. The user Id is used to identify the token when you send push messages to users (see below), and allows you to register multiple tokens to a single user.
-
 
 ## Send a Push Notification
 
@@ -2451,11 +2448,10 @@ Request Body:
 }
 ```
 
-## Sending to a specific user(s)
+## Sending to a specific group(s)
 
 The payload dictionary is subject to the same rules as outlined in "Pushing to Tokens" above.
-Also, as mentioned above in "Registering Tokens", the users specified in the "userIds" list need not match user objects in your app, nor do you even need a user schema in your app to use this call.
-Any usernames, which do not have a device token associated with them will be ignored.
+Any groups which do not have a device token associated with them will be ignored.
 
 ```bash
 POST http://push.stackmob.com/notifications
@@ -2481,7 +2477,7 @@ Request Body:
     "other1": "some data",
     "other2": "some other data"
   },
-  "users": ["john123", "johndoe"]
+  "groups": ["subscribers", "admins"]
 }
 ```
 
@@ -2492,11 +2488,45 @@ href="https://dashboard.stackmob.com/data/console?method=Send%20Push&type=push&t
 the Console</a> with the `Send Push` method.
 
 You can send to the device token directly, but if you registered your
-tokens with a user id, you can send a notification using that. Choose
+tokens with a group, you can send a notification using that. Choose
 via the dropdown.
 
 The sound and badge parameters are optional. Type in a message and hit
 submit.
+
+## Sending to a specific token owners(s)
+
+You can push to a particular user, and the message will be sent to all the tokens owned by that user.
+This requires that registration happens while logged in with OAuth2. The api requires to to specify the specific user schema you're referencing, since there can be multiple.
+Any owners which do not have a device token associated with them will be ignored.
+
+```bash
+POST http://push.stackmob.com/notifications
+```
+
+Request Headers:
+
+```bash
+//"version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=0
+X-StackMob-API-Key: /* Your Public Key */
+```
+
+Request Body:
+
+```javascript
+{
+  
+  "payload": {
+    "badge": 1,
+    "sound": "mysound.mp3",
+    "alert": "you've got mail!",
+    "other1": "some data",
+    "other2": "some other data"
+  },
+  "owners": [{"user": "bob", "schema": "user"}, {"user": "sally", "schema": "user"}]
+}
+```
 
 ## Broadcasting a Push Message to all devices
 
@@ -2541,7 +2571,7 @@ push messages to beforehand.)
 
 ## Removing a registered token
 
-You can remove push tokens from the registered tokens list, so that a user will no longer receive push notifications send directly, or via broadcast command. Note, that if a push token is linked to a username (has the same username, as an entry in your 'users' table), the token will be removed automatically if that user is deleted.
+You can remove push tokens from the registered tokens list, so that a user will no longer receive push notifications send directly, or via broadcast command.
 
 ```bash
 DELETE http://push.stackmob.com/tokens/androidgcm/a88fqsdg8as87rgq87wrg8as8dg78zDf8a98sdf98asd8fa7sdf"
