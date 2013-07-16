@@ -2,9 +2,14 @@
 
 StackMob's API is REST based.  Our SDKs abstract away the REST interface and provide a set of handy methods you can interact with when deleting, creating, updating and deleting objects.  We know sometime's you want to know what happening under the covers, so we've provided this REST reference.  It's also helpful for those building a custom implementation with StackMob that does not involve our SDKs.  We've also provided information on how we use OAuth 2 to create authorization headers for use when accessing schemas with permission levels enabled.
 
-<p class="alert">
-StackMob supports both OAuth 1.0 and OAuth 2.0 protocols.  Our implementation of the OAuth 2.0 protocol is documented here in this doc.<br/><br/>
-We use the <a href="http://tools.ietf.org/html/rfc5849" target="_blank" rel="nofollow">standard OAuth 1.0 spec</a>, which is also described in this <a href="https://dev.twitter.com/docs/auth/authorizing-request" target="_blank" rel="nofollow">Twitter OAuth 1.0 doc</a>.
+<p class="alert">StackMob supports both <a href="https://developer.stackmob.com/rest-api/oauth1-and-oauth2-guide" target="_blank">OAuth 1.0 and OAuth 2.0 protocols</a>.  </p>
+
+Our Mobile SDKs use OAuth 2.0.  Our implementation of the OAuth 2.0 protocol is documented below and only uses the *public key* we assign your app.
+
+Though our OAuth 1.0 implementation is not documented here, the REST API format is the same as the OAuth 2.0 format except that in OAuth 1.0, you *do not* need the `X-StackMob-API-Key` header.  Meanwhile, all OAuth 1.0 calls have an `Authorization` header that contains the OAuth 1.0 signed string as described in the example Twitter link above.  We use the <a href="http://tools.ietf.org/html/rfc5849" target="_blank" rel="nofollow">standard OAuth 1.0 spec</a>.  OAuth 1.0 uses your application's *public and private keys* that we assign you.  OAuth 1.0 signing is described in this <a href="https://dev.twitter.com/docs/auth/authorizing-request" target="_blank" rel="nofollow">Twitter OAuth 1.0 doc</a>.
+
+<p class="alert alert-info">
+  <a href="https://developer.stackmob.com/rest-api/oauth1-and-oauth2-guide" target="_blank">Read about how StackMob uses OAuth 1.0 and OAuth 2.0 protocols</a> and which one you should use.<br/><br/>People generally use OAuth 2.0 to take advantage of user authentication, access controls, and to not expose the private key on client side code.  (OAuth 2.0 only exposes the public key to the client.)<br/><br/>People generally use OAuth 1.0 on server side code to have access to all data.  OAuth 1.0 uses both the private and public key, and since the private key should only be known to the developer, privileged access to data is given via OAuth 1.0.  Since the calls originate from the server, private keys in the code are not exposed to the client.
 </p>
 
 # REST Full API Reference

@@ -1,12 +1,10 @@
 # Javascript SDK API Reference
 
-The StackMob JS SDK connects your web application to StackMob.  You can perform CRUD operations with your objects, perform filtering queries on them, authenticate users, and more.
+The StackMob JS SDK connects your web application to StackMob via the OAuth 2.0 protocol.  You can perform CRUD operations with your objects, perform filtering queries on them, authenticate users, and more.
 
 The StackMob JS SDK is built on <a href="http://documentcloud.github.com/backbone/" target="_blank">Backbone.js</a>.
 
 **If you are using the StackMob JS SDK from your own domain, be sure to [whitelist the domain in your app's CORS Module](https://dashboard.stackmob.com/module/cors/settings).**
-
-** April 11, 2013: You should not use jQuery 1.9+ with the JS SDK.  Use jQuery v1.8.x until further notice. <a href="http://support.stackmob.com/entries/23492763--Invalid-JSON-returned-Error">Read about v1.9+ incompatibilities in the forum.</a>  We are currently implementing a server side fix that will resolve the issue.**
 
 # StackMob Object
 
