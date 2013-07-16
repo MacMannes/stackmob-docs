@@ -97,80 +97,6 @@ Request Body:
 ]
 ```
 
-## Create or Update Multiple Related Objects
-
-The Android and iOS SDKs use a specialized method of posting data that combines POST and PUT, while also submitting expanded json trees all at once. StackMob can easily accept a whole json tree containing multiple related objects, but json lacks any sort of type hints to distinguish which objects go with which schemas, so that information is supplied in a header. Without the header, the expanded json tree will be rejected for having subobjects. It's also the case that when posting objects together like this, some may be new and you want them created, while some exist already, and need to be updated. Thus we also "upsert" the objects, creating them if necessesary, otherwise updating them.
-
-Let's say our `chatmessage` schema has a one to one relation to the `user` schema called `author`.
-
-Request URL:
-
-```bash
-POST http://api.stackmob.com/chatmessage
-```
-
-Request Headers:
-
-```bash
-//"version" sets your REST API Version. "0" for Development. "1" and up for Production
-Accept: application/vnd.stackmob+json; version=0
-X-StackMob-API-Key: /* Your Public Key */
-X-StackMob-Relations: author=user
-Content-Type: application/json
-```
-
-Request Body:
-
-```javascript
-[
-	{
-		"message": "hello world!",
-  		"author": {
-			"username": "johndoe",
-			"age": 27,
-			"hobby": "fishing"
-		}
-	}
-]
-```
-
-The `X-StackMob-Relations` header tells StackMob the the author key corresponds to the user schema. It's structured like a query string, and each field containing a json subobject must be included. Here's a more complex example to show how it works more than one level deep. Say that the `user` schema has a one to many relation to the `user` schema called `friends`.
-
-
-Request URL:
-
-```bash
-POST http://api.stackmob.com/chatmessage
-```
-
-Request Headers:
-
-```bash
-//"version" sets your REST API Version. "0" for Development. "1" and up for Production
-Accept: application/vnd.stackmob+json; version=0
-X-StackMob-API-Key: /* Your Public Key */
-X-StackMob-Relations: author=user&author.friends=user
-Content-Type: application/json
-```
-
-Request Body:
-
-```javascript
-[
-	{
-		"message": "hello world!",
-  		"author": {
-			"username": "johndoe",
-			"age": 27,
-			"hobby": "fishing"
-			"friends": [{ "username": "janedoe", "age": 34 }, { "username": "bob", "age": 25 }]
-		}
-	}
-]
-```
-
-Nesting is shown with the dot syntax, i.e. `author.friends=user`.  There is a limit of 3 nested objects. The same syntax applies whether you are referring to a one-to-one or one-to-many relation.
-
 ## GET - Read Objects
 
 Read your objects from the datastore.
@@ -1033,6 +959,80 @@ Content-Type: application/json;charset=UTF8
    "text": "my other today"}
 ]
 ```
+
+## Create or Update Multiple Related Objects
+
+Relationships can use a specialized method of posting data that combines POST and PUT, while also submitting expanded json trees all at once. StackMob can easily accept a whole json tree containing multiple related objects, but json lacks any sort of type hints to distinguish which objects go with which schemas, so that information is supplied in a header. Without the header, the expanded json tree will be rejected for having subobjects. It's also the case that when posting objects together like this, some may be new and you want them created, while some exist already, and need to be updated. Thus we also "upsert" the objects, creating them if necessesary, otherwise updating them.
+
+Let's say our `chatmessage` schema has a one to one relation to the `user` schema called `author`.
+
+Request URL:
+
+```bash
+POST http://api.stackmob.com/chatmessage
+```
+
+Request Headers:
+
+```bash
+//"version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=0
+X-StackMob-API-Key: /* Your Public Key */
+X-StackMob-Relations: author=user
+Content-Type: application/json
+```
+
+Request Body:
+
+```javascript
+[
+  {
+    "message": "hello world!",
+      "author": {
+      "username": "johndoe",
+      "age": 27,
+      "hobby": "fishing"
+    }
+  }
+]
+```
+
+The `X-StackMob-Relations` header tells StackMob the the author key corresponds to the user schema. It's structured like a query string, and each field containing a json subobject must be included. Here's a more complex example to show how it works more than one level deep. Say that the `user` schema has a one to many relation to the `user` schema called `friends`.
+
+
+Request URL:
+
+```bash
+POST http://api.stackmob.com/chatmessage
+```
+
+Request Headers:
+
+```bash
+//"version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=0
+X-StackMob-API-Key: /* Your Public Key */
+X-StackMob-Relations: author=user&author.friends=user
+Content-Type: application/json
+```
+
+Request Body:
+
+```javascript
+[
+  {
+    "message": "hello world!",
+      "author": {
+      "username": "johndoe",
+      "age": 27,
+      "hobby": "fishing"
+      "friends": [{ "username": "janedoe", "age": 34 }, { "username": "bob", "age": 25 }]
+    }
+  }
+]
+```
+
+Nesting is shown with the dot syntax, i.e. `author.friends=user`.  There is a limit of 3 nested objects. The same syntax applies whether you are referring to a one-to-one or one-to-many relation.
 
 ## GET - Expanding Relationships: Get Full Objects, not just IDs
 
