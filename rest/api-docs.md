@@ -1,6 +1,12 @@
 # REST Docs
 
 StackMob's API is REST based.  Our SDKs abstract away the REST interface and provide a set of handy methods you can interact with when deleting, creating, updating and deleting objects.  We know sometime's you want to know what happening under the covers, so we've provided this REST reference.  It's also helpful for those building a custom implementation with StackMob that does not involve our SDKs.  We've also provided information on how we use OAuth 2 to create authorization headers for use when accessing schemas with permission levels enabled.
+
+<p class="alert">
+StackMob supports both OAuth 1.0 and OAuth 2.0 protocols.  Our implementation of the OAuth 2.0 protocol is documented here in this doc.<br/><br/>
+We use the <a href="http://tools.ietf.org/html/rfc5849" target="_blank" rel="nofollow">standard OAuth 1.0 spec</a>, which is also described in this <a href="https://dev.twitter.com/docs/auth/authorizing-request" target="_blank" rel="nofollow">Twitter OAuth 1.0 doc</a>.
+</p>
+
 # REST Full API Reference
 
 # Create, Read, Update, Delete
