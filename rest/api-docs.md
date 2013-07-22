@@ -1175,8 +1175,12 @@ Request Body:
 
 Response (Success):
 
+```xml
   HTTP/1.1 200 OK
   Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Success):
 
 ```javascript
 [
@@ -1233,8 +1237,12 @@ Request Body:
 
 Response (Success):
 
+```xml
   HTTP/1.1 200 OK
   Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Success):
 
 ```javascript
 [
@@ -1248,9 +1256,13 @@ Response (Success):
 
 Response (Failure):
 
+```xml
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
-  
+```
+
+Response Body (Failure):
+
 ```javascript
 {"error":"<error message>"}
 ```
@@ -1454,30 +1466,42 @@ Make a call to StackMob requesting a new password by email.  The email will be s
 
 Request URL:
 
-    POST http://api.stackmob.com/user/forgotPassword
+```xml
+POST http://api.stackmob.com/user/forgotPassword
+```
 
 Request Headers:
 
-    // "version" sets your REST API Version. "0" for Development. "1" and up for Production
-    Accept: application/vnd.stackmob+json; version=X
-    X-StackMob-API-Key: /* Your Public Key */
+```xml
+// "version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=X
+X-StackMob-API-Key: /* Your Public Key */
+```
 
 Request Body:
 
-    {"username": USERNAME_OF_REQUESTED_USER }
+```xml
+{"username": USERNAME_OF_REQUESTED_USER }
+```
 
 <hr/>
 
 Response (Success):
 
-    HTTP/1.1 200 OK
-    Set-Cookie: <cookie>
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
 
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Failure):
     
 ```javascript
 {"error":"<message>"}
@@ -1488,14 +1512,18 @@ The user will receive an email with a temporary password valid for 24 hours. The
 ## Login with Temporary Password (and reset with new password)
 
 Request URL:
-    
-    GET http://api.stackmob.com/user/accessToken?password=temppassword&username=johndoe&new_password=newpassword
+
+```xml
+GET http://api.stackmob.com/user/accessToken?password=temppassword&username=johndoe&new_password=newpassword
+```
 
 Request Headers:
-    
-    // "version" sets your REST API Version. "0" for Development. "1" and up for Production
-    Accept: application/vnd.stackmob+json; version=X
-    X-StackMob-API-Key: /* Your Public Key */
+
+```xml
+// "version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=X
+X-StackMob-API-Key: /* Your Public Key */
+```
 
 Request Body:
 
@@ -1504,15 +1532,19 @@ Request Body:
 
 Response (Success):
 
-    HTTP/1.1 200 OK
-    Set-Cookie: <cookie>
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
 
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/vnd.stackmob+json; version=X
-    
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
 ```javascript
 {"error":"<message>"}
 ```
@@ -1532,30 +1564,42 @@ Reset password, totally distinct from the forgot password process above, is a ge
 
 Request URL:
 
-    POST http://api.stackmob.com/user/resetPassword
+```xml
+POST http://api.stackmob.com/user/resetPassword
+```
 
 Request Headers:
 
-    // "version" sets your REST API Version. "0" for Development. "1" and up for Production
-    Accept: application/vnd.stackmob+json; version=X
-    X-StackMob-API-Key: /* Your Public Key */
+```xml
+// "version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=X
+X-StackMob-API-Key: /* Your Public Key */
+```
 
 Request Body:
 
-    {"old": {"password": "[tempPassword]"}, "new": {"password": "[newPassword]"}}
+```xml
+{"old": {"password": "[tempPassword]"}, "new": {"password": "[newPassword]"}}
+```
 
 <hr/>
 
 Response (Success):
 
-    HTTP/1.1 200 OK
-    Set-Cookie: <cookie>
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
 
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Failure):
     
 ```javascript
 {"error":"<message>"}
@@ -1731,14 +1775,20 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
 
+```xml
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
-  
+```
+
+Response Body (Failure):
+
 ```javascript
 {"error":"<message>"}
 ```
@@ -1768,9 +1818,13 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
-    
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```xml
+
+Response Body:
+
 ```javascript
 {<Facebook user info>}
 ```
@@ -1800,8 +1854,10 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 
 ## Unlinking Facebook from a linked User object
@@ -1828,19 +1884,26 @@ Request Body:
 <hr/>
 
 Response (Success):
-
+```xml
   HTTP/1.1 200 OK
   Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (User not linked)
 
+```xml
   HTTP/1.1 404 Not Found
   Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
   
+```xml
   HTTP/1.1 400 Bad Request
   Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Failure)
   
 ```javascript
 {"error":"<error message>"}
@@ -1878,14 +1941,20 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 201 Created
-  Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 201 Created
+Set-Cookie: <cookie>
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
 
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 400 Bad Request
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Failure):
   
 ```javascript
 {"error":"<message>"}
@@ -1925,9 +1994,13 @@ Request Body:
 
 Response (Success):
 
+```xml
   HTTP/1.1 200 OK
   Set-Cookie: <cookie>
   Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Success):
 
 ```javascript
 {"username":"johndoe","tw":{<Twitter user info>}}
@@ -1935,9 +2008,13 @@ Response (Success):
 
 Response (Failure):
 
+```xml
   HTTP/1.1 401 Unauthorized
   Content-Type: application/vnd.stackmob+json; version=X
-  
+```
+
+Response Body (Failure):
+
 ```javascript
 {"error":"<message>"}
 ```
@@ -1976,9 +2053,13 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Success):
 
 ```javascript
 {"username":"johndoe","tw":{<Twitter user info>}}
@@ -1986,9 +2067,13 @@ Response (Success):
 
 Response (Failure):
 
-  HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
-  
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body(Failure):
+
 ```javascript
 {"error":"<message>"}
 ```
@@ -2018,13 +2103,19 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
 
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 400 Bad Request
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body (Failure):
   
 ```javascript
 {"error":"<error message>"}
@@ -2055,8 +2146,12 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body:
     
 ```javascript
 {<Twitter user info>}
@@ -2116,18 +2211,22 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (User not linked)
 
-  HTTP/1.1 404 Not Found
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 404 Not Found
+Content-Type: application/vnd.stackmob+json; version=X
+```
 
 Response (Failure):
   
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+HTTP/1.1 400 Bad Request
+Content-Type: application/vnd.stackmob+json; version=X
   
 ```javascript
 {"error":"<error message>"}
@@ -2305,9 +2404,13 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
-    
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body: 
+
 ```javascript
 JSON: Your Custom Code Method Response
 ```
@@ -2346,8 +2449,12 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/vnd.stackmob+json; version=X
+```
+
+Response Body:
     
 ```javascript
 JSON: Your Custom Code Method Response
