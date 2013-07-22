@@ -988,7 +988,7 @@ Request Body:
 [
   {
     "message": "hello world!",
-      "author": {
+    "author": {
       "username": "johndoe",
       "age": 27,
       "hobby": "fishing"
