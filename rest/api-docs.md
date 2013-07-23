@@ -997,7 +997,7 @@ Request Body:
 ]
 ```
 
-The `X-StackMob-Relations` header tells StackMob the the author key corresponds to the user schema. It's structured like a query string, and each field containing a json subobject must be included. Here's a more complex example to show how it works more than one level deep. Say that the `user` schema has a one to many relation to the `user` schema called `friends`.
+The `X-StackMob-Relations` header tells StackMob that the author key corresponds to the user schema. It's structured like a query string, and each field containing a json subobject must be included. Here's a more complex example to show how it works more than one level deep. Say that the `user` schema has a one to many relation to the `user` schema called `friends`.
 
 
 Request URL:
