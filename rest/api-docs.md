@@ -1177,7 +1177,7 @@ Response (Success):
 
 ```xml
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Success):
@@ -1195,7 +1195,7 @@ Response Body (Success):
 Response (Failure):
 
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
 ```javascript
 {"error":"<error message>"}
@@ -1239,7 +1239,7 @@ Response (Success):
 
 ```xml
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Success):
@@ -1258,7 +1258,7 @@ Response (Failure):
 
 ```xml
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure):
@@ -1491,14 +1491,14 @@ Response (Success):
 ```xml
 HTTP/1.1 200 OK
 Set-Cookie: <cookie>
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
 
 ```xml
 HTTP/1.1 401 Unauthorized
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure):
@@ -1535,14 +1535,14 @@ Response (Success):
 ```xml
 HTTP/1.1 200 OK
 Set-Cookie: <cookie>
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
 
 ```xml
 HTTP/1.1 401 Unauthorized
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 ```javascript
@@ -1589,14 +1589,14 @@ Response (Success):
 ```xml
 HTTP/1.1 200 OK
 Set-Cookie: <cookie>
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
 
 ```xml
 HTTP/1.1 401 Unauthorized
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure):
@@ -1637,12 +1637,12 @@ Response (Success):
 
   HTTP/1.1 201 Created
   Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (Failure):
 
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
 ```javascript
 {"error":"<message>"}
@@ -1777,14 +1777,14 @@ Response (Success):
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
 
 ```xml
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure):
@@ -1820,7 +1820,7 @@ Response:
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```xml
 
 Response Body:
@@ -1856,7 +1856,7 @@ Response:
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 
@@ -1886,21 +1886,21 @@ Request Body:
 Response (Success):
 ```xml
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response (User not linked)
 
 ```xml
   HTTP/1.1 404 Not Found
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
   
 ```xml
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure)
@@ -1944,14 +1944,14 @@ Response (Success):
 ```xml
 HTTP/1.1 201 Created
 Set-Cookie: <cookie>
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
 
 ```xml
 HTTP/1.1 400 Bad Request
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure):
@@ -1997,7 +1997,7 @@ Response (Success):
 ```xml
   HTTP/1.1 200 OK
   Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Success):
@@ -2010,7 +2010,7 @@ Response (Failure):
 
 ```xml
   HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure):
@@ -2056,7 +2056,7 @@ Response (Success):
 ```xml
 HTTP/1.1 200 OK
 Set-Cookie: <cookie>
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Success):
@@ -2069,7 +2069,7 @@ Response (Failure):
 
 ```xml
 HTTP/1.1 401 Unauthorized
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body(Failure):
@@ -2105,14 +2105,14 @@ Response (Success):
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
 
 ```xml
 HTTP/1.1 400 Bad Request
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body (Failure):
@@ -2148,7 +2148,7 @@ Response:
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body:
@@ -2184,7 +2184,7 @@ Request Body:
 Response:
 
     HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+    Content-Type: application/json; charset=utf-8
 
 ## Unlinking Twitter from a linked User object
 
@@ -2213,20 +2213,20 @@ Response (Success):
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (User not linked)
 
 ```xml
 HTTP/1.1 404 Not Found
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response (Failure):
   
 HTTP/1.1 400 Bad Request
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
   
 ```javascript
 {"error":"<error message>"}
@@ -2263,7 +2263,7 @@ Request Body:
 Response (Success):
 
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 ```js
 {
@@ -2284,7 +2284,7 @@ Response (Success):
 Response (Failure):
 
   HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
 ```javascript
 {"error":"<message>"}
@@ -2319,12 +2319,12 @@ Request Body:
 Response (Success):
 
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (Failure):
 
   HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
 ```javascript
 {"error":"<message>"}
@@ -2357,17 +2357,17 @@ Request Body:
 Response (Success):
 
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (User not linked):
 
   HTTP/1.1 404 Not Found
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (Failure):
 
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
 ```javascript
 {"error":"<message>"}
@@ -2406,7 +2406,7 @@ Response:
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body: 
@@ -2451,7 +2451,7 @@ Response:
 
 ```xml
 HTTP/1.1 200 OK
-Content-Type: application/vnd.stackmob+json; version=X
+Content-Type: application/json; charset=utf-8
 ```
 
 Response Body:
@@ -2719,4 +2719,5 @@ the <a href="https://dashboard.stackmob.com/data/console?method=Get%20Expired%20
 <a href="https://dashboard.stackmob.com/data/console?method=Get%20Expired%20Tokens&amp;type=push" class="screenshot">
 <img alt="Screenshot of Get Expired Tokens" src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/StackMob_Push_Get_Expired.png" />
 </a>
+
 
