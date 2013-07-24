@@ -1973,7 +1973,7 @@ Login with Twitter:
 Request URL:
 
 ```bash
-  POST http://api.stackmob.com/user/twitterLoginWithCreate
+  POST http://api.stackmob.com/user/twitterAccessTokenWithCreate
 ```
 Request Headers:
 
@@ -1988,7 +1988,7 @@ Request Headers:
 Request Body:
 
 ```bash
-{ mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret>&username=<username> }
+mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret>&username=<username>
 ```
 <hr/>
 
@@ -2047,7 +2047,7 @@ Request Headers:
 Request Body:
 
 ```bash
-{ mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret> }
+mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret>
 ```
 <hr/>
 
