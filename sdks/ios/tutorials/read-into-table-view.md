@@ -306,6 +306,9 @@ In ListViewController.m, edit the following methods:
 
 - (void) refreshTable {
     
+    // We reset the context to remove stale in-memory object values. 
+    // To avoid multiple network calls during the reload, turn on caching.
+    [self.manangedObjectContext reset];
     NSError *error = nil;
     if (![self.fetchedResultsController performFetch:&error]) {
         // Handle error

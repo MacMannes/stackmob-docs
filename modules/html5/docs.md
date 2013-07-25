@@ -26,8 +26,11 @@ It's great to save your code there and collaborate with team members and can gre
 Here's a short video showing how a user like you can link your GitHub account to StackMob, and how StackMob can start seamlessly serving your web app for you automatically:
 
 <p>
-<iframe width="560" height="315" src="//www.youtube.com/embed/2KlW_ynQMDQ" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe src="https://player.vimeo.com/video/69333500" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 </p>
+
+
+
 
 Read on to see how you can link your StackMob app with GitHub and start serving your web app from StackMob.
 
@@ -60,6 +63,16 @@ StackMob can also automatically deploy your development environment whenever you
 
 <div class="screenshot"><a href="https://dashboard.stackmob.com/module/html5/settings" target="_blank"><img src="//s3.amazonaws.com/static.stackmob.com/images/modules/html5/modules-html5-service-hook.png" /></a>
 </div>
+
+
+## Deploying from development to production
+
+Once you've completed developing your app, you'll want to deploy it to production.  For HTML5 Hosted apps, this involves deploying both your API and  HTML5 app.  Deploying to production allows you to continue working in develpment without affecting your users.
+
+This video walks through the process of deploying to production.
+<p>
+<iframe src="https://player.vimeo.com/video/69334370" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+</p>
 
 ## New to GitHub?
 

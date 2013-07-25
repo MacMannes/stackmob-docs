@@ -1,6 +1,17 @@
 # REST Docs
 
 StackMob's API is REST based.  Our SDKs abstract away the REST interface and provide a set of handy methods you can interact with when deleting, creating, updating and deleting objects.  We know sometime's you want to know what happening under the covers, so we've provided this REST reference.  It's also helpful for those building a custom implementation with StackMob that does not involve our SDKs.  We've also provided information on how we use OAuth 2 to create authorization headers for use when accessing schemas with permission levels enabled.
+
+<p class="alert">StackMob supports both <a href="https://developer.stackmob.com/rest-api/oauth1-and-oauth2-guide" target="_blank">OAuth 1.0 and OAuth 2.0 protocols</a>.  </p>
+
+Our Mobile SDKs use OAuth 2.0.  Our implementation of the OAuth 2.0 protocol is documented below and only uses the *public key* we assign your app.
+
+Though our OAuth 1.0 implementation is not documented here, the REST API format is the same as the OAuth 2.0 format except that in OAuth 1.0, you *do not* need the `X-StackMob-API-Key` header.  Meanwhile, all OAuth 1.0 calls have an `Authorization` header that contains the OAuth 1.0 signed string as described in the example Twitter link below.  We use the <a href="http://tools.ietf.org/html/rfc5849" target="_blank" rel="nofollow">standard OAuth 1.0 spec</a>.  OAuth 1.0 uses your application's *public and private keys* that we assign you.  OAuth 1.0 signing is described in this <a href="https://dev.twitter.com/docs/auth/authorizing-request" target="_blank" rel="nofollow">Twitter OAuth 1.0 doc</a>.
+
+<p class="alert alert-info">
+  <a href="https://developer.stackmob.com/rest-api/oauth1-and-oauth2-guide" target="_blank">Read about how StackMob uses OAuth 1.0 and OAuth 2.0 protocols</a> and which one you should use.<br/><br/>People generally use OAuth 2.0 to take advantage of user authentication, access controls, and to not expose the private key on client side code.  (OAuth 2.0 only exposes the public key to the client.)<br/><br/>People generally use OAuth 1.0 on server side code to have access to all data.  OAuth 1.0 uses both the private and public key, and since the private key should only be known to the developer, privileged access to data is given via OAuth 1.0.  Since the calls originate from the server, private keys in the code are not exposed to the client.
+</p>
+
 # REST Full API Reference
 
 # Create, Read, Update, Delete
@@ -28,7 +39,7 @@ Content-Type: application/json
 
 Request Body:
 
-```json
+```javascript
 {
   "message": "hello world!",
   "author": "johndoe"
@@ -37,7 +48,7 @@ Request Body:
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 /*
  * Leave the primary key (chatmessage_id) out of the request body
  * and StackMob will generate a unique ID for you.
@@ -73,7 +84,7 @@ Content-Type: application/json
 
 Request Body:
 
-```json
+```javascript
 [
 	{
 		"message": "hello world!",
@@ -85,80 +96,6 @@ Request Body:
 	}
 ]
 ```
-
-## Create or Update Multiple Related Objects
-
-The Android and iOS SDKs use a specialized method of posting data that combines POST and PUT, while also submitting expanded json trees all at once. StackMob can easily accept a whole json tree containing multiple related objects, but json lacks any sort of type hints to distinguish which objects go with which schemas, so that information is supplied in a header. Without the header, the expanded json tree will be rejected for having subobjects. It's also the case that when posting objects together like this, some may be new and you want them created, while some exist already, and need to be updated. Thus we also "upsert" the objects, creating them if necessesary, otherwise updating them.
-
-Let's say our `chatmessage` schema has a one to one relation to the `user` schema called `author`.
-
-Request URL:
-
-```bash
-POST http://api.stackmob.com/chatmessage
-```
-
-Request Headers:
-
-```bash
-//"version" sets your REST API Version. "0" for Development. "1" and up for Production
-Accept: application/vnd.stackmob+json; version=0
-X-StackMob-API-Key: /* Your Public Key */
-X-StackMob-Relations: author=user
-Content-Type: application/json
-```
-
-Request Body:
-
-```json
-[
-	{
-		"message": "hello world!",
-  		"author": {
-			"username": "johndoe",
-			"age": 27,
-			"hobby": "fishing"
-		}
-	}
-]
-```
-
-The `X-StackMob-Relations` header tells StackMob the the author key corresponds to the user schema. It's structured like a query string, and each field containing a json subobject must be included. Here's a more complex example to show how it works more than one level deep. Say that the `user` schema has a one to many relation to the `user` schema called `friends`.
-
-
-Request URL:
-
-```bash
-POST http://api.stackmob.com/chatmessage
-```
-
-Request Headers:
-
-```bash
-//"version" sets your REST API Version. "0" for Development. "1" and up for Production
-Accept: application/vnd.stackmob+json; version=0
-X-StackMob-API-Key: /* Your Public Key */
-X-StackMob-Relations: author=user&author.friends=user
-Content-Type: application/json
-```
-
-Request Body:
-
-```json
-[
-	{
-		"message": "hello world!",
-  		"author": {
-			"username": "johndoe",
-			"age": 27,
-			"hobby": "fishing"
-			"friends": [{ "username": "janedoe", "age": 34 }, { "username": "bob", "age": 25 }]
-		}
-	}
-]
-```
-
-Nesting is shown with the dot syntax, i.e. `author.friends=user`.  There is a limit of 3 nested objects. The same syntax applies whether you are referring to a one-to-one or one-to-many relation.
 
 ## GET - Read Objects
 
@@ -186,7 +123,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -230,7 +167,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 {
   "username": "johndoe",
   "age": 25,
@@ -269,7 +206,7 @@ Request Body:
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 {
   "username": "johndoe",
   "age": 26, //updated with new value
@@ -362,7 +299,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 //POST
 {
   "username": "john",
@@ -382,7 +319,7 @@ Request Body:
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //StackMob will save the file to your S3 account and return the web path in its place:
 {
   "username": "john",
@@ -488,7 +425,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -539,7 +476,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -585,7 +522,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "johndoe",
@@ -617,7 +554,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "john123",
@@ -652,7 +589,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "notjohn123",
@@ -689,7 +626,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   {
     "username": "john123",
@@ -765,7 +702,7 @@ X-StackMob-Select: username,age
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //Note that fields other than username and age are excluded
 [
   {
@@ -805,7 +742,7 @@ X-StackMob-Select: username,interest_ref,interest_ref.interest_type
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //Note that other fields are excluded
 [
   {
@@ -853,7 +790,7 @@ X-StackMob-Select: username,friend,friend.username,friend.interest_ref,friend.in
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 //Note that other fields are excluded
 [
   {
@@ -923,7 +860,7 @@ X-StackMob-OrderBy: age:asc,createddate:desc
 Response shown in JSON notation for illustration.
 
 
-```json
+```javascript
 //Order by age ascending, then by date descending
 [
   {
@@ -972,7 +909,7 @@ Range: objects=0-9
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 [
   { //result 0
     "username": "jeff",
@@ -1023,6 +960,80 @@ Content-Type: application/json;charset=UTF8
 ]
 ```
 
+## Create or Update Multiple Related Objects
+
+Relationships can use a specialized method of posting data that combines POST and PUT, while also submitting expanded json trees all at once. StackMob can easily accept a whole json tree containing multiple related objects, but json lacks any sort of type hints to distinguish which objects go with which schemas, so that information is supplied in a header. Without the header, the expanded json tree will be rejected for having subobjects. It's also the case that when posting objects together like this, some may be new and you want them created, while some exist already, and need to be updated. Thus we also "upsert" the objects, creating them if necessesary, otherwise updating them.
+
+Let's say our `chatmessage` schema has a one to one relation to the `user` schema called `author`.
+
+Request URL:
+
+```bash
+POST http://api.stackmob.com/chatmessage
+```
+
+Request Headers:
+
+```bash
+//"version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=0
+X-StackMob-API-Key: /* Your Public Key */
+X-StackMob-Relations: author=user
+Content-Type: application/json
+```
+
+Request Body:
+
+```javascript
+[
+  {
+    "message": "hello world!",
+    "author": {
+      "username": "johndoe",
+      "age": 27,
+      "hobby": "fishing"
+    }
+  }
+]
+```
+
+The `X-StackMob-Relations` header tells StackMob that the author key corresponds to the user schema. It's structured like a query string, and each field containing a json subobject must be included. Here's a more complex example to show how it works more than one level deep. Say that the `user` schema has a one to many relation to the `user` schema called `friends`.
+
+
+Request URL:
+
+```bash
+POST http://api.stackmob.com/chatmessage
+```
+
+Request Headers:
+
+```bash
+//"version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=0
+X-StackMob-API-Key: /* Your Public Key */
+X-StackMob-Relations: author=user&author.friends=user
+Content-Type: application/json
+```
+
+Request Body:
+
+```javascript
+[
+  {
+    "message": "hello world!",
+      "author": {
+      "username": "johndoe",
+      "age": 27,
+      "hobby": "fishing"
+      "friends": [{ "username": "janedoe", "age": 34 }, { "username": "bob", "age": 25 }]
+    }
+  }
+]
+```
+
+Nesting is shown with the dot syntax, i.e. `author.friends=user`.  There is a limit of 3 nested objects. The same syntax applies whether you are referring to a one-to-one or one-to-many relation.
+
 ## GET - Expanding Relationships: Get Full Objects, not just IDs
 
 Relationships are represented in your object schemas as arrays of primary IDs. You can return an array of objects instead.
@@ -1048,7 +1059,7 @@ X-StackMob-Expand: /* 1 - 3 */
 
 Response shown in JSON notation for illustration.
 
-```json
+```javascript
 // Get without "expand"
 {
   "username": "john",
@@ -1120,7 +1131,7 @@ X-StackMob-API-Key: /* Your Public Key */
 X-StackMob-CascadeDelete: true
 ```
 
-if set to any value other than false cascading deletion will be applied to the request (if it is omitted it is the same as specifying "false" as the value). 
+if set to any value other than false cascading deletion will be applied to the request (if it is omitted it is the same as specifying "true" as the value). 
 
 Request Body: *Empty*
 
@@ -1164,10 +1175,14 @@ Request Body:
 
 Response (Success):
 
+```xml
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
+```
 
-```json
+Response Body (Success):
+
+```javascript
 [
   {
     ...,
@@ -1180,9 +1195,9 @@ Response (Success):
 Response (Failure):
 
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -1222,10 +1237,14 @@ Request Body:
 
 Response (Success):
 
+```xml
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
+```
 
-```json
+Response Body (Success):
+
+```javascript
 [
   {
     ...,
@@ -1237,10 +1256,14 @@ Response (Success):
 
 Response (Failure):
 
+```xml
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
-  
-```json
+  Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure):
+
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -1443,32 +1466,44 @@ Make a call to StackMob requesting a new password by email.  The email will be s
 
 Request URL:
 
-    POST http://api.stackmob.com/user/forgotPassword
+```xml
+POST http://api.stackmob.com/user/forgotPassword
+```
 
 Request Headers:
 
-    // "version" sets your REST API Version. "0" for Development. "1" and up for Production
-    Accept: application/vnd.stackmob+json; version=X
-    X-StackMob-API-Key: /* Your Public Key */
+```xml
+// "version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=X
+X-StackMob-API-Key: /* Your Public Key */
+```
 
 Request Body:
 
-    {"username": USERNAME_OF_REQUESTED_USER }
+```xml
+{"username": USERNAME_OF_REQUESTED_USER }
+```
 
 <hr/>
 
 Response (Success):
 
-    HTTP/1.1 200 OK
-    Set-Cookie: <cookie>
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
 
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure):
     
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1477,14 +1512,18 @@ The user will receive an email with a temporary password valid for 24 hours. The
 ## Login with Temporary Password (and reset with new password)
 
 Request URL:
-    
-    GET http://api.stackmob.com/user/accessToken?password=temppassword&username=johndoe&new_password=newpassword
+
+```xml
+GET http://api.stackmob.com/user/accessToken?password=temppassword&username=johndoe&new_password=newpassword
+```
 
 Request Headers:
-    
-    // "version" sets your REST API Version. "0" for Development. "1" and up for Production
-    Accept: application/vnd.stackmob+json; version=X
-    X-StackMob-API-Key: /* Your Public Key */
+
+```xml
+// "version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=X
+X-StackMob-API-Key: /* Your Public Key */
+```
 
 Request Body:
 
@@ -1493,22 +1532,26 @@ Request Body:
 
 Response (Success):
 
-    HTTP/1.1 200 OK
-    Set-Cookie: <cookie>
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
 
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/vnd.stackmob+json; version=X
-    
-```json
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json; charset=utf-8
+```
+
+```javascript
 {"error":"<message>"}
 ```
 
 Your user may also close the app and attempt to use the regular login screen with their temporary password. When this happens your call to login will fail with the following error:
 
-```json
+```javascript
 { "error": "Temporary password reset required" }
 ```
 
@@ -1521,32 +1564,44 @@ Reset password, totally distinct from the forgot password process above, is a ge
 
 Request URL:
 
-    POST http://api.stackmob.com/user/resetPassword
+```xml
+POST http://api.stackmob.com/user/resetPassword
+```
 
 Request Headers:
 
-    // "version" sets your REST API Version. "0" for Development. "1" and up for Production
-    Accept: application/vnd.stackmob+json; version=X
-    X-StackMob-API-Key: /* Your Public Key */
+```xml
+// "version" sets your REST API Version. "0" for Development. "1" and up for Production
+Accept: application/vnd.stackmob+json; version=X
+X-StackMob-API-Key: /* Your Public Key */
+```
 
 Request Body:
 
-    {"old": {"password": "[tempPassword]"}, "new": {"password": "[newPassword]"}}
+```xml
+{"old": {"password": "[tempPassword]"}, "new": {"password": "[newPassword]"}}
+```
 
 <hr/>
 
 Response (Success):
 
-    HTTP/1.1 200 OK
-    Set-Cookie: <cookie>
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
 
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure):
     
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1582,14 +1637,14 @@ Response (Success):
 
   HTTP/1.1 201 Created
   Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (Failure):
 
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1720,15 +1775,21 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
 
+```xml
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
-  
-```json
+  Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure):
+
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1757,10 +1818,14 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
-    
-```json
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```xml
+
+Response Body:
+
+```javascript
 {<Facebook user info>}
 ```
 
@@ -1789,8 +1854,10 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
 
 
 ## Unlinking Facebook from a linked User object
@@ -1817,21 +1884,28 @@ Request Body:
 <hr/>
 
 Response (Success):
-
+```xml
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
+```
 
 Response (User not linked)
 
+```xml
   HTTP/1.1 404 Not Found
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
   
+```xml
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure)
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -1867,16 +1941,22 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 201 Created
-  Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 201 Created
+Set-Cookie: <cookie>
+Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
 
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure):
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1893,7 +1973,7 @@ Login with Twitter:
 Request URL:
 
 ```bash
-  POST http://api.stackmob.com/user/twitterLoginWithCreate
+  POST http://api.stackmob.com/user/twitterAccessTokenWithCreate
 ```
 Request Headers:
 
@@ -1908,26 +1988,34 @@ Request Headers:
 Request Body:
 
 ```bash
-{ mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret>&username=<username> }
+mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret>&username=<username>
 ```
 <hr/>
 
 Response (Success):
 
+```xml
   HTTP/1.1 200 OK
   Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
+```
 
-```json
+Response Body (Success):
+
+```javascript
 {"username":"johndoe","tw":{<Twitter user info>}}
 ```
 
 Response (Failure):
 
+```xml
   HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
-  
-```json
+  Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure):
+
+```javascript
 {"error":"<message>"}
 ```
 
@@ -1959,26 +2047,34 @@ Request Headers:
 Request Body:
 
 ```bash
-{ mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret> }
+mac_algorithm=hmac-sha-1&token_type=mac&tw_tk=<token>&tw_ts=<tokensecret>
 ```
 <hr/>
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Set-Cookie: <cookie>
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Set-Cookie: <cookie>
+Content-Type: application/json; charset=utf-8
+```
 
-```json
+Response Body (Success):
+
+```javascript
 {"username":"johndoe","tw":{<Twitter user info>}}
 ```
 
 Response (Failure):
 
-  HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
-  
-```json
+```xml
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body(Failure):
+
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2007,15 +2103,21 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
 
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body (Failure):
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -2044,10 +2146,14 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body:
     
-```json
+```javascript
 {<Twitter user info>}
 ```
 
@@ -2078,7 +2184,7 @@ Request Body:
 Response:
 
     HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+    Content-Type: application/json; charset=utf-8
 
 ## Unlinking Twitter from a linked User object
 
@@ -2105,20 +2211,24 @@ Request Body:
 
 Response (Success):
 
-  HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
 
 Response (User not linked)
 
-  HTTP/1.1 404 Not Found
-  Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+```
 
 Response (Failure):
   
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
   
-```json
+```javascript
 {"error":"<error message>"}
 ```
 
@@ -2153,7 +2263,7 @@ Request Body:
 Response (Success):
 
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 ```js
 {
@@ -2174,9 +2284,9 @@ Response (Success):
 Response (Failure):
 
   HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2209,14 +2319,14 @@ Request Body:
 Response (Success):
 
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (Failure):
 
   HTTP/1.1 401 Unauthorized
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2247,19 +2357,19 @@ Request Body:
 Response (Success):
 
   HTTP/1.1 200 OK
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (User not linked):
 
   HTTP/1.1 404 Not Found
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
 
 Response (Failure):
 
   HTTP/1.1 400 Bad Request
-  Content-Type: application/vnd.stackmob+json; version=X
+  Content-Type: application/json; charset=utf-8
   
-```json
+```javascript
 {"error":"<message>"}
 ```
 
@@ -2294,10 +2404,14 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
-    
-```json
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body: 
+
+```javascript
 JSON: Your Custom Code Method Response
 ```
 
@@ -2324,7 +2438,7 @@ Request Headers:
 ```
 Request Body:
 
-```json
+```javascript
 //Optional.  You can pass any string, e.g., JSON
 {
   param1: value1,
@@ -2335,10 +2449,14 @@ Request Body:
 
 Response:
 
-    HTTP/1.1 200 OK
-    Content-Type: application/vnd.stackmob+json; version=X
+```xml
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+
+Response Body:
     
-```json
+```javascript
 JSON: Your Custom Code Method Response
 ```
 
@@ -2360,7 +2478,7 @@ This older, deprecated Android Push framework can still be used for legacy apps.
 
 The core abstraction that the push API uses is called the device token. A device token looks like this in JSON (note that this example doesn't have a real token in it!):
 
-```json
+```javascript
   {
     "type": "androidgcm",
     "token": "a88fqsdg8as87rgq87wrg8as8dg78zDf8a98sdf98asd8fa7sdf"
@@ -2387,7 +2505,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   "user": "johnsmith"
 }
@@ -2429,7 +2547,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   "payload": {
     "badge": 1,
@@ -2471,7 +2589,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   
   "payload": {
@@ -2514,7 +2632,7 @@ X-StackMob-API-Key: /* Your Public Key */
 
 Request Body:
 
-```json
+```javascript
 {
   "payload": {
     "badge": 1,
@@ -2601,4 +2719,5 @@ the <a href="https://dashboard.stackmob.com/data/console?method=Get%20Expired%20
 <a href="https://dashboard.stackmob.com/data/console?method=Get%20Expired%20Tokens&amp;type=push" class="screenshot">
 <img alt="Screenshot of Get Expired Tokens" src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/StackMob_Push_Get_Expired.png" />
 </a>
+
 

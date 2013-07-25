@@ -85,7 +85,7 @@ The above `schemaName: 'todo'` tells StackMob to save your `Todo` data under a s
 
 Save an instance of your `todo` object to the server.
 
-```javascript
+```javascript,13-16
   // Associate s Model with the Schema
   var Todo = StackMob.Model.extend({ schemaName: 'todo' });
 
@@ -135,7 +135,7 @@ var Todo = StackMob.Model.extend({ schemaName: 'todo' });
 This tells StackMob to save your object in the `todo` schema.
 
 <p class="alert">
-  If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a `create` call. (This only occurs in the development environment.)
+  If the schema doesn't already exist on the server, StackMob will auto create your schema when you make a <code>create</code> call. (This only occurs in the development environment.)
 </p>
 
 <div class="alert alert-info">
@@ -181,7 +181,7 @@ You can use `get(..)` to get a field's value on your object:
   todo.get('action'); //Take out the garbage!
 ```
 
-<p>StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, `StackMob.Model` inherits from `Backbone.Model` so you can use any `Backbone.Model` method.  <a href="http://backbonejs.org/#Model" rel="nofollow" target="_blank">See the Backbone.Model docs</a>.</p>
+<p class="alert">StackMob is built on Backbone.js and hence uses the same accessor methods as Backbone Models.  In fact, <code>StackMob.Model</code> inherits from <code>Backbone.Model</code> so you can use any <code>Backbone.Model</code> method.  <a href="http://backbonejs.org/#Model" rel="nofollow" target="_blank">See the Backbone.Model docs</a>.</p>
 
 
 
@@ -226,8 +226,13 @@ todo.create({
 
 To fetch your `todo` object, just specify the primary key and run `fetch`.  Again, the primary key takes the form of `[schemaName]_id`.
 
-```js
+```js,7-11
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
+
 todo.fetch({
   success: function(model, result, options) {
     console.debug(model.toJSON());
@@ -248,6 +253,9 @@ todo.fetch({
 <p class="alert">
   Don't forget that StackMob calls are asynchronous, so you'll need to operate on your objects in your success/error callbacks.
 </p>
+<p class="alert">
+  Querying by a field that <b>is not</b> the primary key?  Check out <a href="#Queries">querying multiple objects</a>.
+</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -265,8 +273,13 @@ todo.fetch({
 
 You can edit existing objects easily.  Let's update `todo` object `1234` with a new field: `done` and let's mark it as `true`.
 
-```javascript
+```javascript,7-10
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
+
 todo.save({ done: true }, {
   success: function(model, result, options) { console.debug(model.toJSON()); }
   error: function(model, result, options) {}
@@ -280,6 +293,10 @@ todo.save({ done: true }, {
 You can also set fields and save things later.
 
 ```javascript
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
 
 todo.set({ done: true });
@@ -307,8 +324,14 @@ todo.save({
 Let's now delete your object.
 
 
-```javascript
+```javascript,8-11
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '1234' });
+
+// Delete object
 user.destroy({
   success: function(model, result, options) { console.debug(model.toJSON()); },
   error: function(model, result, options) {}
@@ -331,13 +354,18 @@ user.destroy({
 
 You can save arrays.
 
-```js,3
+```js,8
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo();
+
 todo.save({
   subtasks: ['do A', 'do B']
 }, {
-  success: ...
-  error: ...
+  success: function(){ /* ... */ }
+  error: function(){ /* ... */ }
 });
 ```
 
@@ -348,7 +376,12 @@ e.g. John saves `['do A', 'do B']` and Jill saves `['do C']`.  Whoever calls `sa
 But sometimes you want to append to an array.  StackMob provides ways of *appending* to arrays so that the end result will be `['do A', 'do B', 'do C']`, even if multiple users are operating on that field.
 
 ```javascript
+// Associates Model with the Schema
+var Todo = StackMob.Model.extend({ schemaName: 'todo' });
+
+// Create new instance of the Model
 var todo = new Todo({ todo_id: '12345' });
+
 todo.appendAndSave('subtasks', ['do C']);
 ```
 
@@ -446,6 +479,28 @@ To work with an array of your objects, define your `Collection`.
     </div>
   </div>
 </div>
+
+### Reading all objects
+
+To get all objects of one type, use `StackMob.Collection`.
+
+```js
+  var Todo = StackMob.Model.extend({
+    schemaName: 'todo'
+  });
+
+  var Todos = StackMob.Collection.extend({
+    model: Todo
+  });
+
+  var todos = new Todos();
+  todos.fetch({
+    success: function(results) { //StackMob.Collection is returned
+      console.debug(results.toJSON());
+    },
+    error: function(..) {}
+  });
+```
 
 
 ## Queries
@@ -618,15 +673,17 @@ Defining relationships lets you fetch and save information more easily.  You can
 * create related objects and attach them to a parent object in one call
 * fetch a parent object and have the full JSON objects returned as well, not just the ids.
 
-    ```js
-    {
-      username: 'john',
-      chores: [
-         { todo_id: '123', action: '...', ...}, 
-         { todo_id: '234', action: '...', ...}, 
-         { todo_id: '345', action: '...', ...}]
-    }
-    ```
+Example JSON:
+
+```js
+{
+  username: 'john',
+  chores: [
+     { todo_id: '123', action: '...', ...}, 
+     { todo_id: '234', action: '...', ...}, 
+     { todo_id: '345', action: '...', ...}]
+}
+```
 
 Let's get to it.
 
@@ -656,6 +713,13 @@ And you'll get:
 Let's work with relationships in the code.
 
 ### Adding Related Objects
+
+Let's cover adding related objects.  We'll cover:
+
+* creating and associating new related bojects
+* associating existing related objects
+
+#### Creating and Associating New Related Objects
 
 You can create objects and add them to a related parent object in one swoop.
 
@@ -710,6 +774,21 @@ todos.fetch();
     </div>
   </div>
 </div>
+
+
+#### Associating existing related objects
+
+If your related object already exists in the datastore and you simply want to add the relationship between the parent, use `appendAndSave`.  StackMob saves relationships as an array of primary key strings, so we're simply adding the primary key of the related object to the array.
+
+We created and assigned `todo` objects to `Marty` already, so the `todo` objects already exist in the datastore.  Let's also add them to Doc's todo list by adding them by reference.
+
+```js
+var user = new StackMob.User({ username: 'Doc' });
+user.appendAndSave('todos', ['1','2','3'], {
+  success: function(..) {},
+  error: function(...) {}
+});
+```
 
 
 ### Fetching Related Objects (Join)
@@ -1180,7 +1259,7 @@ So now if you call `todos.fetch(..)`, you'll get a 401 Unauthorized error if you
 
 You can upload files to StackMob.  The files are saved to your Amazon S3 account, which you link with StackMob.  This'll allow you to more easily manage your files and retain content.
 
-<a href="https://developer.stackmob.com/modules/s3/docs">Link StackMob with your S3 account and create a `binary` field on your schema.</a>
+<a href="https://developer.stackmob.com/modules/s3/docs">Link StackMob with your S3 account and create a <code>binary</code> field on your schema.</a>
 
 A file is represented as a `Binary` file type field on your schema.  To save the file, you'll call `setBinaryFile` with three parameters:
 
