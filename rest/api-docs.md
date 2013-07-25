@@ -1131,7 +1131,7 @@ X-StackMob-API-Key: /* Your Public Key */
 X-StackMob-CascadeDelete: true
 ```
 
-if set to any value other than false cascading deletion will be applied to the request (if it is omitted it is the same as specifying "false" as the value). 
+if set to any value other than false cascading deletion will be applied to the request (if it is omitted it is the same as specifying "true" as the value). 
 
 Request Body: *Empty*
 
