@@ -1,13 +1,26 @@
 iOS SDK Caching and Offline Sync
 ====================
 
+<!---
+  ##########
+  OVERVIEW
+  ##########
+-->
+
+
 ## Overview
 
 The offline sync feature enables developers to build apps that can function seamlessly without network connectivity. When the network connection is restored to the device, developers can sync locally changed data with their StackMob database. With the ability to define your own merge policies, error callbacks and fetch cache policies, StackMob offers developers the ability to build powerful, feature rich apps that aren't limited by a device's network connection.
 
 In this guide we will discuss how the cache works, options the developer has to customize the cache behavior, and the process of syncing your local objects with the server.
 
-<h2>How the Cache Works</h2>
+<!---
+  ##########
+  HOW THE CACHE WORKS
+  ##########
+-->
+
+## How the Cache Works
 
 The cache itself is a Core Data stack, equipped with its own private managed object context and persistent store coordinator. It uses SQLite as the persistent store. By implementing the cache as a Core Data stack, results from fetches performed on the network can be cached independently of their original request. You can then perform subsequent local fetches that are able to return subsets of the originally cached data.
 
@@ -15,7 +28,13 @@ The cache itself is a Core Data stack, equipped with its own private managed obj
 
 For example, suppose you are building a To-Do application which has the option to filter tasks by date, subject, etc. These filters would translate to conditional fetches on the same list of task objects. Rather than needing to execute a fetch on the network every time your query condition changes, you can instead grab all the tasks during application launch with one network call. From there you can perform the conditional fetches on that data locally, without needing to fetch from the network again. By reducing the amount of network calls we are drastically improving the performance of the application, as well as preserving data usage and potentially battery usage as well.
 
-<h2>Updating your Data Model</h2>
+<!---
+  ##########
+  UPDATING YOUR DATA MODEL
+  ##########
+-->
+
+## Updating Your Data Model
 
 In order for the offline sync system to work properly, you must edit your data model to include attributes that link to the auto-generated date fields on StackMob.
 
@@ -33,21 +52,35 @@ The easiest way to do this is the following:
 
 Lightweight migration should take care of merging your new model with your old database.  If you run into the "Cannot Find Source Store" error, remove the application from the device/simulator (this removes the local database and cache mapping table files) and try running the application again.
 
-<b>Important:</b> If your application currently uses the cache and you are upgrading to v2.0.0+, the internal cache mapping table will be inconsistent with the new version. You should either remove the application from the device or call the <code>SMCoreDataStore</code> <code><i>resetCache</i></code> method once. Improved migration functionality is in development.
+<b>Important:</b> If your application currently uses the cache and you are upgrading from v1.x.x to v2.0.0+, the internal cache mapping table will be inconsistent with the new version. You should either remove the application from the device or call the <code>SMCoreDataStore</code> <code><i>resetCache</i></code> method once. Improved migration functionality is in development.
 
 Now you're ready to use the caching and offline sync systems.
 
-<h2>Turning On/Off the Cache</h2>
+<!---
+  ##########
+  TURNING ON/OFF THE CACHE
+  ##########
+-->
+
+## Turning On/Off the Cache
 
 **The cache is turned off by default.** To turn on the cache, include `SM_CACHE_ENABLED = YES;` before you initialize the StackMob client and core data store.
 
-<h2>Fetching into the Cache</h2>
+<!---
+  ##########
+  FETCHING INTO THE CACHE
+  ##########
+-->
+
+## Fetching into the Cache
 
 After successfully performing a fetch from the StackMob database, an equivalent fetch is performed locally on the cache and those results are replaced with the up-to-date objects from the server. The results are returned as faulted managed objects. When you then access an object’s values or relationships, Core Data will use the cached version of the object to fill the fault.
 
 There are a few scenarios where filling faults will require a network call. One is when trying to access values of related objects which themselves have not been cached. If one of these situations arise and there is no network connection Core Data may throw the “Core Data could not fulfill a fault” exception. The SDK is set up to catch this exception in most cases and error out smoothly.
 
-<h3>Choosing a Cache Policy for Fetches</h3>
+<!--- CHOOSING CACHE POLICY -->
+
+### Choosing a Cache Policy for Fetches
 
 There are 4 policies to choose from, with type `SMCachePolicy`, which determine the location and order in which data is fetched:
 
@@ -59,7 +92,9 @@ There are 4 policies to choose from, with type `SMCachePolicy`, which determine 
 
 * `SMCachePolicyTryCacheElseNetwork` – Fetches are attempted on the cache, and if the cache yields no results (empty array), the fetch is attempted on the network. This is useful for applications which want to reduce the total amount of network calls and rely on their cache more than the server. 
 
-<h3>Changing the Caching Policy</h3>
+<!--- CHANGING CACHE POLICY -->
+
+### Changing the Caching Policy
 
 You can change the caching policy for your `SMCoreDataStore` instance at any time by setting its `cachePolicy` property.
 
@@ -80,7 +115,9 @@ To set a network status change block, define the following after you initialize 
 
 For a list of `SMNetworkStatus` keys, visit the <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMNetworkReachability.html" target="_blank">SMNetworkReachability Class Reference</a>.
 
-<h3>Manually Purging the Cache</h3>
+<!--- MANUALLY PURGING CACHE -->
+
+### Manually Purging the Cache
 
 At any time you can purge the cache manually of:
 
@@ -92,7 +129,42 @@ At any time you can purge the cache manually of:
 
 Check out the **Manually Purging the Cache** section of the <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html" target="_blank">SMCoreDataStore Class Reference</a> for all the methods.
 
-<h2>Writing to the Cache</h2>
+<!--- PER REQUEST CACHE POLICY -->
+
+### Per Request Cache Policy
+
+Suppose you want to direct all of your fetches to the local cache, except during application launch, where you will make a few network calls to fetch down the latest server data. You can choose a specific cache policy for a save or fetch options with the `cachePolicy` property of `SMRequestOptions`.
+
+Lets fetch all Todo objects since out last app launch:
+
+```obj-c
+NSDate *lastAppLaunch = [[NSUserdefaults standardUserDefaults] objectForKey:@"lastLaunch"];
+
+NSFetchRequest *updatedTodos = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
+[updatedTodos setPredicate:[NSPredicate predicateWithFormat:@"lastmoddate > %@", lastAppLaunch]];
+
+SMRequestOptions *options = [SMRequestOptions optionsWithCachePolicy:SMCachePolicyTryNetworkOnly];
+
+// We can pass nil for the callback queues to default to the main thread.
+[self.manangedObjectContext executeFetchRequest:updatedTodos returnManagedObjectIDs:NO successCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^(NSArray *results) {
+  // Update UI, etc
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+For method signature and specifics see the `SMRequestOptions` class reference: <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/optionsWithCachePolicy:" target="_blank">optionsWithCachePolicy:</a>
+
+This feature is available since v2.1.0.
+
+
+<!---
+  ##########
+  WRITING TO THE CACHE
+  ##########
+-->
+
+## Writing to the Cache
 
 With the cache system enabled, writing to the cache takes place automatically in the following fashion:
 
@@ -100,7 +172,13 @@ During a save operation, when the network is reachable, all objects are first se
 
 During a save operation, when the network is not reachable, all operations are completed on the cache. Each object is marked as "dirty" until the network connection has been restored and the "sync with server" process is initiated.
 
-<h2>Syncing with the Server</h2>
+<!---
+  ##########
+  SYNC
+  ##########
+-->
+
+## Syncing with the Server
 
 When network connectivity has been restored, the syncing process can be initialized using the `SMCoreDataStore syncWithServer` method.  
 
@@ -121,13 +199,17 @@ __block SMCoreDataStore *blockCoreDataStore = self.appDelegate.coreDataStore;
 }];
 ```
 
-<h3>How It Works</h3>
+<!--- HOW IT WORKS -->
+
+### How It Works
 
 The syncing process starts with the list of modified object IDs that has been populated since the device was offline. Those IDs are then read from both the server and the cache and the resulting objects are then checked for conflict. If there is a conflict, a merge policy is applied to determine which representation of the object should be synced across the server and cache. Each ID thus results in a write operation, be it an update to the server, insert into the cache, etc. When the requests are all ready they are executed as one batch. If everything goes well, the sync completion callback is executed. Any errors cause error callbacks to be executed as well. Here's a diagram to demonstrate the entire process that takes place asynchronously behind the scenes:
 
 <img class="screenshot" src="https://s3.amazonaws.com/static.stackmob.com/images/ios/offlinesync/syncing.png" />
 
-<h3>Deciding on a Merge Policy</h3>
+<!--- DECIDING ON MERGE POLICY -->
+
+### Deciding on a Merge Policy
 
 During the sync process, the goal is to send all the save operations completed while offline to the StackMob server, the end result being that client representations of data match the server representations. Conflicts occur when objects modified locally are also modified on the server while the device was offline. If there are conflicts, merge policies are used to decide which representation of an object, client or server, should be synced across the local and remote databases.
 
@@ -151,7 +233,9 @@ The general algorithm for the sync with server process is as follows:
 
 6. When finished, call completion callback as well as any error callbacks, if needed.
 
-<h3>Setting a Predefined Merge Policy</h3>
+<!--- SETTING PREDEFINED POLICY -->
+
+### Setting a Predefined Merge Policy
 
 StackMob gives developers three predefined merge policies to use, and the ability to define your own custom policy. The three predefined policies are:
 
@@ -171,7 +255,9 @@ Developers also have the option of setting different merge policies for inserts,
 * updatesSMMergePolicy
 * deletesSMMergePolicy
 
-<h3>Setting a Custom Merge Policy</h3>
+<!--- SETTING CUSTOM MERGE POLICY -->
+
+### Setting a Custom Merge Policy
 
 You can conduct your own merge strategies by defining and setting a block rather than choosing a predefined policy. You are given a dictionary representation of the client and server objects, as well as the date of the last time the object was read from the server. The block must return "client" or "server", represented by the `SMMergeObjectKey` typedef:
 
@@ -199,7 +285,9 @@ self.coreDataStore.defaultSMMergePolicy = ^(NSDictionary *clientObject, NSDictio
 };
 ```
 
-<h3>Successful Sync Callback</h3>
+<!--- SYNC SUCCESS -->
+
+### Successful Sync Callback
 
 Developers have the option of defining a callback that is executed whenever a sync completes. This is the perfect time to save the in-memory context and reload objects from the cache to pick up on any new changes
 
@@ -227,7 +315,9 @@ typedef enum {
 } SMSyncAction;
 ```
 
-<h3>Handling Merge Errors</h3>
+<!--- SYNC FAILURE -->
+
+### Handling Merge Errors
 
 Sometimes, objects will not be properly synced to StackMob due to permissions, bad values sent to the server, etc. Because syncing with the server is an asynchronous event, developers have the option of defining callbacks for each type of operation (insert/update/delete) in order to handle failed merges. Set the callback properties using:
 
@@ -251,9 +341,22 @@ The structure of the dictionary passed to the callback is exactly like the error
 
 When an error occurs while syncing an object, it remains marked as "dirty" i.e. not synced. To mark an object as synced and optionally purge it from the cache as well, pass the dictionary entry to the `SMCoreDataStore markObjectAsSynced:purgeFromCache:` method. To mark multiple entries with one call use `markArrayOfObjectsAsSynced:purgeFromCache:`.
 
-<h2>Other Utility Properties/Methods</h2>
+<!---
+  ##########
+  MISC
+  ##########
+-->
+
+## Other Utility Properties/Methods
 
 The following are utility properties/methods to assist in your offline sync implementation:
+
+<b>v2.1.0</b>
+
+* <b><i>optionsWithCacheResults:</i> (SMRequestOptions)</b> - For a particular save or fetch request you may choose to not cache the results. Simply create an `SMRequestOptions` instance, set the `cacheResults` property to NO, and pass the options to your save/fetch request. For simplicity you can also initialize with the `[SMRequestOptions optionsWithCacheResults:NO]` class method.
+
+
+<b>v2.0.0</b>
 
 * <b>SM_ALLOW_CACHE_RESET</b> flag - Use during development when changing your Core Data model often to allow the local Core Data stack to reset itself if needed.
 * <b><i>syncInProgress</i> (SMCoreDataStore)</b> - Boolean property which returns YES while a sync with the server is taking place.  Otherwise NO.
@@ -261,6 +364,7 @@ The following are utility properties/methods to assist in your offline sync impl
 * <b><i>sendLocalTimestamps</i> (SMCoreDataStore)</b> - Boolean indicating whether to send the `createddate` and `lastmoddate` keys and values in a request payload (during sync only). 
 * <b><i>stringContainsURL:</i> (SMBinaryDataConversion)</b> - Returns whether the value of a string attribute contains an S3 URL or raw data.  This is for string attributes which map to a binary field on StackMob.  The value would be raw data if the object was saved offline and hasn't yet been synced with the server.
 * <b><i>dataForString:</i> (SMBinaryDataConversion)</b> - If the value of a string attribute is raw data (because the object has not yet been synced with the server), call this method to translate it back to data.
+
 
 
 
