@@ -90,6 +90,10 @@ The other 10% of the time is when you want to assign your own ids that aren't un
 // now you can save your context
 ```
 
+#### Use NSManagedObjectContext+Concurrency Category
+
+The <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency category</a> is where all the StackMob async and sync versions of the <i>save:</i>, <i>executeFetchRequest:error:</i>, and <i>countForFetchRequest:error:</i> can be found. They should be only methods you use to perform save and fetch operations.
+
 
 #### NSManagedObject Subclasses
 
@@ -317,7 +321,7 @@ Support Table is based on `NSFetchRequest` methods.  Additional support, especia
 
 <b>Additional Supported Features:</b>
 <ul>
-	<li>Fetch Entity with predicates where "relationship key == managed object or managed object ID". <b>Important:</b> Predicate supported only for comparison predicates and to-one relationships.</li>
+	<li>Fetch Entity with predicates where "relationship key == managed object or managed object ID".</li>
 </ul>
 <b>Not Supported</b>
 <ul>

@@ -433,8 +433,11 @@ BOOL success = [self.managedObjectContext saveAndWait:&error];
 Each type of method (asynchronous/synchronous save/fetch) has an overloaded method declaration with a parameter that takes an instance of <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions</a>. The parameter name in all methods is called options. This allows you to provide a custom `SMRequestOptions` instance that will be applied to all calls in that request. For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific save request to run over SSL i.e. all inserts/updates/deletes for that request will be sent over SSL.
 
 <p class="alert">
-Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to customize and will override the default for the duration of the request:</br></br>
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)</br></br>
+Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to set and will override the default for the duration of the request:</br></br>
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;cacheResults property (for saves/fetches)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;cachePolicy property (for fetches only)
+</br></br>
 Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
 </p>
 
@@ -442,7 +445,7 @@ Customizing other options can result in unexpected requests, which can lead to s
 
 ### Lower Level Data Store API
 
-If you want to make direct REST-based calls to the Datastore, check out the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMDataStore.html" target="_blank">SMDataStore</a> class.
+All asynchronous methods which serve as basic wrappers on top of the REST API can be found in the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMDataStore.html" target="_blank">SMDataStore</a> class.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -454,6 +457,19 @@ If you want to make direct REST-based calls to the Datastore, check out the <a h
     </div>
   </div>
 </div>
+
+#### Create
+
+#### Bulk Create
+
+#### Read
+
+#### Update
+
+#### Atomic Increment
+
+#### Delete
+
 
 <!---
 	///////////////////
@@ -484,6 +500,48 @@ For a list of StackMob supported predicate types, visit the <a href="https://dev
       <ul>
         <li><a href="https://developer.stackmob.com/ios-sdk/basic-queries-tutorial" target="_blank">Basic Queries Tutorial</a></li>
         <li><a href="https://developer.stackmob.com/ios-sdk/advanced-queries-tutorial" target="_blank">Advanced Queries Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Counts -->
+
+### Fetch Counts
+
+If you just need to know the number of object that would be returned for a given fetch request, use the `countForFetchRequest:onSuccess:onFailure:` method (also comes in synchronous form):
+
+```obj-c
+NSFetchRequest *fetch = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
+[fetch setPredicate:[NSPredicate predicateWithFormat:@"type == 'Home'"]];
+
+[self.manangedObjectContext countForFetchRequest:fetch onSuccess:^(NSUInteger count) {
+  // count contains the number of object that would be retuned by the fetch.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+You can also do the same with the datastore API. Create your `SMQuery` instance and pass it to the `performCount:onSuccess:onFailure:` method, like so:
+
+```obj-c
+SMQuery *query = [[SMQuery alloc] initWithSchema:@"todo"];
+[query addConditionWhere:@"type" equals:@"Home"];
+
+[[[SMClient defaultClient] dataStore] performCount:query onSuccess:^(NSNumber *count) {
+  // count contains the number of object that would be retuned by the query.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Asynchronous Count" target="_blank">NSManagedObjectContext Category: Asynchronous/Synchronous Count</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Count Queries" target="_blank">SMDataStore: Performing Count Queries</a></li>
       </ul>
     </div>
   </div>
@@ -762,18 +820,18 @@ NSArray *newLuckyNumbers = [NSArray arrayWithObjects:[NSNumber numberWithInt:13]
 
 <!-- Deleting Related Objects -->
 
-#### Deleting Related Objects
+#### Deleting Existing Objects/References
 
-Just like you can append relationship references to an object, you can delete them in the same fashion as well.
+Just like you can append existing objects from array field types or relationship references to an object, you can delete them in the same fashion as well.
 
-You also have the option of not only removing the reference of a relationship, but deleting that object in its entirety at the same time.
+For a relationship reference, you also have the option of not only removing the reference, but deleting that object in its entirety at the same time.
 
 Lets delete 2 `category` related object references from our `todo` object with primary key `12345678`:
 
 ```obj-c
 NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
 
-[[[SMClient defaultClient] dataStore] deleteRelatedObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" onSuccess:^(){
+[[[SMClient defaultClient] dataStore] deleteObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" onSuccess:^(){
   // We have deleted the category references from the relationship value, but the category objects still exist.
 } onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
   // Handle error
@@ -782,11 +840,11 @@ NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
 
 If, in the same call, we also want to delete those category objects altogether, we just set the `cascadeDelete:` parameter to `YES`:
 
-```obj-c
+
 ```obj-c
 NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
 
-[[[SMClient defaultClient] dataStore] deleteRelatedObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" cascadeDelete:YES onSuccess:^(){
+[[[SMClient defaultClient] dataStore] deleteObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" cascadeDelete:YES onSuccess:^(){
   // We have deleted the category references from the relationship value as well as the category objects themselves.
 } onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
   // Handle error
@@ -844,19 +902,18 @@ Behind the scenes the SDK will build a request header that lets StackMob know th
 
 <p class="alert">If you are working in development and the "category" relationship doesn't exist, it will be inferred and automatically created as a one-to-one relationship. If you send an array of objects as the value and the relationship doesn't exist yet, it will be inferred and automatically created as a one-to-many relationship.</p>
 
-Here's an example of creating a new `todo` object while updating a related `category` object with a new name:
+Here's an example of updating an existing `todo` object while updating a related `category` object with a new name:
 
 ```obj-c
-// Create category object. We can specify a manual primary key if we wish, otherwise one will be automatically assigned when it's created.
-NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Updated Name", @"name", @"1234", @"category_id", nil];
+NSDictionary *categoryUpdate = [NSDictionary dictionaryWithObjectsAndKeys:@"updated name", @"name", @"1234", @"category_id", nil];
 
-NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
+NSDictionary *todoUpdate = [NSDictionary dictionaryWithObjectsAndKeys:@"updated title", @"title", categoryObject, @"category", @"5678", @"todo_id", nil];
 
 // Associate the key "category" with the StackMob "category" schema
 SMRequestOptions *options = [SMRequestOptions options];
 [options associateKey:@"category" withSchema:@"category"];
 
-// Execute request
+// We always use a POST (create) request when upserting, even though this is technically an update
 [[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
   // Result will contain the entire todo object, as well as the entire updated category object as a nested value.
 } onFailure:^(NSError *error) {
@@ -869,10 +926,11 @@ The payload will end up looking like this:
 ```bash
 // Request to "todo" schema
 {
-  title : "new todo",
+  todo_id : "5678"
+  title : "updated todo",
   category : {
                 category_id : "1234",
-                name : "Updated Name"
+                name : "updated name"
              }
 }
 ```
