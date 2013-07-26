@@ -16,7 +16,7 @@ The project itself is based off of the **Single View Application** template, fou
 
 ## Importing StackMob
 
-<a href="https://s3.amazonaws.com/static.stackmob.com/sdks/ios/stackmob-ios-sdk-v2.0.0.zip" class="button">Download StackMob v2.0.0</a>
+<a href="https://s3.amazonaws.com/static.stackmob.com/sdks/ios/stackmob-ios-sdk-v2.1.0.zip" class="button">Download StackMob v2.1.0</a>
 
 <br/>
 <br/>
