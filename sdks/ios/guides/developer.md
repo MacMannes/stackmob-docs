@@ -3,7 +3,9 @@ iOS Developer Guide
 
 ## Overview
 
-Core Data allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications. For those interested in sticking to the REST-based way of making requests, we provide the full Datastore API as well.
+Core Data allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications. 
+
+We understand that using Core Data for persistence might be too extensive for some applications. For those who prefer a simple wrapper on top of the REST API, we provide the full <a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide" target="_blank">Datastore API</a> as well.
 
 In each section of this guide you may see colored boxes which are meant to highlight important information:
 
@@ -70,6 +72,9 @@ We've created a separate guide on using StackMob with Core Data, which contains 
 <p class="alert">Since a lot of your interactions with StackMob will be through Core Data, please be sure to read through the guide.</p>
 
 <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">StackMob and Core Data Guide</a>
+
+<p></p><p></p>
+<p class="alert">We understand that using Core Data for persistence might be too extensive for some applications. For those who prefer a simple wrapper on top of the REST API, we provide the full <a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide" target="_blank">Datastore API</a> as well.</p>
 
 <!--- DEF MOM -->
 
@@ -443,32 +448,11 @@ Customizing other options can result in unexpected requests, which can lead to s
 
 <!--- LOWER LEVEL DATASTORE API -->
 
-### Lower Level Data Store API
+### Datastore CRUD API
 
-All asynchronous methods which serve as basic wrappers on top of the REST API can be found in the <a href="http://stackmob.github.com/stackmob-ios-sdk/Classes/SMDataStore.html" target="_blank">SMDataStore</a> class.
+If you find that Core Data is too entensive for your application's datastore needs, feel free to check out our simple wrapper on top of the REST API. It's what the Core Data integration is built on top of!
 
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>Resources</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/lower-level-crud-api-tutorial" target="_blank">Lower Level CRUD API Tutorial</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-#### Create
-
-#### Bulk Create
-
-#### Read
-
-#### Update
-
-#### Atomic Increment
-
-#### Delete
+<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Datastore" target="_blank">Datastore API Guide: Datastore Section</a>
 
 
 <!---
@@ -479,7 +463,7 @@ All asynchronous methods which serve as basic wrappers on top of the REST API ca
 
 ## Queries
 
-While you will perform fetch requests to do all reading in Core Data, predicates enable you to return a subset of a schema's objects by placing conditions on the read, for example retrieving todos from today, or friends with birthdays this week. The Core Data fetch requests implementation is built on top of the lower level query API. 
+While you will perform fetch requests to do all reading in Core Data, predicates enable you to return a subset of a schema's objects by placing conditions on the read, for example retrieving todos from today, or friends with birthdays this week. The Core Data fetch requests implementation is built on top of the datastore query API. 
 
 <!--- Predicates -->
 
@@ -549,43 +533,11 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"todo"];
 
 <!--- Lower Level Query API -->
 
-### Lower Level Query API
+### Datastore Query API
 
-To perform queries using the lower level API, you'll first instantiate an instance of `SMQuery`:
+The Core Data fetch requests implementation is built on top of the datastore query API. You are free to use the datastore query API directly, which is highly recommended if you are using the datastore API for persistence as well.
 
-```obj-c
-SMQuery *newQuery = [[SMQuery alloc] initWithSchema:@"todo"];
-```
-
-Next, you'll add conditions, pagination, sorting, etc as needed:
-
-```obj-c
-[newQuery where:@"title" isEqualTo:@"Do Homework"];
-// add additional conditions
-```
-
-Finally, perform the query through the datastore property of your client instance:
-
-```obj-c
-[[[SMClient defaultClient] datastore] performQuery:newQuery onSuccess:^(NSArray *results) {
-	// Successful query
-} onFailure:^(NSError *error) {
-	// Error
-}];
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMQuery.html" target="_blank">SMQuery Class Reference</a></li>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Queries" target="_blank">SMDataStore: Performing Queries</a></li>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Count Queries" target="_blank">SMDataStore: Performing Count Queries</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
+<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Queries" target="_blank">Datastore API Guide: Queries Section</a>
 
 <!---
 	///////////////////
@@ -649,336 +601,6 @@ In the data model, be sure to check the box for a To-Many relationship, as shown
 
 You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
 
-
-<!--- Datastore api relationships -->
-
-### Relationships using Datastore API
-
-#### Relate Objects Via Primary Keys
-
-You can create or update objects with relationships by specifying the primary keys of the related objects as the values.
-
-Suppose your `todo` schema has a one to one relationship named `thecategory` which relates to objects in the `category` schema. You can create a new `todo` object with a relationship to a `category` object like so:
-
-```obj-c
-// Assumes the category object with primary key 1234 exists
-NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", @"1234", @"thecategory", nil];
-
-// Make request
-[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *theObject, NSString *) {
-  // Handle success
-} onFailure:^(NSError *error) {
-  // Handle error
-}];
-```
-
-Suppose the relationship was one-to-many and called `thecategories`. You can create the todo object and relate it to many `category` objects like so:
-
-```obj-c
-// Assumes the category object with primary key 1234 exists
-NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", [NSArray arrayWithObjects:@"1234", @"5678", nil], @"thecategories", nil];
-
-// Make request
-[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *result) {
-  // Handle success
-} onFailure:^(NSError *error) {
-  // Handle error
-}];
-```
-<br/>
-**A Note About Inference**
-
-While working in your **Development** environment, if the `thecategory` or `thecategories` relationships didn't exist in the `todo` schema, the methods above would infer a field of type `String`. 
-
-To specify that relationships should get inferred, you'll create an instance of `SMRequestOptions` and use the `associateKey:withSchema:` method to manually specify which schema the relationship key relates to. Regardless of whether you are sending a create or update, you need to use the `createObject:...` method, which translates to a POST. For updates, simply add a key/value pair for the primary key.
-
-Here's an example using our one-to-one example above:
-
-```obj-c
-// Assumes the category object with primary key 1234 exists
-NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", @"1234", @"thecategory", nil];
-
-// Specify that "thecategory" is a relationship to the "category" schema
-SMRequestOptions *options = [SMRequestOptions options];
-[options associateKey:@"thecategory" withSchema:@"category"];
-
-// Make request
-[[[SMClient defaultClient] dataStore] createObject:todoObject options:options inSchema:@"todo" onSuccess:^(NSDictionary *result) {
-  // Handle success
-} onFailure:^(NSError *error) {
-  // Handle error
-}];
-```
-
-Behind the scenes the SDK will build a request header that lets StackMob know that `thecategory` is a relationship key on the `category` schema, and the relationship will get properly inferred.
-
-<!-- Creating and Appending Related Objects -->
-
-#### Create and Append Related Objects
-
-You can create and save related objects, then subsequently save them to another object's relationship value, all in one call.
-
-This is instead of making a single call for each object, then another call to update the related object with the relationships.
-
-Suppose we have an existing `todo` object with primary key `1234`. The `todo` schema has a one-to-many relationship `categories` to the `category` schema. Lets go ahead and create and two new `category` objects and relate them to the `todo` object:
-
-```obj-c
-NSDictionary *category1 = [NSDictionary dictionaryWithObjectsAndKeys:@"category1", @"name", nil];
-NSDictionary *category2 = [NSDictionary dictionaryWithObjectsAndKeys:@"category2", @"name", nil];
-NSArray *categories = [NSArray arrayWithObjects:category1, category2, nil];
-            
-[[[SMClient defaultClient] dataStore] createAndAppendRelatedObjects:categories toObjectWithId:@"1234" inSchema:@"todo" relatedField:@"categories" onSuccess:^(NSArray *succeeded, NSArray *failed) {
-  // The succeeded array contains a list of the IDs for the objects which were persisted.
-  // the failed array contains a list of the IDs for the objects which failed, either because of a duplicate key or internal server error.
-} onFailure:^(NSError *error) {
-  // Handle Error
-}];
-```
-
-<!-- Fetch Expand -->
-
-
-#### Fetch with Expand
-
-Relationships are represented in an object dictionary as either a string primary ID for one-to-one relationships or arrays of string primary IDs for one-to-many relationships. 
-
-You can opt to fetch an object with an expand depth set; this will cause related objects to be returned as full dictionary objects rather than just primary IDs. The expand depth you set determines how deep related objects are expanded out. This is useful when you know you will be working with an object's related objects directly because you will only have to make one network call.
-
-<p class="alert">The expand depth limit is 3.</p>
-
-Suppose you have a `user` schema with a `friends` relationship field, which is a one-to-many relationship to the schema `user`. Normally the friends relationship value is represented as an array of primary keys (usernames in this case), but you can use the expand feature to have that array expanded as an array of full user objects instead.
-
-To do this, define an instance of `SMRequestOptions`, set the `setExpandDepth:` method, and pass the instance to your datastore request.
-
-Lets do a read on our user `john`, who has 3 friends: `jane`, `jill`, and `jack`:
-
-```obj-c
-SMRequestOptions *options = [SMRequestOptions options];
-[options setExpandDepth:1];
-
-[[[SMClient defaultClient] dataStore] readObjectWithId:@"john" inSchema:@"user" options:options onSuccess:^(NSDictionary *object, NSString *schema) {
-  // object contains the expanded john object
-} onFailure:^(NSError *error, NSString *objectId, NSString *schema) {
-  // Handle Error
-}];
-```
-
-`object` would have the following structure:
-
-```bash
-{
-  username : "john"
-  age : 25
-  friends: [
-            {
-              username : "jane",
-              age : 26,
-              friends : [1234,5678,...]
-            },
-            {
-              username : "jill",
-              age : 29,
-              friends : [4753,3855,...]
-            },
-            {
-              username : "jack",
-              age : 28,
-              friends : [1734,7465,...]
-            }
-           ]
-}
-```
-
-If we would have set expand depth `2`, we would have also got full objects for all of `jane`, `jill`, and `jack`'s friends, too.
-
-
-<!-- Append Existing object -->
-
-
-#### Append Existing Objects
-
-You can append objects to an array without needing to update the entire object at once. This goes for fields of type `Array` as well as one-to-many relationships.
-
-This method also handles any concurrency issues if two users are modifying the same object at the same time by doing atomic appending.
-
-If the field is an array, the objects will be appended to it with no uniqueness constraint.
-
-If the field is a relationship, just append the object primary IDs to the array, not the objects themselves. The resulting array will be deduped so that there are no duplicate references to related object IDs.
-
-Suppose you have an `Array` field called `lucky_numbers` in the `user` schema. You can append new lucky numbers to the array atomically like so:
-
-```obj-c
-NSArray *newLuckyNumbers = [NSArray arrayWithObjects:[NSNumber numberWithInt:13], [NSNumber numberWithInt:36], [NSNumber numberWithInt:23], nil];
-
-[[[SMClient defaultClient] dataStore] appendObjects:newLuckyNumbers toObjectWithId:@"Bob" inSchema:@"user" field:@"lucky_numbers" onSuccess:^(NSDictionary* object, NSString *schema) {
-  // object contains the parent object dictionary
-} onFailure:^(NSError *error, NSString *objectId, NSArray* values, NSString *schema) {
-  // Handle error
-}];
-```
-
-
-<!-- Deleting Related Objects -->
-
-#### Deleting Existing Objects/References
-
-Just like you can append existing objects from array field types or relationship references to an object, you can delete them in the same fashion as well.
-
-For a relationship reference, you also have the option of not only removing the reference, but deleting that object in its entirety at the same time.
-
-Lets delete 2 `category` related object references from our `todo` object with primary key `12345678`:
-
-```obj-c
-NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
-
-[[[SMClient defaultClient] dataStore] deleteObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" onSuccess:^(){
-  // We have deleted the category references from the relationship value, but the category objects still exist.
-} onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
-  // Handle error
-}];
-```
-
-If, in the same call, we also want to delete those category objects altogether, we just set the `cascadeDelete:` parameter to `YES`:
-
-
-```obj-c
-NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
-
-[[[SMClient defaultClient] dataStore] deleteObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" cascadeDelete:YES onSuccess:^(){
-  // We have deleted the category references from the relationship value as well as the category objects themselves.
-} onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
-  // Handle error
-}];
-```
-
-
-<!-- Upsert -->
-
-#### Upsert with Nested Objects
-
-There might be times when you want create or update an object while creating or updating related objects, all in one request.
-
-To do so, in the top level dictionary you would include a key/value pair where the key is the relationship name and the value is a nested dictionary or array of dictionaries.
-
-However, you must manually define what schemas the related objects are associated with.
-
-The first thing to note is that you will always send this type of request as a POST. Even if you are updating an object, you'll pass the dictionary object to the `createObject:...` method and simply include a key/value pair for the existing primary key.
-
-To manually specify what schema a related object is associated with, you'll create an instance of `SMRequestOptions` and use the `associateKey:withSchema:` method for each relationship key in the request dictionary.
-
-Lets create a new `todo` object which has a one to one relationship named `category`, associated with the schema `category`. In the same request we will be creating the new `category` object and relating it to the `todo` object:
-
-```obj-c
-// Create category object. We can specify a manual primary key if we wish, otherwise one will be automatically assigned when it's created.
-NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Home Projects", @"name", nil];
-
-NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
-
-// Correlate the key "category" to the StackMob "category" schema
-SMRequestOptions *options = [SMRequestOptions options];
-[options associateKey:@"category" withSchema:@"category"];
-
-// Execute request
-[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
-  // Result will contain the entire todo object, as well as the entire nested category object.
-} onFailure:^(NSError *error) {
-  // Handle error
-}];
-```
-
-The dictionary payload will end up looking like this:
-
-```bash
-// Request to "todo" schema
-{
-  title : "new todo",
-  category : {
-                name : "Home Projects"
-             }
-}
-```
-
-Behind the scenes the SDK will build a request header that lets StackMob know that the `category` key contains an object that should be created in the `category` schema.
-
-<p class="alert">If you are working in development and the "category" relationship doesn't exist, it will be inferred and automatically created as a one-to-one relationship. If you send an array of objects as the value and the relationship doesn't exist yet, it will be inferred and automatically created as a one-to-many relationship.</p>
-
-Here's an example of updating an existing `todo` object while updating a related `category` object with a new name:
-
-```obj-c
-NSDictionary *categoryUpdate = [NSDictionary dictionaryWithObjectsAndKeys:@"updated name", @"name", @"1234", @"category_id", nil];
-
-NSDictionary *todoUpdate = [NSDictionary dictionaryWithObjectsAndKeys:@"updated title", @"title", categoryObject, @"category", @"5678", @"todo_id", nil];
-
-// Associate the key "category" with the StackMob "category" schema
-SMRequestOptions *options = [SMRequestOptions options];
-[options associateKey:@"category" withSchema:@"category"];
-
-// We always use a POST (create) request when upserting, even though this is technically an update
-[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
-  // Result will contain the entire todo object, as well as the entire updated category object as a nested value.
-} onFailure:^(NSError *error) {
-  // Handle error
-}];
-```
-
-The payload will end up looking like this:
-
-```bash
-// Request to "todo" schema
-{
-  todo_id : "5678"
-  title : "updated todo",
-  category : {
-                category_id : "1234",
-                name : "updated name"
-             }
-}
-```
-<br/>
-Finally, you can also nest full related objects within full related objects. The trick is that all associated keys need to be specified with the top level relationship key as the reference, using dot notation.
-
-Here's an example of creating a `todo` object while updating a one-to-one relationship to the `category` schema, and also updating a one-to-one relationship `genre` in that object:
-
-```obj-c
-NSDictionary *genreObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Home and Living", @"type", @"5678", @"genre_id", nil];
-
-NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Updated Name", @"name", genreObject, @"genre", @"1234", @"category_id", nil];
-
-NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
-
-// Associate the key "category" with the "category" schema as well as the key "genre" with the "genre" schema
-SMRequestOptions *options = [SMRequestOptions options];
-[options associateKey:@"category" withSchema:@"category"];
-[options associateKey:@"category.genre" withSchema:@"genre"];
-
-// Make request
-[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
-  // Result will contain the entire todo object, as well as the entire updated category and genre objects as a nested values.
-} onFailure:^(NSError *error) {
-  // Handle error
-}];
-```
-
-The payload will end up looking like this:
-
-```bash
-// Request to "todo" schema
-{
-  title : "new todo",
-  category : {
-                category_id : "1234",
-                name : "Updated Name",
-                genre : {
-                          genre_id : @"5678",
-                          type : "Home and Living"
-                        }
-             }
-}
-```
-
-<p class="alert">This all works for one-to-many relationships as well. Just use an array of dictionaries to specify that the relationship is one-to-many.</p>
-
-
 <!--- Creating through dashboard -->
 
 
@@ -1001,6 +623,16 @@ Press **Add Relationship** and you'll get:
 **Save the schema** and that's it - you have a relationship.
 
 When you work with Core Data, you'll want to make sure you define inverse relationships as well, so in this case you'll also add a relationship to the `todo` schema pointing back to the `user` schema.
+
+
+<!--- Datastore api relationships -->
+
+### Datastore Relationships API
+
+If you are using the datastore API for general persistence, check out all the methods available for relationships via the datastore API. Creating and appending related object, appending existing objects, and updating multiple related objects at once has never been so easy!
+
+<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Relationships" target="_blank">Datastore API Guide: Relationships Section</a>
+
 
 <!---
 	///////////////////
@@ -1579,80 +1211,11 @@ All <code>SMPredicate</code> methods to query based on an instance of <code>SMGe
 
 <!--- Geo-Location through DS API -->
 
-### Geo-Location using the Datastore API
+### Datastore Geolocation API
 
-<!--- SUB: Saving -->
+If you are using the datastore API directly for persistence, check out the Geolocation section for info on how to save and read geopoint data.
 
-#### Saving
-
-You can make an `SMGeoPoint` with a latitude and a longitude:
-
-```obj-c
-NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
-NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
-
-SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
-```
- 
-Alternatively, you can use a `CLLocationCoordinate2D` coordinate:
-
-```obj-c
-CLLocationCoordinate2D renoCoordinate = CLLocationCoordinate2DMake(39.537940, -119.783936);
-
-SMGeoPoint *reno = [SMGeoPoint geoPointWithCoordinate:renoCoordinate];
-```
-
-To save an SMGeoPoint, store it in a dictionary of arguments to be uploaded to StackMob:
-
-```obj-c
-CLLocationCoordinate2D renoCoordinate = CLLocationCoordinate2DMake(39.537940, -119.783936);
-  
-SMGeoPoint *location = [SMGeoPoint geoPointWithCoordinate:renoCoordinate];
- 
-NSDictionary *arguments = [NSDictionary dictionaryWithObjectsAndKeys:@"My Location", @"name", location, @"location", nil];
- 
-[[[SMClient defaultClient] dataStore] createObject:arguments inSchema:@"todo" onSuccess:^(NSDictionary *theObject, NSString *schema) {
-    NSLog(@"Created object %@ in schema %@", theObject, schema);
- 
-} onFailure:^(NSError *theError, NSDictionary *theObject, NSString *schema) {
-    NSLog(@"Error creating object: %@", theError);
-}];
-```
-
-<!--- SUB: Reading -->
-
-#### Reading
-
-You can query geo data by using conditions found in the `SMQuery` class. Here is an example of querying for all people within 5 miles of a given location:
-
-```obj-c
-NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
-NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
-
-SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
-
-SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
-
-[query where:@"location" isWithin:5 milesOfGeoPoint:location];
-
-[[[SMClient defaultClient] datastore] performQuery:query onSuccess:^(NSArray *results) {
-  // Successful query
-} onFailure:^(NSError *error) {
-  // Error
-}];
-
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMQuery.html" target="_blank">SMQuery Class Reference</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
+<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Geolocation" target="_blank">Datastore API Guide: Geolocation Section</a>
 
 <!---
   ///////////////////
@@ -1758,25 +1321,11 @@ if ([SMBinaryDataConversion stringContainsURL:picString]) {
   </div>
 </div>
 
-### File Storage using the Datastore API
+### Datastore File Storage API
 
-When saving objects using the datastore API that include binary data, you must format the value of the field correctly so that it can be parsed by Amazon. The correct value format should look like the following:
+If you are using the datastore API directly for persistence, check out the File Storage section for info on how to save and read binary data.
 
-`"Content-Type: REPLACE_WITH_CONTENT_TYPE\nContent-Disposition: attachment; filename=REPLACE_WITH_FILE_NAME_NO_PATH_NEEDED\nContent-Transfer-Encoding: base64\n\nBASE_64_ENCODED_STRING_OF_THE_BYTE_ARRAY"`
-
-Here's a real world example of saving a comment with a photo:
-
-```obj-c
-NSString *picData = @"Content-Type: image/png\nContent-Disposition: attachment; filename=profile_pic.png\nContent-Transfer-Encoding: base64\n\niVBORw0KGgoAAAANSUhEUgAAA.....";
-
-NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:@"1234", @"comment_id", picData, @"photo", nil];
-
-[[[SMClient defaultClient] dataStore] createObject:objectToCreate inSchema:@"Comment" onSuccess:^(NSDictionary *theObject, NSString *schema) {
-  // Saved object
-} onFailure:^(NSError *theError, NSDictionary *theObject, NSString *schema) {
-  // Error
-}];
-```
+<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#FileStorage" target="_blank">Datastore API Guide: File Storage Section</a>
 
 <!---
   ///////////////////
