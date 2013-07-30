@@ -5,7 +5,7 @@ Custom Code Developer Guide
 
 Custom Code is Java, Scala, or Clojure code you write that runs on the StackMob server.  You deploy it to the servers by either uploading your JAR or linking your GitHub repository with StackMob.
 
-If you wrote a Custom Code method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's callable from the StackMob Client SDKs.  The server will execute the server side custom code and return a response with a body that you define.
+If you wrote a Custom Code method called `hello_world`, then StackMob creates an API endpoint for you at `https://api.stackmob.com/hello_world` so that it's callable from the REST API and StackMob Client SDKs.  The server will execute the server side custom code and return a response with a body that you define.
 
 Example of mobile SDKs calling Custom Code:
 
