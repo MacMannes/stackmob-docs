@@ -146,7 +146,7 @@ NSFetchRequest *updatedTodos = [[NSFetchRequest alloc] initWithEntityName:@"Todo
 SMRequestOptions *options = [SMRequestOptions optionsWithCachePolicy:SMCachePolicyTryNetworkOnly];
 
 // We can pass nil for the callback queues to default to the main thread.
-[self.manangedObjectContext executeFetchRequest:updatedTodos returnManagedObjectIDs:NO successCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^(NSArray *results) {
+[self.managedObjectContext executeFetchRequest:updatedTodos returnManagedObjectIDs:NO successCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^(NSArray *results) {
   // Update UI, etc
 } onFailure:^(NSError *error) {
   // Handle error

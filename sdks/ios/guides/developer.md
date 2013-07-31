@@ -203,7 +203,7 @@ The following sections include everything you need to know about creating, readi
 Typically you will create an `NSManagedObject` subclass for each of your Core Data entities, giving you convenience methods, accessors, etc. You might also find it valuable to define a custom init method. The easiest way to declare a new instance of an entity and fill in its values is like so:
 
 ```obj-c
-Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.manangedObjectContext];
+Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
 
 // Assumes Todo has attributes title and todoId
 [newTodo setTitle:@"Take out the trash"];
@@ -358,7 +358,7 @@ After fetching an existing managed object, update it by simply changing the obje
 Delete an object by simply calling the managed object context `deleteObject` method and passing the manage object you wish to delete. The delete will not be finalized until you save the managed object context.
 
 ```obj-c
-[self.manangedObjectContext deleteObject:aManagedObject];
+[self.managedObjectContext deleteObject:aManagedObject];
 ```
 
 <div class="alert alert-info">
@@ -499,7 +499,7 @@ If you just need to know the number of object that would be returned for a given
 NSFetchRequest *fetch = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
 [fetch setPredicate:[NSPredicate predicateWithFormat:@"type == 'Home'"]];
 
-[self.manangedObjectContext countForFetchRequest:fetch onSuccess:^(NSUInteger count) {
+[self.managedObjectContext countForFetchRequest:fetch onSuccess:^(NSUInteger count) {
   // count contains the number of object that would be retuned by the fetch.
 } onFailure:^(NSError *error) {
   // Handle error
@@ -789,7 +789,7 @@ NSString *username = self.textField.text;
 NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
 [userFetch setPredicate:[NSPredicate predicateWithFormat:@"username == %@", username]];
 
-[self.manangedObjectContext executeFetchRequest:userFetch onSuccess:^(NSArray *results){
+[self.managedObjectContext executeFetchRequest:userFetch onSuccess:^(NSArray *results){
 	if ([results count] != 1) { 
     // There should only be one result 
   };
