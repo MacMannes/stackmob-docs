@@ -1481,11 +1481,11 @@ StackMob provides integrations with Facebook and Twitter to allow users to login
 
 ### Facebook
 
-<!--- SUB: FB Login Workflow -->
+<!--- SUB: FB Auth Workflow -->
 
-#### Facebook Login Workflow
+#### Facebook Auth Workflow
 
-You will need to download the Facebook SDK and follow their tutorials to get login working in your application. Once you have a Facebook session open you will direct the application in the `sessionStateChanged:state:error` Facebook method to login to StackMob using the provided Facebook access token.
+You will need to download the Facebook SDK and follow their tutorials to get authentication working in your application. Once you have a Facebook session open you will direct the application in the Facebook `sessionStateChanged:state:error` method to login to StackMob using the provided Facebook access token.
 
 All the implementation details for Facebook's SDK can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-facebook-tutorial" target="_blank">Facebook Integration Tutorial</a>.
 
@@ -1653,9 +1653,9 @@ Sometimes you may want to get the logged in user's Facebook info, either for UI 
 
 ### Twitter
 
-<!--- SUB: Twitter Login Workflow -->
+<!--- SUB: Twitter Auth Workflow -->
 
-#### Twitter Authentication Workflow
+#### Twitter Auth Workflow
 
 StackMob provides additional files to make the Twitter authentication workflow easy and painless.
 
@@ -1686,7 +1686,7 @@ Finally, when you are ready to open and authenticate a Twitter session, `SMTwitt
 
   // fullResponse includes key/value pairs for the token and secret as well as the account screen name and id.
   // Save the screen name, login, etc. Example login is shown below.
-  
+
   /*
     StackMob method to login with Twitter token and secret.  A StackMob user will be created with the username provided if one doesn't already exist attached to the provided credentials.
   */
