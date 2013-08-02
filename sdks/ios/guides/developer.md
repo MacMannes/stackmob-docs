@@ -1655,11 +1655,57 @@ Sometimes you may want to get the logged in user's Facebook info, either for UI 
 
 <!--- SUB: Twitter Login Workflow -->
 
-#### Twitter Login Workflow
+#### Twitter Authentication Workflow
 
-You will need to download the Twitter SDK and follow their tutorials to get login working in your application. Once you have a Twitter session open you will direct the application to login to StackMob using the provided Twitter access token.
+StackMob provides additional files to make the Twitter authentication workflow easy and painless.
 
-All the implementation details on Twitter's end can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Twitter Integration Tutorial</a>.
+First you will download, unzip and add the <a href="https://s3.amazonaws.com/static.stackmob.com/resources/ios/SMTwitterCredentials.zip">SMTwitterCredentials files</a> to your Xcode project.
+
+For the files to compile you will need to link your target with the **Social**, **Twitter**, and **Accounts** frameworks.
+
+Next you will declare an `SMTwitterCredentials` property, either in your App Delegate or where ever you encapsulate the StackMob login logic:
+
+```obj-c
+@property (nonatomic, strong) SMTwitterCredentials *twitterCredentials;
+```
+
+To properly initialize the property you'll need your Twitter App Consumer key and secret. In order to get your app keys, you will need a Twitter app. For instructions, see the <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial#CreateTwitterApp" target="_blank">Create Twitter App</a> section of the Twitter Ingegration Tutorial.
+
+Once you have your keys, you'll also need to add your keys to the StackMob Twitter Module. For instructions, see the <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial#AddKeysToTwitterModule" target="_blank">Add Keys To Twitter Module</a> section of the Twitter Ingegration Tutorial.
+
+When you are all set, initialize your `SMTwitterCredentials` property:
+
+```obj-c
+self.twitterCredentials = [[SMTwitterCredentials alloc] initWithTwitterConsumerKey:@"TWITTER_APP_KEY" secret:@"TWITTER_APP_SECRET"];
+```
+
+Finally, when you are ready to open and authenticate a Twitter session, `SMTwitterCredentials` provides the `retrieveTwitterCredentialsForAccount:onSuccess:onFailure` method, which takes care of everything for you:
+
+```obj-c
+[self.twitterCredentials retrieveTwitterCredentialsForAccount:nil onSuccess:^(NSString *token, NSString *secret, NSDictionary *fullResponse) {
+
+  // fullResponse includes key/value pairs for the token and secret as well as the account screen name and id.
+  // Save the screen name, login, etc. Example login is shown below.
+  
+  /*
+    StackMob method to login with Twitter token and secret.  A StackMob user will be created with the username provided if one doesn't already exist attached to the provided credentials.
+  */
+  [[SMClient defaultClient] loginWithTwitterToken:token twitterSecret:secret createUserIfNeeded:YES usernameForCreate:fullResponse[@"screen_name"] onSuccess:^(NSDictionary *result) {
+    NSLog(@"Successful Login with Twitter: %@", result);
+  } onFailure:^(NSError *error) {
+    NSLog(@"Login failed: %@", error);
+  }];
+
+} onFailure:^(NSError *error) {
+  NSLog(@"Twitter Auth Error: %@", error);
+}];
+```
+
+<p class="alert">If you pass nil for the account name, it will automatically display an action sheet pop-up with the available accounts, prompting the user to choose one. Once they have done that, you can save and pass the username for future login calls. No user interaction is therefore needed, and this is a good way to simulate a "stay logged in" feature.</p>
+
+`SMTwitterCredentials` also provides `twitterAccountsAvailable`, a Boolean property indicating whether the user has an accounts set up on their device. This feature does not work for the simulator, it will always return true.
+
+The entire authentication workflow can be found in our <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial" target="_blank">Twitter Integration Tutorial</a>.
 
 <!--- SUB: Login with Facebook -->
 
@@ -1667,7 +1713,7 @@ All the implementation details on Twitter's end can be found in our <a href="htt
 
 Logging into StackMob using Twitter credentials requires that a StackMob user object already exists and is linked to the user's Twitter access token and secret. Fortunately, you can do all of that with one method.
 
-Assuming you have opened a Twitter session which probably triggered a custom method, you would login to StackMob like so:
+Assuming you have opened a Twitter session, most likely using the methods found in the `SMTwitterCredentials` files. You can then login to StackMob like so:
 
 ```obj-c
 [[self.appDelegate client] loginWithTwitterToken:oauthToken twitterSecret:oauthTokenSecret createUserIfNeeded:YES usernameForCreate:@"Joe Schmoe" onSuccess:^(NSDictionary *result) {
