@@ -737,7 +737,7 @@ Request Headers:
 Accept: applicaton/vnd.stackmob+json; version=0
 X-StackMob-API-Key: /* Your Public Key */
 X-StackMob-Expand: 1
-X-StackMob-Select: username,interest_ref,interest_ref.interest_type
+X-StackMob-Select: username,interest_ref.interest_type
 ```
 
 Response shown in JSON notation for illustration.
@@ -785,7 +785,7 @@ Request Headers:
 Accept: application/vnd.stackmob+json; version=0
 X-StackMob-API-Key: /* Your Public Key */
 X-StackMob-Expand: 2
-X-StackMob-Select: username,friend,friend.username,friend.interest_ref,friend.interest_ref.*
+X-StackMob-Select: username,friend.username,friend.interest_ref.*
 ```
 
 Response shown in JSON notation for illustration.
