@@ -143,7 +143,8 @@ NSDate *lastAppLaunch = [[NSUserdefaults standardUserDefaults] objectForKey:@"la
 NSFetchRequest *updatedTodos = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
 [updatedTodos setPredicate:[NSPredicate predicateWithFormat:@"lastmoddate > %@", lastAppLaunch]];
 
-SMRequestOptions *options = [SMRequestOptions optionsWithCachePolicy:SMCachePolicyTryNetworkOnly];
+SMRequestOptions *options = [SMRequestOptions options];
+options.cachePolicy = SMCachePolicyTryNetworkOnly;
 
 // We can pass nil for the callback queues to default to the main thread.
 [self.managedObjectContext executeFetchRequest:updatedTodos returnManagedObjectIDs:NO successCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^(NSArray *results) {
@@ -153,9 +154,13 @@ SMRequestOptions *options = [SMRequestOptions optionsWithCachePolicy:SMCachePoli
 }];
 ```
 
+<!--
 For method signature and specifics see the `SMRequestOptions` class reference: <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/optionsWithCachePolicy:" target="_blank">optionsWithCachePolicy:</a>
+-->
 
 This feature is available since v2.1.0.
+
+<p class="alert">In v2.1.0, there is a known issue with using the optionsWithCachePolicy: class method to set a cache policy. Use the 2-step process shown above.</p>
 
 
 <!---
