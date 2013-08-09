@@ -1549,9 +1549,9 @@ To get your Custom Code to the Production environment, just <a href="https://dev
 
 ## Testing Locally
 
-You can run Custom Code locally on a mock API server StackMob provides.  Read about the <a href="https://github.com/stackmob/stackmob-customcode-dev" rel="nofollow" target="_blank">StackMob Custom Code Development Environment</a>.
+You can run Custom Code locally on a mock API server StackMob provides.  This local custom code dev environment houses your JAR and proxies API calls.  You would treat this running server as your test API server and point your requests at it.
 
-It houses your JAR and proxies API calls.  You would treat this running server as your test API server and point your requests at it.
+<a href="https://blog.stackmob.com/2013/08/up-and-running-with-stackmob-custom-code-local-development/" target="_blank">Read about setting up and running your local custom code dev environment</a>.
 
 ## Best Practices
 
