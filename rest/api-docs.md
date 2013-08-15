@@ -1676,7 +1676,7 @@ X-StackMob-User-Agent: /* Your User Agent.  Recommended format: Your SDK Version
 Request Body:
 
 ```bash
-{ token_type=mac&fb_at=<fbtoken>&username=<username> }
+token_type=mac&fb_at=<fbtoken>&username=<username>
 ```
 
 You'll be given back the following in the response:
@@ -1727,7 +1727,7 @@ X-StackMob-User-Agent: /* Your User Agent.  Recommended format: Your SDK Version
 Request Body:
 
 ```bash
-{ token_type=mac&fb_at=<fbtoken>&username=<username> }
+token_type=mac&fb_at=<fbtoken>&username=<username>
 ```
 
 You'll be given back the following in the response:
