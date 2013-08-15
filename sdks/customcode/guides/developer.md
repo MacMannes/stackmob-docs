@@ -999,7 +999,7 @@ Here's the code.
 ```java,3,5,6
 public ResponseToProcess execute(ProcessedAPIRequest request, SDKServiceProvider serviceProvider) {
 	DataService ds = serviceProvider.getDataService();
-	var expandDepth = 1;
+	int expandDepth = 1;
 	try {
 		List<SMObject> results = ds.readObjects("user", 
 			new ArrayList<SMCondition>(), expandDepth);
