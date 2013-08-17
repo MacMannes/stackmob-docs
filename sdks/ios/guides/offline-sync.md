@@ -370,6 +370,23 @@ The following are utility properties/methods to assist in your offline sync impl
 * <b><i>stringContainsURL:</i> (SMBinaryDataConversion)</b> - Returns whether the value of a string attribute contains an S3 URL or raw data.  This is for string attributes which map to a binary field on StackMob.  The value would be raw data if the object was saved offline and hasn't yet been synced with the server.
 * <b><i>dataForString:</i> (SMBinaryDataConversion)</b> - If the value of a string attribute is raw data (because the object has not yet been synced with the server), call this method to translate it back to data.
 
+<!---
+  ##########
+  BEST PRACTICES
+  ##########
+-->
+
+## Best Practices
+
+While caching and syncing works out of the box with the iOS SDK, it is important to think about what data you are caching, when you are caching it, and when in your app you are initiating the syncing process. Every app is unique and will have different use cases for when it should be caching and syncing. Many of the the features are customizable to fit your app's needs, and we encourage you to try out different strategies to find the right balance of caching and syncing for as smooth of a user experience as possible. Here are some best practices for the workflows we often see:
+
+### Fetching at Launch
+
+When your app first launches, do you immediately fetch data from the network, possibly to display into a table view? Do you also have a network status change block set to sync with the server when the network is reachable? If so, you might run into a conflict. Consider this scenario:
+
+ 
+
+### Preparing for Offline  
 
 
 
