@@ -1,7 +1,7 @@
-StackMob and Core Data
+StackMob and Core Data Integration
 =====================================
 
-StackMob recommends using Core Data for data persistence. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
+Core Data provides a powerful and robust object graph management system that otherwise would be a nightmare to implement. Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
 
 ## The Basics
 
@@ -123,6 +123,1051 @@ if ([date1 timeIntervalSinceDate:date2] < 1) {
 ```
 
 Feel free to try other ways of comparing dates to find the method that works best for your app's needs.
+
+<!---
+    ///////////////////
+    SETUP
+    //////////////////
+-->
+
+## Setup
+
+<!--- USING CORE DATA -->
+
+### Using Core Data
+
+Core Data provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
+
+We've created a separate guide on using StackMob with Core Data, which contains everything from Core Data basics to Coding Practices to Specifications on what is supported by the StackMob integration.
+
+<p class="alert">Since a lot of your interactions with StackMob will be through Core Data, please be sure to read through the guide.</p>
+
+<a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">StackMob and Core Data Guide</a>
+
+<p></p><p></p>
+<p class="alert">We understand that using Core Data for persistence might be too extensive for some applications. For those who prefer a simple wrapper on top of the REST API, we provide the full <a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide" target="_blank">Datastore API</a> as well.</p>
+
+<!--- DEF MOM -->
+
+### Defining a Managed Object Model
+
+To use Core Data you will define an `NSManagedObjectModel` instance which points to your local object graph, a `.xcdatamodeld` file. This file defines a local representation of your database, using Entities which have attributes and relationships.
+
+Your Core Data model should replicate your StackMob schemas. The <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#SupportSpecifications" target="_blank">Support Specifications</a> section of the Core Data Guide details the mappings between StackMob field types and Core Data attribute types, ensuring proper translations to and from Core Data.
+
+Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, declare a property called `managedObjectModel` of type `NSManagedObjectModel` and include the following method in your implementation file:
+
+```obj-c
+- (NSManagedObjectModel *)managedObjectModel
+{
+    if (_managedObjectModel != nil) {
+        return _managedObjectModel;
+    }
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"mydatamodel" withExtension:@"momd"];
+    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return _managedObjectModel;
+}
+```
+
+<p class="alert">If you are using the cache, make sure you include the <b>createddate</b> and <b>lastmoddate</b> attributes as <b>Date</b> types in your entities. We also recommend not inheriting from a parent entity to do so, as it drastically affects cache performance.<br/><br/>Also, if there are fields on StackMob you don't plan on interacting with through the client, don't include them in your model.</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectModel_Class/Reference/Reference.html" target="_blank">NSManagedObjectModel Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- CREATE SUBCLASSES -->
+
+### Creating `NSManagedObject` Subclasses
+
+Creating classes for each one of your entities provides a lot of convenience around constructors, accessors, validation, formatting, etc. for when you work with managed objects. We recommend you create these custom classes, which you can do by selecting an Entity in the Model Editor and going to `Editor -> Create NSManagedObject Subclass`:
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/coredata/nsmanagedobjectsubclass.png" /> 
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.apple.com/library/ios/#documentation/cocoa/Conceptual/CoreData/Articles/cdManagedObjects.html#//apple_ref/doc/uid/TP40003397-BBCEHEGG" target="_blank">Core Data Programming Guide: Managed Objects</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- INIT CDS -->
+
+### Initialize a Core Data Store
+
+A Core Data store instance gives you everything you need to work with StackMob's Core Data integration. With your `SMCoreDataStore` object you can retrieve a managed object context configured with a `SMIncrementalStore` as its persistent store to allow communication to StackMob from Core Data.  
+
+You can create an `SMCoreDataStore` instance like so:
+
+```obj-c
+// This assumes you have already initialized your SMClient instance,
+// and have a NSManagedObjectModel property called managedObjectModel
+SMCoreDataStore *coreDataStore = [[SMClient defaultClient] coreDataStoreWithManagedObjectModel:self.managedObjectModel];
+```
+
+From then on you can either pass your core data store instance around, or if you are using iOS SDK v2.0.0+, use `[[SMClient defaultClient] coreDataStore]` to retrieve it at any point.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Retrieving a Datastore" target="_blank">SMClient: Retrieving a Datastore</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- OBTAIN MOC -->
+
+### Obtaining a Managed Object Context
+
+You can obtain a managed object context configured from your `SMClient` instance like this:
+
+```obj-c
+NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
+```
+
+Use this instance of `NSManagedObjectContext` for the current thread you are on. We recommend calling `contextForCurrentThread` rather than passing a context instance across files or blocks.
+
+The default Core Data merge policy set for all contexts created by this class is `NSMergeByPropertyObjectTrumpMergePolicy`. Use `setDefaultMergePolicy:applyToMainThreadContextAndParent:` to change the default.
+
+You can obtain the managed object context for the main thread at any time by accessing the `mainThreadContext` property.
+
+If you want to do your own context creation, use the `persistentStoreCoordinator` property to ensure your objects are being saved to the StackMob server.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#task_Obtaining a Managed Object Context" target="_blank">SMCoreDataStore: Obtaining a Managed Object Context</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!---
+    ///////////////////
+    DATASTORE
+    //////////////////
+-->
+
+## Datastore
+
+The following sections include everything you need to know about creating, reading, updating and deleting objects. When you use Core Data you'll perform your write operations on your managed object context, kind of like a scratch pad, and persist the changes by performing a save operation.
+
+<!--- INSERT OBJECT -->
+
+### Creating an Object
+
+Typically you will create an `NSManagedObject` subclass for each of your Core Data entities, giving you convenience methods, accessors, etc. You might also find it valuable to define a custom init method. The easiest way to declare a new instance of an entity and fill in its values is like so:
+
+```obj-c
+Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
+
+// Assumes Todo has attributes title and todoId
+[newTodo setTitle:@"Take out the trash"];
+[newTodo setTodoId:[newManagedObject assignObjectId]];
+```
+
+The `assignObjectId` method is provided by the SDK to assign an arbitrary ID to the attribute which maps to the primary key field on StackMob. Object IDs must be assigned to a managed object before it is persisted. This keeps Core Data IDs and StackMob objects in sync. You are free to assign your own IDs if you wish, `assignObjectId` is simply a convenience method which masks a random UUID generation algorithm.
+
+<b>Without Subclasses</b>
+
+Instantiating and assigning values to a generic managed object requires using key-value methods in accordance with key value coding.
+
+```obj-c
+NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
+    
+[newManagedObject setValue:@"Take out the trash" forKey:@"title"];
+[newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
+```
+
+The `primaryKeyField` method is provided by the SDK for convenience to return the attribute which maps to the primary key field on StackMob. The SDK knows which attribute is the primary key field because of its format. The format is defined in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#EntityPrimaryKeys" target="_blank">Entity Primary Keys</a> section of the Core Data Guide. 
+
+<p class="alert">
+The newly created object is not persisted until you <a href="#PerformingSaves">save the managed object context</a>.
+</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/assignObjectId" target="_blank">assignObjectId</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/primaryKeyField" target="_blank">primaryKeyField</a></li>
+        <li><a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSEntityDescription_Class/NSEntityDescription.html" target="_blank">NSEntityDescription Class Reference</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/create.zip">Download Sample Project</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- READ OBJECT -->
+
+### Reading Objects
+
+To read objects from a particular Entity, create and execute a Core Data fetch request using methods from the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
+
+For a list of StackMob supported `NSFetchRequest` methods, see the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#FetchRequests" target="_bank">Fetch Requests</a> section of the Core Data Guide.
+
+<p class="alert">By default, objects are returned as faults, and attribute values are not accessed from the persistent store until specifically called upon in your code.  This ensures in-memory usage is as low as possible.</p>
+
+All information on specifying conditions for a query can be found in the <a href="#Queries">Queries</a> section. 
+
+<!--- SUB: ASYNC READ -->
+
+#### Asynchronous Fetch Requests
+
+We've created an asynchronous wrapper around the familiar `executeFetchRequest:error` method which ensures that fetches are performed off the main thread and will not block your applications UI.
+
+```obj-c
+NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
+     
+// set any predicates or sort descriptors, etc.
+
+// execute the request
+[self.managedObjectContext executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
+    NSLog(@"%@",results);
+} onFailure:^(NSError *error) {
+    NSLog(@"Error fetching: %@", error);
+}];
+```
+
+If you wish to return managed object IDs rather than objects, use the following method:
+
+```obj-c
+[self.managedObjectContext executeFetchRequest:fetchRequest returnManagedObjectIDs:YES onSuccess:^(NSArray *results) {
+    NSLog(@"%@",results);
+} onFailure:^(NSError *error) {
+    NSLog(@"Error fetching: %@", error);
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Asynchronous Fetch" target="_blank">NSManagedObjectContext Category: Asynchronous Fetches</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read.zip">Download Sample Project</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/read-into-table-view-tutorial" target="_blank">Read Into Tableview Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: SYNC READ -->
+
+#### Synchronous Fetch Requests
+
+To execute synchronous fetches, use the `executeFetchRequestAndWait:error:` method. This works like `executeFetchRequest:error`, but uses the child-parent context model that is used internally by the SDK.
+
+```obj-c
+NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
+     
+// Set any predicates or sort descriptors, etc.
+
+// Execute the request
+NSError *error = nil;
+NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRequest error:&error];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Synchronous Fetch" target="_blank">NSManagedObjectContext Category: Synchronous Fetches</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- UPDATE OBJECT -->
+
+### Updating an Object
+
+After fetching an existing managed object, update it by simply changing the object's values. The updated values are not persisted until the managed object context is saved.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/update.zip" target="_blank">Download Sample Project</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- DELETE OBJECT -->
+
+### Deleting an Object
+
+Delete an object by simply calling the managed object context `deleteObject` method and passing the manage object you wish to delete. The delete will not be finalized until you save the managed object context.
+
+```obj-c
+[self.managedObjectContext deleteObject:aManagedObject];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/delete.zip" target="_blank">Download Sample Project</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SAVE -->
+
+### Performing Saves
+
+At some point after inserting, updating, and deleting objects from a managed object context, you will initiate a save which will cause all modified objects to be persisted to the external store.  The external store in this case is StackMob as well as a local cache database, ensuring data is available while the devices is offline.
+
+The StackMob SDK has placed a wrapper around the familiar `save:` core data method to offer synchronous and asynchronous versions for improved performance. All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
+
+<!--- ASYNC SAVES -->
+
+#### Asynchronous Saves
+
+Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked. If other events rely on the successful save, place them in the callbacks.
+
+```obj-c
+[self.managedObjectContext saveOnSuccess:^{
+    NSLog(@"You created a new object!");
+} onFailure:^(NSError *error) {
+    NSLog(@"There was an error! %@", error);
+}];
+```
+
+Use the callbacks to update the UI, notify other dependent files, etc.
+
+The SDK also provides save methods that allow you to pass request options and queues to perform the callbacks on. Check out the link below.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Asynchronous Save" target="_blank">NSManagedObjectContext Category: Asynchronous Saves</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SYNC SAVES -->
+
+#### Synchronous Saves
+
+Although the SDK synchronous save methods behave like Core Data's native `save:` method, we recommend using them because they follow the child-parent context patterns used internally by the SDK.
+
+```obj-c
+NSError *error = nil;
+BOOL success = [self.managedObjectContext saveAndWait:&error];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Synchronous Save" target="_blank">NSManagedObjectContext Category: Synchronous Saves</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- PER REQUEST OPTIONS -->
+
+### Per Request Options
+
+Each type of method (asynchronous/synchronous save/fetch) has an overloaded method declaration with a parameter that takes an instance of <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions</a>. The parameter name in all methods is called options. This allows you to provide a custom `SMRequestOptions` instance that will be applied to all calls in that request. For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific save request to run over SSL i.e. all inserts/updates/deletes for that request will be sent over SSL.
+
+<p class="alert">
+Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to set and will override the default for the duration of the request:</br></br>
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;cacheResults property (for saves/fetches)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;cachePolicy property (for fetches only)
+</br></br>
+Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
+</p>
+
+
+<!---
+    ///////////////////
+    QUERIES
+    //////////////////
+-->
+
+## Queries
+
+While you will perform fetch requests to do all reading in Core Data, predicates enable you to return a subset of a schema's objects by placing conditions on the read, for example retrieving todos from today, or friends with birthdays this week. The Core Data fetch requests implementation is built on top of the datastore query API. 
+
+<!--- Predicates -->
+
+### Predicates
+
+In Core Data, every read begins by creating a fetch request. You can then add predicates (conditions), sort descriptors, offsets (ranges), etc. to return a more granular subset of results. To complete the read you execute the fetch request on a managed object context.
+
+See the <a href="#ReadingObjects">Reading Objects</a> section for information on creating/executing a fetch request.
+
+To learn more about fetch requests in general visit Apple's documentation on <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CoreData/Articles/cdFetching.html" target="_blank">Fetching Managed Objects</a>.
+
+For a list of StackMob supported predicate types, visit the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#Predicates" target="_blank">Predicates</a> section of the Core Data Guide.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/ios-sdk/basic-queries-tutorial" target="_blank">Basic Queries Tutorial</a></li>
+        <li><a href="https://developer.stackmob.com/ios-sdk/advanced-queries-tutorial" target="_blank">Advanced Queries Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Counts -->
+
+### Fetch Counts
+
+If you just need to know the number of object that would be returned for a given fetch request, use the `countForFetchRequest:onSuccess:onFailure:` method (also comes in synchronous form):
+
+```obj-c
+NSFetchRequest *fetch = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
+[fetch setPredicate:[NSPredicate predicateWithFormat:@"type == 'Home'"]];
+
+[self.managedObjectContext countForFetchRequest:fetch onSuccess:^(NSUInteger count) {
+  // count contains the number of object that would be retuned by the fetch.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+You can also do the same with the datastore API. Create your `SMQuery` instance and pass it to the `performCount:onSuccess:onFailure:` method, like so:
+
+```obj-c
+SMQuery *query = [[SMQuery alloc] initWithSchema:@"todo"];
+[query addConditionWhere:@"type" equals:@"Home"];
+
+[[[SMClient defaultClient] dataStore] performCount:query onSuccess:^(NSNumber *count) {
+  // count contains the number of object that would be retuned by the query.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Asynchronous Count" target="_blank">NSManagedObjectContext Category: Asynchronous/Synchronous Count</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Count Queries" target="_blank">SMDataStore: Performing Count Queries</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Lower Level Query API -->
+
+### Datastore Query API
+
+The Core Data fetch requests implementation is built on top of the datastore query API. You are free to use the datastore query API directly, which is highly recommended if you are using the datastore API for persistence as well.
+
+<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Queries" target="_blank">Datastore API Guide: Queries Section</a>
+
+
+<!---
+    ///////////////////
+    RELATIONSHIPS
+    //////////////////
+-->
+
+## Relationships
+
+When you create relationships between entities in your Core Data model, they will translate directly to relationships on StackMob.  Here are the important things to note:
+
+* Core Data recommends creating inverse relationships to maintain referential integrity. This ensures that when you delete one object, any related objects are updated as well.
+* Core Data supports <a href="http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/coredata/Articles/cdRelationships.html">Delete Rules</a>. Take this into consideration if you are building cross-platform.
+* The great thing about Core Data handling relationship logic is that it will all translate from the client to StackMob, so no extra work is necessary.
+
+When you eventually save objects which include relationships to other entities, those relationships will get inferred by the server i.e. StackMob will detect that those relationships do not exist and create them on the fly. This is a feature included only in development. If you need to create relationships manually, see <a href="#CreatingRelationshipswiththeDashboard">Creating Relationships with the Dashboard</a>.
+
+<!--- One To One -->
+
+### One to One
+
+Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the singular version of the entity it points to, like so:
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/one-to-one-guide.png" />
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-one-relationships-tutorial" target="_blank">One-To-One Relationships Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- One To Many -->
+
+### One to Many
+
+Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the plural version of the entity it points to, like so:
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/one-to-many-guide.png" />
+
+In the data model, be sure to check the box for a To-Many relationship, as shown.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-many-relationships-tutorial" target="_blank">One-To-Many Relationships Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Many To Many -->
+
+### Many to Many
+
+You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
+
+<!--- Creating through dashboard -->
+
+
+### Dashboard Relationship Creation
+
+While relationships, like fields and schemas, are inferred by StackMob, sometimes you'll want to manually create them yourself.  Here we'll assume that we have both `todo` and `user` schemas already defined.
+
+<a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank">Edit the user schema</a> and add a new relationship.
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/dashboard/tutorials/relationships/dashboard-schemas-relationships-add.png" alt=""/></a></p>
+
+Fill in the relationship details:
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/add_relationship_dashboard.png" alt=""/></a></p>
+
+Press **Add Relationship** and you'll get:
+
+<p class="screenshot"><a href="https://dashboard.stackmob.com/schemas/edit/user" target="_blank"><img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/todos_relationship_added.png" alt=""/></a></p>
+
+**Save the schema** and that's it - you have a relationship.
+
+When you work with Core Data, you'll want to make sure you define inverse relationships as well, so in this case you'll also add a relationship to the `todo` schema pointing back to the `user` schema.
+
+<!---
+    ///////////////////
+    GEO-LOCATION
+    //////////////////
+-->
+
+## Geolocation
+
+StackMob provides GeoPoint field types which allow you to save objects with latitude and longitude coordinates. Once you have objects that contain geolocation data, you can query for a subset of those objects near a particular coordinate pair, within a specific radius, or even within a box formed from coordinates. This makes building apps that show all restaurants around a user's current location, or tracking a user's path as they jog through the city, as simple as ever.
+
+<!--- Add schema field -->
+
+### Add a GeoPoint Schema Field
+
+In order for a schema to allow for geopoints, it must have a field with the GeoPoint type. To manually add a geopoint field to your schema, follow the <a href="https://developer.stackmob.com/module/geo" target="_blank">Adding a GeoPoint Field To Schemas</a> tutorial to get set up.
+
+<!--- Track Geo-Location -->
+
+### Start Tracking Geolocation
+
+`SMLocationManager` is a built-in `CLLocationManager` singleton for use in retrieving `CLLocationCoordinate2D` points. 
+ 
+Many apps make use of geolocation data; `SMLocationManager` aides in this process by eliminating the boilerplate code needed to build a `CLLocationManager` singleton.
+
+<!--- SUB: Using SMLocationManager -->
+
+#### Using SMLocationManager
+
+First, import the class where needed: 
+
+```obj-c
+#import "SMLocationManager.h"
+```
+
+To start retrieving data, first prompt `SMLocationManager` to start listening for updates from the device GPS:
+
+```obj-c
+[[[SMLocationManager sharedInstance] locationManager] startUpdatingLocation];
+```
+
+When you are finished, tell the location manager to stop listening for GPS updates.
+
+```obj-c
+[[[SMLocationManager sharedInstance] locationManager] stopUpdatingLocation];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMLocationManager.html" target="_blank">SMLocationManager Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- SUB: Manual lat/lon -->
+
+#### Obtaining Latitude/Longitude Values
+
+If you wish to pull the latitude and longitude data manually from the location manager, do so with the following:
+
+```obj-c
+NSNumber *latitude = [[NSNumber alloc] initWithDouble:[[[[SMLocationManager sharedInstance] locationManager] location] coordinate].latitude];
+NSNumber *longitude = [[NSNumber alloc] initWithDouble:[[[[SMLocationManager sharedInstance] locationManager] location] coordinate].longitude];
+```
+
+Often times it may take a few run loops for the location manager to start receiving actual data after <i>startUpdatingLocation</i> is called.  You may need to implement the necessary logic to ensure you are not pulling nil data.
+
+<!--- SUB: Subclass SMLocationManager -->
+
+#### Subclassing SMLocationManager
+
+Out of the box, `SMLocationManager` gives you the ability to start/stop pulling GPS location data, as well as retrieve the current latitude and longitude of the device.  If you would like more control and customization, it's recommended you subclass `SMLocationManager`. In the init method of your subclass, you can configure the properties of the `CLLocationManager` as needed.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="https://developer.apple.com/library/mac/#documentation/CoreLocation/Reference/CLLocationManager_Class/CLLocationManager/CLLocationManager.html" target="_blank">CCLocationManager Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Save Geo Data -->
+
+### Saving Geolocation Data
+
+GeoPoints are stored in Core Data using the `Transformable` attribute type. 
+
+The `SMGeoPoint` class provides a simple interface around a geopoint. It inherits from `NSDictionary` and has two instance methods: `latitude` and `longitude`.
+
+Use the provided class method to obtain the current location data of the device:
+
+```obj-c
+[SMGeoPoint getGeoPointForCurrentLocationOnSuccess:^(SMGeoPoint *geoPoint) {
+     
+    // Do something with geoPoint.latitude and geoPoint.longitude
+     
+} onFailure:^(NSError *error) {
+
+    // Error
+}];
+```
+
+To save an `SMGeoPoint` in Core Data, it must be archived into `NSData`:
+
+```obj-c
+NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
+NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
+
+SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
+
+NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
+```
+
+ Since `getGeoPointForCurrentLocationOnSuccess:onFailure:` gives us back an instance of `SMGeoPoint`, we can easily save objects with geo data like so:
+
+```obj-c
+[SMGeoPoint getGeoPointForCurrentLocationOnSuccess:^(SMGeoPoint *geoPoint) {
+     
+  Todo *todo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
+  todo.todoId = [todo assignObjectId];
+  todo.title = @"My Location";
+
+  todo.location = [NSKeyedArchiver archivedDataWithRootObject:geoPoint];
+   
+  // Save the location to StackMob
+  NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
+  [context saveOnSuccess:^{
+     NSLog(@"Created new object in Todo schema");
+  } onFailure:^(NSError *error) {
+      NSLog(@"Error creating object: %@", error);
+  }];
+     
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+<p class="alert">Geolocation in iOS relies on the <b>MapKit</b> framework.</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMGeoPoint.html" target="_blank">SMGeoPoint Class Reference</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Examples</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/ios-sdk/saving-geolocation-tutorial" target="_blank">Saving Geolocation Data Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- Read Geo-Location -->
+
+### Reading Geolocation Values
+
+Because managed object geopoint data will be contained in a `Tranformable` attribute type, it must be unarchived to be properly read:
+
+```obj-c
+NSData *data = [managedObject objectForKey:@"location"];
+
+SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+```
+
+<!--- Query Geo-Location -->
+
+### Query based on Geolocation
+
+To query using `SMGeoPoint`, use the special predicate methods provided by the `SMPredicate` class:
+
+```obj-c
+NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"EntityName"];
+
+// Fisherman's Wharf
+CLLocationCoordinate2D coordinate;
+coordinate.latitude = 37.810317;
+coordinate.longitude = -122.418167;
+
+SMGeoPoint *geoPoint = [SMGeoPoint geoPointWithCoordinate:coordinate];
+SMPredicate *predicate = [SMPredicate predicateWhere:@"geopoint" isWithin:3.5 milesOfGeoPoint:geoPoint];
+[fetchRequest setPredicate:predicate];
+
+// Execute fetch request
+[self.managedObjectContext executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
+    
+    // Once you've made a fetch request, make sure to unarchive the NSData
+
+    NSManagedObject *object = [results objectAtIndex:0];
+    NSData *data = [object objectForKey:@"location"];
+    SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+} onFailure:^(NSError *error) {
+        // Error
+}];
+```
+
+The `SMPredicate` class provides method to query based on range in miles or kilometers, as well as bounds by SW and NE corners, or even just near a provided point.
+
+All <code>SMPredicate</code> methods to query based on an instance of <code>SMGeoPoint</code> have an equivalent method to query based on an instance of <code>CLLocationCoordinate2D</code>.
+
+<p class="alert">Fetching from the cache using <code>SMPredicate</code> is not supported, and will return an empty array of results. Similarly, when a fetch is performed from the network (StackMob), any results are not cached.</br></br>Fetched Results Controllers that use fetch requests with conditions around geolocation is not supported. Use refresh controls instead.</p>
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPredicate.html" target="_blank">SMPredicate Class Reference</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/ios-sdk/querying-geolocation-tutorial" target="_blank">Querying Geolocation Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!---
+  ///////////////////
+  BINARY DATA
+  //////////////////
+-->
+
+## File Storage
+
+Files and images in the form binary data works by linking StackMob to your personal Amazon S3 account. You'll then declare a Binary type field in your schema and all files, images, etc. that you save will actually be stored in your S3 library, and the value of the field will be the URL that points to that data.
+
+<!--- Add schema field -->
+
+### Add a Binary Schema Field
+
+Follow the <a href="https://developer.stackmob.com/module/s3#AddaBinaryField" target="_blank">Adding a Binary Field To Schemas</a> tutorial to get the S3 module and a Binary field in your schema set up.
+
+### Saving Binary Data
+
+To save Binary data to StackMob, first create an attribute in your entity of type `String`. This attribute should map to a field on StackMob of type `Binary`.
+
+Next, you will use the `SMBinaryDataConversion` class to convert instances of `NSData` into strings ready to be saved to StackMob.
+
+`SMBinaryDataConversion` offers a class method `stringForBinaryData:name:contentType:` to decode binary data into a string. This is then used to send to StackMob as the value for a field with type `Binary`. The contents of the string will be parsed and the content will be stored on S3. StackMob will then store the URL as the value. A call to `refreshObject:mergeChanges:` on the managed object context will update the in-memory value to the URL in the persistent store.
+
+Here's an example of converting a picture stored in the app's bundle:
+
+```obj-c
+NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+NSString* pathToImageFile = [bundle pathForResource:@"coolPic" ofType:@"jpg"];
+NSData *theData = [NSData dataWithContentsOfFile:pathToImageFile];
+
+NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:@"whateverNameYouWant" contentType:@"image/jpg"];
+```
+
+Now set the string value to your managed object, save the managed object context, and refresh your in-memory copy of the object to grab the url pointing to your data:
+
+```obj-c
+[newManagedObject setValue:picData forKey:@"pic"];
+
+NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
+[context saveOnSuccess:^{
+  [context refreshObject:newManagedObject mergeChanges:YES];
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+`[newManagedObject valueForKey:@"pic"]` now returns the S3 URL for the binary data.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMBinaryDataConversion.html" target="_blank">SMBinaryDataConversion Class Reference</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/ios-sdk/upload-files-to-s3-tutorial" target="_blank">Upload Files to S3 Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+### Reading Binary Data
+
+Once you have saved an object to StackMob containing a field with binary data, the value will then contain a string representation of the S3 URL. You will most likely convert this string into an instance of `NSURL`, and in turn use that URL to get and set data to a variable. For example, suppose we have saved an image in our attribute `photo`, and now want to set an image for our UI. After reading the object we would convert the string URL to an image like this:
+
+```obj-c
+NSURL *imageURL = [NSURL URLWithString:[object valueForKey:@"photo"]]; 
+NSData *imageData = [NSData dataWithContentsOfURL:imageURL]; 
+UIImage *image = [UIImage imageWithData:imageData];
+```
+
+### Working Offline
+
+When you save an object with binary data while the device is offline, the value of the attribute will contain a data representation, ready to be saved to StackMob. In order to properly read it at that point, the data must be extracted from the string and decoded.
+
+In order to check if the attribute value is a URL or not, use the `stringContainsURL:` method. To convert the string value back to data, use the `dataForString:` method:
+
+```obj-c
+NSString *picString = [newManagedObject valueForKey:@"pic"];
+if ([SMBinaryDataConversion stringContainsURL:picString]) {
+  NSURL *urlForPic = [NSURL URLForString:picString];
+  // Set image from URL
+} else {
+  UIImage *image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
+  // Set image directly
+}
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMBinaryDataConversion.html" target="_blank">SMBinaryDataConversion Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!---
+  ///////////////////
+  NETWORK REACHABILITY
+  //////////////////
+-->
+
+## Network Reachability
+
+The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#CachingandOfflineSync">Caching and Offline Sync</a>).
+
+<!--- SMNetworkReachability -->
+
+### SMNNetworkReachability Class
+
+`SMNetworkReachability` provides an interface to monitor the network reachability from the device to StackMob.
+ 
+Network reachability checks are already built into the SDK.  When the network is not reachable and a request is made, an error with domain `SMError` and status code -105 (SMNetworkNotReachable) will be returned.
+
+An instance of `SMNetworkReachability` is created during the initialization of an `SMUserSession`, accessible by the `networkMonitor` property.
+
+A shorthand is available through the `SMClient` instance: `client.networkMonitor`.
+
+### Checking the Current Network Status
+
+To manually check the current network status, use the `currentNetworkStatus` method:
+
+```obj-c
+SMNetworkStatus currentStatus = [self.client.networkMonitor currentNetworkStatus];
+```
+
+This method will return an `SMNetworkStatus`, defined as:
+
+```obj-c
+typedef enum {
+    SMNetworkStatusUnknown = -1,
+    SMNetworkStatusNotReachable  = 0,
+    SMNetworkStatusReachable = 1,
+} SMNetworkStatus;
+```
+ 
+* Reachable - the device has a network connection and can successfully reach StackMob.
+* Not Reachable - StackMob is not reachable either because there is no network connection on the device or the service is down.
+* Unknown - Typically this status arises during in-between times of network connection initialization.
+ 
+An example of testing reachability before sending a request would look like this:
+
+```obj-c
+if ([self.client.networkMonitor currentNetworkStatus] == SMNetworkStatusReachable) {
+    // send request
+}
+```
+ 
+You can also handle each state case by case in a switch statement:
+
+```obj-c
+switch([client.session.networkMonitor currentNetworkStatus]) {
+    case  SMNetworkStatusReachable:
+        // do Reachable stuff
+        break;
+    case SMNetworkStatusNotReachable:
+        // do NotReachable stuff
+        break;
+    case SMNetworkStatusUnknown:
+        // do Unknown stuff
+        break;
+    default:
+        break;
+}
+```
+
+<!--- Status Change Notifications -->
+
+### Status Change Notifications
+
+You can register to receive notifications when the network status changes by simply adding an observer for the notification name `SMNetworkStatusDidChangeNotification`.  The notification will have a `userInfo` dictionary containing one entry with key `SMCurrentNetworkStatusKey` and `NSNumber` representing the `SMNetworkStatus` value.
+
+In order to access the value of `SMCurrentNetworkStatusKey` in a format for comparing to specific states or use in a switch statement, retrieve the intValue like this:
+
+```obj-c
+if ([[[notification userInfo] objectForKey:SMCurrentNetworkStatusKey] intValue] == SMNetworkStatusReachable) {
+    // do Reachable stuff
+}
+```
+
+<p class="alert">Remember to remove your notification observer before the application terminates.</p>
+ 
+ 
+### Status Changes Blocks 
+
+Often times you may want to change the cache policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
+
+```obj-c
+[self.client.networkMonitor setNetworkStatusChangeBlock:^(SMNetworkStatus status){
+    
+    if (status == SMNetworkStatusReachable) {
+      ...
+    } else {
+      ...
+    }
+
+}];
+```
+
+Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
+
+```obj-c
+[self.client.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^(SMNetworkStatus status){
+    
+    if (status == SMNetworkStatusReachable) {
+      return SMCachePolicyTryNetworkOnly;
+    } else {
+      return SMCachePolicyTryCacheOnly;
+    }
+
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMNetworkReachability.html" target="_blank">SMNetworkReachability Class Reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!---
+  ///////////////////
+  OFFLINE SYNC
+  //////////////////
+-->
+
+## Caching and Offline Sync
+
+Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
+
+Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Caching and Offline Sync Guide</a> for all information.
+
+
+<!---
+    ///////////////////
+    SUPPORT SPECS
+    //////////////////
+-->
 
 ## Support Specifications
 

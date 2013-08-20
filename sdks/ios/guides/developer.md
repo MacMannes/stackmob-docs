@@ -3,9 +3,36 @@ iOS Developer Guide
 
 ## Overview
 
-Core Data allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications. 
+The iOS SDK is comprised of a tree-like structure of classes, each responsible for specific core features.
 
-We understand that using Core Data for persistence might be too extensive for some applications. For those who prefer a simple wrapper on top of the REST API, we provide the full <a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide" target="_blank">Datastore API</a> as well.
+At the very top of the tree is SMClient. When initializing an instance of SMClient, you provide key pieces of information about your StackMob app, including your public key, API version number, and optionally other non-default values, such as the user object schema name or password field. Those values are then used to initialize an internal user session and datastore component.
+
+You will use methods of SMClient to authenticate with the StackMob servers, using a StackMob user object username and password, or possibly Facebook or Twitter credentials.
+
+The iOS SDK provides two routes for persistence: 
+
+The "Datastore API" offers simple asynchronous wrapper methods for each of the core operations: creating, reading, updating, and deleting. It also provides methods for performing queries, atomic increments/decrements, and related object manipulation, just to name a few.
+
+You can interact with the Datastore persistence layer by obtaining an instance of SMDataStore via your SMClient object.
+
+For developers who want a more powerful, complex persistence solution, complete with a caching and offline system, we have built a Core Data layer that sits on top of the Datastore API. Core Data, Apple's Persistence framework, allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications.
+
+You can interact with the Core Data persistence layer by obtaining an instance of SMCoreDataStore via your SMClient object.
+
+Beneath each of the persistence classes there are additional helper classes used for specialized features like file storage, geolocation, and custom code.
+
+The push notification system is encapsulated in the SMPushClient class. In conjunction with the SMPushToken class, you can broadcast push notifications to other devices using your StackMob public and private key. SMPushClient works similarly to SMClient, but is dedicated entirely to push functionality.
+
+Here is a diagram showing the architecture of the iOS SDK:
+
+(INSERT ARCHITECTURE DIAGRAM)
+
+
+How do I know if I should use Core Data for persistence or the Datastore API directly?
+
+(ANSWER ME)
+
+The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data persistence layer can be found in the (INSERT LINK) Core Data Integration Guide.
 
 In each section of this guide you may see colored boxes which are meant to highlight important information:
 
@@ -61,126 +88,28 @@ You should only instantiate one instance of `SMClient`. You can use `[SMClient d
   </div>
 </div>
 
-<!--- USING CORE DATA -->
+### Retrieve a Datastore Instance
 
-### Using Core Data
-
-StackMob recommends using Core Data for data persistence. It provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
-
-We've created a separate guide on using StackMob with Core Data, which contains everything from Core Data basics to Coding Practices to Specifications on what is supported by the StackMob integration.
-
-<p class="alert">Since a lot of your interactions with StackMob will be through Core Data, please be sure to read through the guide.</p>
-
-<a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">StackMob and Core Data Guide</a>
-
-<p></p><p></p>
-<p class="alert">We understand that using Core Data for persistence might be too extensive for some applications. For those who prefer a simple wrapper on top of the REST API, we provide the full <a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide" target="_blank">Datastore API</a> as well.</p>
-
-<!--- DEF MOM -->
-
-### Defining a Managed Object Model
-
-To use Core Data you will define an `NSManagedObjectModel` instance which points to your local object graph, a `.xcdatamodeld` file. This file defines a local representation of your database, using Entities which have attributes and relationships.
-
-Your Core Data model should replicate your StackMob schemas. The <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#SupportSpecifications" target="_blank">Support Specifications</a> section of the Core Data Guide details the mappings between StackMob field types and Core Data attribute types, ensuring proper translations to and from Core Data.
-
-Suppose your data model is called `mydatamodel`. In your `AppDelegate` file, declare a property called `managedObjectModel` of type `NSManagedObjectModel` and include the following method in your implementation file:
+The easiest way to get a datastore instance is through the default client, starting your calls with the following:
 
 ```obj-c
-- (NSManagedObjectModel *)managedObjectModel
-{
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"mydatamodel" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return _managedObjectModel;
-}
+[[SMClient defaultClient] dataStore] someDataStoreMethod...];
 ```
 
-<p class="alert">If you are using the cache, make sure you include the <b>createddate</b> and <b>lastmoddate</b> attributes as <b>Date</b> types in your entities. We also recommend not inheriting from a parent entity to do so, as it drastically affects cache performance.<br/><br/>Also, if there are fields on StackMob you don't plan on interacting with through the client, don't include them in your model.</p>
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectModel_Class/Reference/Reference.html" target="_blank">NSManagedObjectModel Class Reference</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!--- CREATE SUBCLASSES -->
-
-### Creating `NSManagedObject` Subclasses
-
-Creating classes for each one of your entities provides a lot of convenience around constructors, accessors, validation, formatting, etc. for when you work with managed objects. We recommend you create these custom classes, which you can do by selecting an Entity in the Model Editor and going to `Editor -> Create NSManagedObject Subclass`:
-
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/coredata/nsmanagedobjectsubclass.png" /> 
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="https://developer.apple.com/library/ios/#documentation/cocoa/Conceptual/CoreData/Articles/cdManagedObjects.html#//apple_ref/doc/uid/TP40003397-BBCEHEGG" target="_blank">Core Data Programming Guide: Managed Objects</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!--- INIT CDS -->
-
-### Initialize a Core Data Store
-
-A Core Data store instance gives you everything you need to work with StackMob's Core Data integration. With your `SMCoreDataStore` object you can retrieve a managed object context configured with a `SMIncrementalStore` as its persistent store to allow communication to StackMob from Core Data.  
-
-You can create an `SMCoreDataStore` instance like so:
+Alternatively you can initialize a separate `SMDataStore` instance from the client:
 
 ```obj-c
-// This assumes you have already initialized your SMClient instance,
-// and have a NSManagedObjectModel property called managedObjectModel
-SMCoreDataStore *coreDataStore = [[SMClient defaultClient] coreDataStoreWithManagedObjectModel:self.managedObjectModel];
+SMClient *client = ...;
+SMDataStore *myDataStore = [client dataStore];
 ```
-
-From then on you can either pass your core data store instance around, or if you are using iOS SDK v2.0.0+, use `[[SMClient defaultClient] coreDataStore]` to retrieve it at any point.
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#task_Retrieving a Datastore" target="_blank">SMClient: Retrieving a Datastore</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!--- OBTAIN MOC -->
-
-### Obtaining a Managed Object Context
-
-You can obtain a managed object context configured from your `SMClient` instance like this:
-
-```obj-c
-NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
-```
-
-Use this instance of `NSManagedObjectContext` for the current thread you are on. We recommend calling `contextForCurrentThread` rather than passing a context instance across files or blocks.
-
-The default Core Data merge policy set for all contexts created by this class is `NSMergeByPropertyObjectTrumpMergePolicy`. Use `setDefaultMergePolicy:applyToMainThreadContextAndParent:` to change the default.
-
-You can obtain the managed object context for the main thread at any time by accessing the `mainThreadContext` property.
-
-If you want to do your own context creation, use the `persistentStoreCoordinator` property to ensure your objects are being saved to the StackMob server.
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-      	<li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html#task_Obtaining a Managed Object Context" target="_blank">SMCoreDataStore: Obtaining a Managed Object Context</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#//api/name/dataStore" target="_blank">SMClient: datastore</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMClient.html#//api/name/defaultClient" target="_blank">SMClient: defaultClient</a></li>
       </ul>
     </div>
   </div>
@@ -194,55 +123,67 @@ If you want to do your own context creation, use the `persistentStoreCoordinator
 
 ## Datastore
 
-The following sections include everything you need to know about creating, reading, updating and deleting objects. When you use Core Data you'll perform your write operations on your managed object context, kind of like a scratch pad, and persist the changes by performing a save operation.
+The following sections include everything you need to know about creating, reading, updating and deleting objects. All methods are asynchronous and allow you to provide a success and failure block, which will be performed on the main thread by default. All methods have alternative version which include parameters for request options and/or success and failure callback queues. Refer to the Resources sections for links to all available method signatures.
+
 
 <!--- INSERT OBJECT -->
 
 ### Creating an Object
 
-Typically you will create an `NSManagedObject` subclass for each of your Core Data entities, giving you convenience methods, accessors, etc. You might also find it valuable to define a custom init method. The easiest way to declare a new instance of an entity and fill in its values is like so:
+To create an object, simply define a dictionary where the keys map to their corresponding StackMob fields. Then pass the dictionary to the `SMDataStore` `createObject:inSchema:onSuccess:onFailure:` method.
+
+Lets create a new todo object:
 
 ```obj-c
-Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
+NSDictionary *newTodo = [NSDictionary dictionaryWithObjectsAndKeys:@"my todo", @"title", nil];
 
-// Assumes Todo has attributes title and todoId
-[newTodo setTitle:@"Take out the trash"];
-[newTodo setTodoId:[newManagedObject assignObjectId]];
+[[SMClient defaultClient] dataStore] createObject:newTodo inSchema:@"todo" onSuccess:^(NSDictionary *object, NSString *schema) {
+  // object contains the full created object, which has been assigned a primary key automatically by the server.
+  // You can also create objects with primary keys if you choose, but it's probably easier to let the server auto-generate them.
+} onFailure:^(NSError *error, NSDictionary* object, NSString *schema) {
+  // Handle error
+}];
 ```
-
-The `assignObjectId` method is provided by the SDK to assign an arbitrary ID to the attribute which maps to the primary key field on StackMob. Object IDs must be assigned to a managed object before it is persisted. This keeps Core Data IDs and StackMob objects in sync. You are free to assign your own IDs if you wish, `assignObjectId` is simply a convenience method which masks a random UUID generation algorithm.
-
-<b>Without Subclasses</b>
-
-Instantiating and assigning values to a generic managed object requires using key-value methods in accordance with key value coding.
-
-```obj-c
-NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
-    
-[newManagedObject setValue:@"Take out the trash" forKey:@"title"];
-[newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
-```
-
-The `primaryKeyField` method is provided by the SDK for convenience to return the attribute which maps to the primary key field on StackMob. The SDK knows which attribute is the primary key field because of its format. The format is defined in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#EntityPrimaryKeys" target="_blank">Entity Primary Keys</a> section of the Core Data Guide. 
-
-<p class="alert">
-The newly created object is not persisted until you <a href="#PerformingSaves">save the managed object context</a>.
-</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/assignObjectId" target="_blank">assignObjectId</a></li>
-		<li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObject+StackMobSerialization.html#//api/name/primaryKeyField" target="_blank">primaryKeyField</a></li>
-		<li><a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSEntityDescription_Class/NSEntityDescription.html" target="_blank">NSEntityDescription Class Reference</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Create an Object" target="_blank">SMDataStore: Create an Object</a></li>
       </ul>
     </div>
+  </div>
+</div>
+
+<!--- CREATING OBJECTS IN BULK -->
+
+### Creating Objects in Bulk
+
+You can create many objects in the same schema all in one call.
+
+Lets create 5 todo objects. For simplicity purposes they will all have the same title:
+
+```obj-c
+NSMutableArray *todoArray = [NSMutableArray array];
+
+for (int i = 0; i < 5; i++) {
+  [todoArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"my todo", @"title", nil]];
+}
+
+[[SMClient defaultClient] dataStore] createObjects:todoArray inSchema:@"todo" onSuccess:^(NSArray* succeeded, NSArray *failed, NSString *schema) {
+  // succeeded contains an array of IDs of all objects that were successfully persisted.
+  // failed contains an array of IDs of all objects that were unsuccessfully persisted, possibly because of duplicate key issues, etc.
+} onFailure:^(NSError *error, NSArray *objects, NSString *schema) {
+  // Handle error
+}];
+```
+<div class="alert alert-info">
+  <div class="row-fluid">
     <div class="span6">
-      <strong>Resources</strong>
+      <strong>API References</strong>
       <ul>
-        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/create.zip">Download Sample Project</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Create Objects" target="_blank">SMDataStore: Create Objects</a></li>
       </ul>
     </div>
   </div>
@@ -250,102 +191,85 @@ The newly created object is not persisted until you <a href="#PerformingSaves">s
 
 <!--- READ OBJECT -->
 
-### Reading Objects
+### Reading an Object
 
-To read objects from a particular Entity, create and execute a Core Data fetch request using methods from the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
+To read an existing object, use the `readObjectWithId:onSuccess:onFailure:` method.
 
-For a list of StackMob supported `NSFetchRequest` methods, see the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#FetchRequests" target="_bank">Fetch Requests</a> section of the Core Data Guide.
-
-<p class="alert">By default, objects are returned as faults, and attribute values are not accessed from the persistent store until specifically called upon in your code.  This ensures in-memory usage is as low as possible.</p>
-
-All information on specifying conditions for a query can be found in the <a href="#Queries">Queries</a> section. 
-
-<!--- SUB: ASYNC READ -->
-
-#### Asynchronous Fetch Requests
-
-We've created an asynchronous wrapper around the familiar `executeFetchRequest:error` method which ensures that fetches are performed off the main thread and will not block your applications UI.
+Lets read an existing todo object with primary key "1234":
 
 ```obj-c
-NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
-     
-// set any predicates or sort descriptors, etc.
-
-// execute the request
-[self.managedObjectContext executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
-    NSLog(@"%@",results);
-} onFailure:^(NSError *error) {
-    NSLog(@"Error fetching: %@", error);
+[[[SMClient defaultClient] dataStore] readObjectWithId:@"1234" inSchema:@"todo" onSuccess:^(NSDictionary* object, NSString *schema) {
+  // object contains the read object from the server.
+} onFailure:^(NSError *error, NSString* objectId, NSString *schema) {
+  // Handle error
 }];
 ```
 
-If you wish to return managed object IDs rather than objects, use the following method:
-
-```obj-c
-[self.managedObjectContext executeFetchRequest:fetchRequest returnManagedObjectIDs:YES onSuccess:^(NSArray *results) {
-    NSLog(@"%@",results);
-} onFailure:^(NSError *error) {
-    NSLog(@"Error fetching: %@", error);
-}];
-```
+<p class="alert">Check out the Queries section for information on how to read all or a subset of objects in a schema.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Asynchronous Fetch" target="_blank">NSManagedObjectContext Category: Asynchronous Fetches</a></li>
-      </ul>
-    </div>
-    <div class="span6">
-      <strong>Resources</strong>
-      <ul>
-        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/read.zip">Download Sample Project</a></li>
-        <li><a href="https://developer.stackmob.com/ios-sdk/read-into-table-view-tutorial" target="_blank">Read Into Tableview Tutorial</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Read an Object" target="_blank">SMDataStore: Read an Object</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!--- SUB: SYNC READ -->
-
-#### Synchronous Fetch Requests
-
-To execute synchronous fetches, use the `executeFetchRequestAndWait:error:` method. This works like `executeFetchRequest:error`, but uses the child-parent context model that is used internally by the SDK.
-
-```obj-c
-NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
-     
-// Set any predicates or sort descriptors, etc.
-
-// Execute the request
-NSError *error = nil;
-NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRequest error:&error];
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Synchronous Fetch" target="_blank">NSManagedObjectContext Category: Synchronous Fetches</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
 
 <!--- UPDATE OBJECT -->
 
 ### Updating an Object
 
-After fetching an existing managed object, update it by simply changing the object's values. The updated values are not persisted until the managed object context is saved.
+You can update an existing object at any time by creating a dictionary with the fields/values to update and passing it to the `updateObjectWithId:inSchema:onSuccess:onFailure:` method.
+
+Lets update our existing todo object with a new title:
+
+```obj-c
+NSDictionary *updatedTodo = [NSDictionary dictionaryWithObjectsAndKeys:@"updated todo", @"title", nil];
+
+[[SMClient defaultClient] dataStore] updateObjectWithId:updatedTodo inSchema:@"todo" onSuccess:^(NSDictionary *object, NSString *schema) {
+  // object contains the full updated object.
+} onFailure:^(NSError *error, NSDictionary* object, NSString *schema) {
+  // Handle error
+}];
+```
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
-      <strong>Resources</strong>
+      <strong>API References</strong>
       <ul>
-        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/update.zip" target="_blank">Download Sample Project</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Update an Object" target="_blank">SMDataStore: Update an Object</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--- UPDATE ATOMIC COUNTER -->
+
+### Update a Counter Atomically
+
+If you have a field of `Integer` type, you can atomically increment it, meaning increment the value without worrying about it being incremented at the same time by another request.
+
+Suppose you had an existing todo object with a `priority` field. You can increment the field by any value (here by 1) like so:
+
+```obj-c
+[[[SMClient defaultClient] dataStore] updateAtomicCounterWithId:@"1234" field:@"priority" inSchema:@"todo" by:1 onSuccess:^(NSDictionary* object, NSString *schema) {
+  // object contains the full updated object
+} onFailure:^(NSError *error, NSDictionary* object, NSString *schema) {
+  // Handle error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Update an Object" target="_blank">SMDataStore: Update an Object</a></li>
       </ul>
     </div>
   </div>
@@ -355,77 +279,24 @@ After fetching an existing managed object, update it by simply changing the obje
 
 ### Deleting an Object
 
-Delete an object by simply calling the managed object context `deleteObject` method and passing the manage object you wish to delete. The delete will not be finalized until you save the managed object context.
+To delete an existing object, simply pass its primary key to the `deleteObjectId:inSchema:onSuccess:onFailure:` method.
+
+Lets delete our existing todo object from the Stackmob database:
 
 ```obj-c
-[self.managedObjectContext deleteObject:aManagedObject];
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>Resources</strong>
-      <ul>
-        <li><a href="https://s3.amazonaws.com/static.stackmob.com/tutorial-source-code/ios/delete.zip" target="_blank">Download Sample Project</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!--- SAVE -->
-
-### Performing Saves
-
-At some point after inserting, updating, and deleting objects from a managed object context, you will initiate a save which will cause all modified objects to be persisted to the external store.  The external store in this case is StackMob as well as a local cache database, ensuring data is available while the devices is offline.
-
-The StackMob SDK has placed a wrapper around the familiar `save:` core data method to offer synchronous and asynchronous versions for improved performance. All methods can be found in the <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency</a> class.
-
-<!--- ASYNC SAVES -->
-
-#### Asynchronous Saves
-
-Asynchronous saves are great for executing a save off the main thread, ensuring the UI is not blocked. If other events rely on the successful save, place them in the callbacks.
-
-```obj-c
-[self.managedObjectContext saveOnSuccess:^{
-    NSLog(@"You created a new object!");
-} onFailure:^(NSError *error) {
-    NSLog(@"There was an error! %@", error);
+[[[SMClient defaultClient] dataStore] deleteObjectId:@"1234" inSchema:@"todo" onSuccess:^(NSString* objectId, NSString *schema) {
+  // Successful deletion of objectId
+} onFailure:^(NSError *error, NSString* objectId, NSString *schema) {
+  // Handle error
 }];
 ```
 
-Use the callbacks to update the UI, notify other dependent files, etc.
-
-The SDK also provides save methods that allow you to pass request options and queues to perform the callbacks on. Check out the link below.
-
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Asynchronous Save" target="_blank">NSManagedObjectContext Category: Asynchronous Saves</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!--- SYNC SAVES -->
-
-#### Synchronous Saves
-
-Although the SDK synchronous save methods behave like Core Data's native `save:` method, we recommend using them because they follow the child-parent context patterns used internally by the SDK.
-
-```obj-c
-NSError *error = nil;
-BOOL success = [self.managedObjectContext saveAndWait:&error];
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Synchronous Save" target="_blank">NSManagedObjectContext Category: Synchronous Saves</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Delete an Object" target="_blank">SMDataStore: Delete an Object</a></li>
       </ul>
     </div>
   </div>
@@ -435,86 +306,268 @@ BOOL success = [self.managedObjectContext saveAndWait:&error];
 
 ### Per Request Options
 
-Each type of method (asynchronous/synchronous save/fetch) has an overloaded method declaration with a parameter that takes an instance of <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions</a>. The parameter name in all methods is called options. This allows you to provide a custom `SMRequestOptions` instance that will be applied to all calls in that request. For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific save request to run over SSL i.e. all inserts/updates/deletes for that request will be sent over SSL.
+Each type of method (create, read, update, etc) has an overloaded method declaration with a parameter that takes an instance of <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions</a>. The parameter name in all methods is called options. This allows you to provide a custom `SMRequestOptions` instance that will be applied to customize certain settings for that request. 
+
+For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific create request to run over SSL.
 
 <p class="alert">
-Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to set and will override the default for the duration of the request:</br></br>
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;cacheResults property (for saves/fetches)
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;cachePolicy property (for fetches only)
-</br></br>
-Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
+Caching options provided by the SMRequestOptions class are not taken into account during datastore API requests.
 </p>
-
-<!--- LOWER LEVEL DATASTORE API -->
-
-### Datastore CRUD API
-
-If you find that Core Data is too entensive for your application's datastore needs, feel free to check out our simple wrapper on top of the REST API. It's what the Core Data integration is built on top of!
-
-<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Datastore" target="_blank">Datastore API Guide: Datastore Section</a>
-
-
-<!---
-	///////////////////
-	QUERIES
-	//////////////////
--->
-
-## Queries
-
-While you will perform fetch requests to do all reading in Core Data, predicates enable you to return a subset of a schema's objects by placing conditions on the read, for example retrieving todos from today, or friends with birthdays this week. The Core Data fetch requests implementation is built on top of the datastore query API. 
-
-<!--- Predicates -->
-
-### Predicates
-
-In Core Data, every read begins by creating a fetch request. You can then add predicates (conditions), sort descriptors, offsets (ranges), etc. to return a more granular subset of results. To complete the read you execute the fetch request on a managed object context.
-
-See the <a href="#ReadingObjects">Reading Objects</a> section for information on creating/executing a fetch request.
-
-To learn more about fetch requests in general visit Apple's documentation on <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CoreData/Articles/cdFetching.html" target="_blank">Fetching Managed Objects</a>.
-
-For a list of StackMob supported predicate types, visit the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#Predicates" target="_blank">Predicates</a> section of the Core Data Guide.
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
-      <strong>Resources</strong>
+      <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/basic-queries-tutorial" target="_blank">Basic Queries Tutorial</a></li>
-        <li><a href="https://developer.stackmob.com/ios-sdk/advanced-queries-tutorial" target="_blank">Advanced Queries Tutorial</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html" target="_blank">SMRequestOptions Class Reference</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!--- Counts -->
 
-### Fetch Counts
+<!---
+  ///////////////////
+  QUERIES
+  //////////////////
+-->
 
-If you just need to know the number of object that would be returned for a given fetch request, use the `countForFetchRequest:onSuccess:onFailure:` method (also comes in synchronous form):
+
+## Queries
+
+To perform queries using the datastore API, you'll first instantiate an instance of `SMQuery`:
 
 ```obj-c
-NSFetchRequest *fetch = [[NSFetchRequest alloc] initWithEntityName:@"Todo"];
-[fetch setPredicate:[NSPredicate predicateWithFormat:@"type == 'Home'"]];
+SMQuery *newQuery = [[SMQuery alloc] initWithSchema:@"todo"];
+```
 
-[self.managedObjectContext countForFetchRequest:fetch onSuccess:^(NSUInteger count) {
-  // count contains the number of object that would be retuned by the fetch.
+Next, you'll add conditions, pagination, sorting, etc as needed:
+
+```obj-c
+[newQuery where:@"title" isEqualTo:@"Do Homework"];
+// add additional conditions
+```
+
+Finally, perform the query through the datastore property of your client instance:
+
+```obj-c
+[[[SMClient defaultClient] datastore] performQuery:newQuery onSuccess:^(NSArray *results) {
+  // results contains an array of dictionary objects that match the query
+} onFailure:^(NSError *error) {
+  // Error
+}];
+```
+
+Read through the `SMQuery` class reference, listed below, for all conditions you can place on your queries.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMQuery.html" target="_blank">SMQuery Class Reference</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Queries" target="_blank">SMDataStore: Performing Queries</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Count Queries" target="_blank">SMDataStore: Performing Count Queries</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!---
+  ///////////////////
+  RELATIONSHIPS
+  //////////////////
+-->
+
+## Relationships
+
+Our REST API offers many endpoints to make it super easy to create and append related objects, append existing object atomically, and update multiple related objects in one request, to name a few.
+
+<p class="alert">You do not need inverse relationships if you are solely using the datastore API. Core Data requires inverse relationships, and the iOS SDK in conjunction with Core Data manages these relationships, especially when it comes to delete rule propogation.</p>
+
+<!--- RELATE OBJECTS -->
+
+### Relate Objects Via Primary Keys
+
+You can create or update objects with relationships by specifying the primary keys of the related objects as the values.
+
+Suppose your `todo` schema has a one to one relationship named `thecategory` which relates to objects in the `category` schema. You can create a new `todo` object with a relationship to a `category` object like so:
+
+```obj-c
+// Assumes the category object with primary key 1234 exists
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", @"1234", @"thecategory", nil];
+
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *theObject, NSString *) {
+  // Handle success
 } onFailure:^(NSError *error) {
   // Handle error
 }];
 ```
 
-You can also do the same with the datastore API. Create your `SMQuery` instance and pass it to the `performCount:onSuccess:onFailure:` method, like so:
+Suppose the relationship was one-to-many and called `thecategories`. You can create the todo object and relate it to many `category` objects like so:
 
 ```obj-c
-SMQuery *query = [[SMQuery alloc] initWithSchema:@"todo"];
-[query addConditionWhere:@"type" equals:@"Home"];
+// Assumes the category object with primary key 1234 exists
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", [NSArray arrayWithObjects:@"1234", @"5678", nil], @"thecategories", nil];
 
-[[[SMClient defaultClient] dataStore] performCount:query onSuccess:^(NSNumber *count) {
-  // count contains the number of object that would be retuned by the query.
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" onSuccess:^(NSDictionary *result) {
+  // Handle success
 } onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+<br/>
+**A Note About Inference**
+
+While working in your **Development** environment, if the `thecategory` or `thecategories` relationships didn't exist in the `todo` schema, the methods above would infer a field of type `String`. 
+
+To specify that relationships should get inferred, you'll create an instance of `SMRequestOptions` and use the `associateKey:withSchema:` method to manually specify which schema the relationship key relates to. Regardless of whether you are sending a create or update, you need to use the `createObject:...` method, which translates to a POST. For updates, simply add a key/value pair for the primary key.
+
+Here's an example using our one-to-one example above:
+
+```obj-c
+// Assumes the category object with primary key 1234 exists
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", @"1234", @"thecategory", nil];
+
+// Specify that "thecategory" is a relationship to the "category" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"thecategory" withSchema:@"category"];
+
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject options:options inSchema:@"todo" onSuccess:^(NSDictionary *result) {
+  // Handle success
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+Behind the scenes the SDK will build a request header that lets StackMob know that `thecategory` is a relationship key on the `category` schema, and the relationship will get properly inferred.
+
+<!-- Creating and Appending Related Objects -->
+
+### Create and Append Related Objects
+
+You can create and save related objects, then subsequently save them to another object's relationship value, all in one call.
+
+This is instead of making a single call for each object, then another call to update the related object with the relationships.
+
+Suppose we have an existing `todo` object with primary key `1234`. The `todo` schema has a one-to-many relationship `categories` to the `category` schema. Lets go ahead and create and two new `category` objects and relate them to the `todo` object:
+
+```obj-c
+NSDictionary *category1 = [NSDictionary dictionaryWithObjectsAndKeys:@"category1", @"name", nil];
+NSDictionary *category2 = [NSDictionary dictionaryWithObjectsAndKeys:@"category2", @"name", nil];
+NSArray *categories = [NSArray arrayWithObjects:category1, category2, nil];
+            
+[[[SMClient defaultClient] dataStore] createAndAppendRelatedObjects:categories toObjectWithId:@"1234" inSchema:@"todo" relatedField:@"categories" onSuccess:^(NSArray *succeeded, NSArray *failed) {
+  // The succeeded array contains a list of the IDs for the objects which were persisted.
+  // the failed array contains a list of the IDs for the objects which failed, either because of a duplicate key or internal server error.
+} onFailure:^(NSError *error) {
+  // Handle Error
+}];
+```
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Create and Append Related Objects" target="_blank">SMDataStore: Create and Append Related Objects</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Fetch Expand -->
+
+
+### Fetch with Expand
+
+Relationships are represented in an object dictionary as either a string primary ID for one-to-one relationships or arrays of string primary IDs for one-to-many relationships. 
+
+You can opt to fetch an object with an expand depth set; this will cause related objects to be returned as full dictionary objects rather than just primary IDs. The expand depth you set determines how deep related objects are expanded out. This is useful when you know you will be working with an object's related objects directly because you will only have to make one network call.
+
+<p class="alert">The expand depth limit is 3.</p>
+
+Suppose you have a `user` schema with a `friends` relationship field, which is a one-to-many relationship to the schema `user`. Normally the friends relationship value is represented as an array of primary keys (usernames in this case), but you can use the expand feature to have that array expanded as an array of full user objects instead.
+
+To do this, define an instance of `SMRequestOptions`, set the `setExpandDepth:` method, and pass the instance to your datastore request.
+
+Lets do a read on our user `john`, who has 3 friends: `jane`, `jill`, and `jack`:
+
+```obj-c
+SMRequestOptions *options = [SMRequestOptions options];
+[options setExpandDepth:1];
+
+[[[SMClient defaultClient] dataStore] readObjectWithId:@"john" inSchema:@"user" options:options onSuccess:^(NSDictionary *object, NSString *schema) {
+  // object contains the expanded john object
+} onFailure:^(NSError *error, NSString *objectId, NSString *schema) {
+  // Handle Error
+}];
+```
+
+`object` would have the following structure:
+
+```bash
+{
+  username : "john"
+  age : 25
+  friends: [
+            {
+              username : "jane",
+              age : 26,
+              friends : [1234,5678,...]
+            },
+            {
+              username : "jill",
+              age : 29,
+              friends : [4753,3855,...]
+            },
+            {
+              username : "jack",
+              age : 28,
+              friends : [1734,7465,...]
+            }
+           ]
+}
+```
+
+If we would have set expand depth `2`, we would have also got full objects for all of `jane`, `jill`, and `jack`'s friends, too.
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#task_Expanding Relationships" target="_blank">SMRequestOptions: Expanding Relationships</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- Append Existing object -->
+
+
+### Append Existing Objects
+
+You can append objects to an array without needing to update the entire object at once. This goes for fields of type `Array` as well as one-to-many relationships.
+
+This method also handles any concurrency issues if two users are modifying the same object at the same time by doing atomic appending.
+
+If the field is an array, the objects will be appended to it with no uniqueness constraint.
+
+If the field is a relationship, just append the object primary IDs to the array, not the objects themselves. The resulting array will be deduped so that there are no duplicate references to related object IDs.
+
+Suppose you have an `Array` field called `lucky_numbers` in the `user` schema. You can append new lucky numbers to the array atomically like so:
+
+```obj-c
+NSArray *newLuckyNumbers = [NSArray arrayWithObjects:[NSNumber numberWithInt:13], [NSNumber numberWithInt:36], [NSNumber numberWithInt:23], nil];
+
+[[[SMClient defaultClient] dataStore] appendObjects:newLuckyNumbers toObjectWithId:@"Bob" inSchema:@"user" field:@"lucky_numbers" onSuccess:^(NSDictionary* object, NSString *schema) {
+  // object contains the parent object dictionary
+} onFailure:^(NSError *error, NSString *objectId, NSArray* values, NSString *schema) {
   // Handle error
 }];
 ```
@@ -524,85 +577,196 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"todo"];
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html#task_Asynchronous Count" target="_blank">NSManagedObjectContext Category: Asynchronous/Synchronous Count</a></li>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Performing Count Queries" target="_blank">SMDataStore: Performing Count Queries</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Append Existing Objects" target="_blank">SMDataStore: Append Existing Objects</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!--- Lower Level Query API -->
 
-### Datastore Query API
+<!-- Deleting Related Objects -->
 
-The Core Data fetch requests implementation is built on top of the datastore query API. You are free to use the datastore query API directly, which is highly recommended if you are using the datastore API for persistence as well.
+### Deleting Existing Objects/References
 
-<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Queries" target="_blank">Datastore API Guide: Queries Section</a>
+Just like you can append existing objects from array field types or relationship references to an object, you can delete them in the same fashion as well.
 
-<!---
-	///////////////////
-	RELATIONSHIPS
-	//////////////////
--->
+For a relationship reference, you also have the option of not only removing the reference, but deleting that object in its entirety at the same time.
 
-## Relationships
+Lets delete 2 `category` related object references from our `todo` object with primary key `12345678`:
 
-When you create relationships between entities in your Core Data model, they will translate directly to relationships on StackMob.  Here are the important things to note:
+```obj-c
+NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
 
-* Core Data recommends creating inverse relationships to maintain referential integrity. This ensures that when you delete one object, any related objects are updated as well.
-* Core Data supports <a href="http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/coredata/Articles/cdRelationships.html">Delete Rules</a>. Take this into consideration if you are building cross-platform.
-* The great thing about Core Data handling relationship logic is that it will all translate from the client to StackMob, so no extra work is necessary.
+[[[SMClient defaultClient] dataStore] deleteObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" onSuccess:^(){
+  // We have deleted the category references from the relationship value, but the category objects still exist.
+} onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
+  // Handle error
+}];
+```
 
-When you eventually save objects which include relationships to other entities, those relationships will get inferred by the server i.e. StackMob will detect that those relationships do not exist and create them on the fly. This is a feature included only in development. If you need to create relationships manually, see <a href="#CreatingRelationshipswiththeDashboard">Creating Relationships with the Dashboard</a>.
+If, in the same call, we also want to delete those category objects altogether, we just set the `cascadeDelete:` parameter to `YES`:
 
-<!--- One To One -->
 
-### One to One
+```obj-c
+NSArray *categoryIDsToDelete = [NSArray arrayWithObjects:@"1234", @"5678", nil];
 
-Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the singular version of the entity it points to, like so:
-
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/one-to-one-guide.png" />
+[[[SMClient defaultClient] dataStore] deleteObjects:categoryIDsToDelete fromObjectWithId:@"12345678" schema:@"todo" field:@"categories" cascadeDelete:YES onSuccess:^(){
+  // We have deleted the category references from the relationship value as well as the category objects themselves.
+} onFailure:^(NSError *error, NSString *objectId, NSArray* objects, NSString *schema){
+  // Handle error
+}];
+```
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
-      <strong>Resources</strong>
+      <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-one-relationships-tutorial" target="_blank">One-To-One Relationships Tutorial</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#task_Delete Existing Objects" target="_blank">SMDataStore: Delete Existing Objects</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!--- One To Many -->
 
-### One to Many
+<!-- Upsert -->
 
-Add a relationship from one entity to another by creating a new entry in the **Relationships** section of the entity builder UI.  Convention says to name the relationship the plural version of the entity it points to, like so:
+### Upsert with Nested Objects
 
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/relationships/one-to-many-guide.png" />
+There might be times when you want create or update an object while creating or updating related objects, all in one request.
 
-In the data model, be sure to check the box for a To-Many relationship, as shown.
+To do so, in the top level dictionary you would include a key/value pair where the key is the relationship name and the value is a nested dictionary or array of dictionaries.
+
+However, you must manually define what schemas the related objects are associated with.
+
+The first thing to note is that you will always send this type of request as a POST. Even if you are updating an object, you'll pass the dictionary object to the `createObject:...` method and simply include a key/value pair for the existing primary key.
+
+To manually specify what schema a related object is associated with, you'll create an instance of `SMRequestOptions` and use the `associateKey:withSchema:` method for each relationship key in the request dictionary.
+
+Lets create a new `todo` object which has a one to one relationship named `category`, associated with the schema `category`. In the same request we will be creating the new `category` object and relating it to the `todo` object:
+
+```obj-c
+// Create category object. We can specify a manual primary key if we wish, otherwise one will be automatically assigned when it's created.
+NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Home Projects", @"name", nil];
+
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
+
+// Correlate the key "category" to the StackMob "category" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"category" withSchema:@"category"];
+
+// Execute request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
+  // Result will contain the entire todo object, as well as the entire nested category object.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+The dictionary payload will end up looking like this:
+
+```bash
+// Request to "todo" schema
+{
+  title : "new todo",
+  category : {
+                name : "Home Projects"
+             }
+}
+```
+
+Behind the scenes the SDK will build a request header that lets StackMob know that the `category` key contains an object that should be created in the `category` schema.
+
+<p class="alert">If you are working in development and the "category" relationship doesn't exist, it will be inferred and automatically created as a one-to-one relationship. If you send an array of objects as the value and the relationship doesn't exist yet, it will be inferred and automatically created as a one-to-many relationship.</p>
+
+Here's an example of updating an existing `todo` object while updating a related `category` object with a new name:
+
+```obj-c
+NSDictionary *categoryUpdate = [NSDictionary dictionaryWithObjectsAndKeys:@"updated name", @"name", @"1234", @"category_id", nil];
+
+NSDictionary *todoUpdate = [NSDictionary dictionaryWithObjectsAndKeys:@"updated title", @"title", categoryObject, @"category", @"5678", @"todo_id", nil];
+
+// Associate the key "category" with the StackMob "category" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"category" withSchema:@"category"];
+
+// We always use a POST (create) request when upserting, even though this is technically an update
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
+  // Result will contain the entire todo object, as well as the entire updated category object as a nested value.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+The payload will end up looking like this:
+
+```bash
+// Request to "todo" schema
+{
+  todo_id : "5678"
+  title : "updated todo",
+  category : {
+                category_id : "1234",
+                name : "updated name"
+             }
+}
+```
+<br/>
+Finally, you can also nest full related objects within full related objects. The trick is that all associated keys need to be specified with the top level relationship key as the reference, using dot notation.
+
+Here's an example of creating a `todo` object while updating a one-to-one relationship to the `category` schema, and also updating a one-to-one relationship `genre` in that object:
+
+```obj-c
+NSDictionary *genreObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Home and Living", @"type", @"5678", @"genre_id", nil];
+
+NSDictionary *categoryObject = [NSDictionary dictionaryWithObjectsAndKeys:@"Updated Name", @"name", genreObject, @"genre", @"1234", @"category_id", nil];
+
+NSDictionary *todoObject = [NSDictionary dictionaryWithObjectsAndKeys:@"new todo", @"title", categoryObject, @"category", nil];
+
+// Associate the key "category" with the "category" schema as well as the key "genre" with the "genre" schema
+SMRequestOptions *options = [SMRequestOptions options];
+[options associateKey:@"category" withSchema:@"category"];
+[options associateKey:@"category.genre" withSchema:@"genre"];
+
+// Make request
+[[[SMClient defaultClient] dataStore] createObject:todoObject inSchema:@"todo" options:options onSuccess:^(NSDictionary *result) {
+  // Result will contain the entire todo object, as well as the entire updated category and genre objects as a nested values.
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+The payload will end up looking like this:
+
+```bash
+// Request to "todo" schema
+{
+  title : "new todo",
+  category : {
+                category_id : "1234",
+                name : "Updated Name",
+                genre : {
+                          genre_id : @"5678",
+                          type : "Home and Living"
+                        }
+             }
+}
+```
+
+<p class="alert">This all works for one-to-many relationships as well. Just use an array of dictionaries to specify that the relationship is one-to-many.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
-      <strong>Resources</strong>
+      <strong>API References</strong>
       <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/one-to-many-relationships-tutorial" target="_blank">One-To-Many Relationships Tutorial</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/associateKey:withSchema:" target="_blank">associateKey:withSchema:</a></li>
       </ul>
     </div>
   </div>
 </div>
-
-<!--- Many To Many -->
-
-### Many to Many
-
-You can achieve a many to many relationship by simply creating two relationships which are the inverse of each other and both to-many relationships.
 
 <!--- Creating through dashboard -->
-
 
 ### Dashboard Relationship Creation
 
@@ -623,15 +787,6 @@ Press **Add Relationship** and you'll get:
 **Save the schema** and that's it - you have a relationship.
 
 When you work with Core Data, you'll want to make sure you define inverse relationships as well, so in this case you'll also add a relationship to the `todo` schema pointing back to the `user` schema.
-
-
-<!--- Datastore api relationships -->
-
-### Datastore Relationships API
-
-If you are using the datastore API for general persistence, check out all the methods available for relationships via the datastore API. Creating and appending related object, appending existing objects, and updating multiple related objects at once has never been so easy!
-
-<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Relationships" target="_blank">Datastore API Guide: Relationships Section</a>
 
 
 <!---
@@ -980,11 +1135,13 @@ If a user who was not logged in then attempted to create an object, the response
 
 Find which access controls work best for your app's use case. <a href="https://developer.stackmob.com/modules/acl/docs" target="_blank">Read about all the Access Control options.</a> 
 
+
 <!---
-	///////////////////
-	GEO-LOCATION
-	//////////////////
+  ///////////////////
+  GEOLOCATION
+  //////////////////
 -->
+
 
 ## Geolocation
 
@@ -994,7 +1151,7 @@ StackMob provides GeoPoint field types which allow you to save objects with lati
 
 ### Add a GeoPoint Schema Field
 
-In order for a schema to allow for geopoints, it must have a field with the GeoPoint type. To manually add a geopoint field to your schema, follow the <a href="https://developer.stackmob.com/module/geo" target="_blank">Adding a GeoPoint Field To Schemas</a> tutorial to get set up.
+In order for a schema to allow for geopoints, it must have a field with the GeoPoint type. To manually add a geopoint field to your schema, follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-GeoPoint-Field-to-Schemas" target="_blank">Adding a GeoPoint Field To Schemas</a> tutorial to get set up.
 
 <!--- Track Geo-Location -->
 
@@ -1069,9 +1226,7 @@ Out of the box, `SMLocationManager` gives you the ability to start/stop pulling 
 
 <!--- Save Geo Data -->
 
-### Saving Geolocation Data
-
-GeoPoints are stored in Core Data using the `Transformable` attribute type. 
+### Saving Geolocation Data 
 
 The `SMGeoPoint` class provides a simple interface around a geopoint. It inherits from `NSDictionary` and has two instance methods: `latitude` and `longitude`.
 
@@ -1088,38 +1243,55 @@ Use the provided class method to obtain the current location data of the device:
 }];
 ```
 
-To save an `SMGeoPoint` in Core Data, it must be archived into `NSData`:
+For example, we can immediately immediately create/read/update an object once we get out geopoint data:
+
+```obj-c
+[SMGeoPoint getGeoPointForCurrentLocationOnSuccess:^(SMGeoPoint *geoPoint) {
+     
+    NSDictionary *arguments = [NSDictionary dictionaryWithObjectsAndKeys:@"My Location", @"name", geoPoint, @"location", nil];
+ 
+  [[[SMClient defaultClient] dataStore] createObject:arguments inSchema:@"todo" onSuccess:^(NSDictionary *theObject, NSString *schema) {
+      NSLog(@"Created object %@ in schema %@", theObject, schema);
+ 
+  } onFailure:^(NSError *theError, NSDictionary *theObject, NSString *schema) {
+      NSLog(@"Error creating object: %@", theError);
+  }];
+     
+} onFailure:^(NSError *error) {
+    // Error
+}];
+```
+
+You can alternatively make an `SMGeoPoint` with a latitude and a longitude:
 
 ```obj-c
 NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
 NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
 
 SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
-
-NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 ```
-
- Since `getGeoPointForCurrentLocationOnSuccess:onFailure:` gives us back an instance of `SMGeoPoint`, we can easily save objects with geo data like so:
+ 
+Furthermore, you can use a `CLLocationCoordinate2D` coordinate:
 
 ```obj-c
-[SMGeoPoint getGeoPointForCurrentLocationOnSuccess:^(SMGeoPoint *geoPoint) {
-     
-  Todo *todo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
-  todo.todoId = [todo assignObjectId];
-  todo.title = @"My Location";
+CLLocationCoordinate2D renoCoordinate = CLLocationCoordinate2DMake(39.537940, -119.783936);
 
-  todo.location = [NSKeyedArchiver archivedDataWithRootObject:geoPoint];
-   
-  // Save the location to StackMob
-  NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
-  [context saveOnSuccess:^{
-     NSLog(@"Created new object in Todo schema");
-  } onFailure:^(NSError *error) {
-      NSLog(@"Error creating object: %@", error);
-  }];
-     
-} onFailure:^(NSError *error) {
-  // Error
+SMGeoPoint *reno = [SMGeoPoint geoPointWithCoordinate:renoCoordinate];
+```
+
+Here's an example of saving an `SMGeoPoint` from a `CLLocationCoordinate2D`, storing it in a dictionary of arguments and creating an object with the data:
+
+```obj-c
+CLLocationCoordinate2D renoCoordinate = CLLocationCoordinate2DMake(39.537940, -119.783936);
+  
+SMGeoPoint *location = [SMGeoPoint geoPointWithCoordinate:renoCoordinate];
+ 
+NSDictionary *arguments = [NSDictionary dictionaryWithObjectsAndKeys:@"My Location", @"name", location, @"location", nil];
+ 
+[[[SMClient defaultClient] dataStore] createObject:arguments inSchema:@"todo" onSuccess:^(NSDictionary *object, NSString *schema) {
+    // Create success
+} onFailure:^(NSError *error, NSDictionary *object, NSString *schema) {
+    Handle error
 }];
 ```
 
@@ -1133,12 +1305,6 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
         <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMGeoPoint.html" target="_blank">SMGeoPoint Class Reference</a></li>
       </ul>
     </div>
-    <div class="span6">
-      <strong>Examples</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/saving-geolocation-tutorial" target="_blank">Saving Geolocation Data Tutorial</a></li>
-      </ul>
-    </div>
   </div>
 </div>
 
@@ -1146,76 +1312,44 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 
 ### Reading Geolocation Values
 
-Because managed object geopoint data will be contained in a `Tranformable` attribute type, it must be unarchived to be properly read:
+Geopoint data will always be returned in a dictionary object as an `NSDictionary` instance with `lat` and `lon` keys.
 
-```obj-c
-NSData *data = [managedObject objectForKey:@"location"];
-
-SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-```
 
 <!--- Query Geo-Location -->
 
 ### Query based on Geolocation
 
-To query using `SMGeoPoint`, use the special predicate methods provided by the `SMPredicate` class:
+You can query geo data by using conditions found in the `SMQuery` class. Here is an example of querying for all people within 5 miles of a given location:
 
 ```obj-c
-NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"EntityName"];
+NSNumber *lat = [NSNumber numberWithDouble:37.77215879638275];
+NSNumber *lon = [NSNumber numberWithDouble:-122.4064476357965];
 
-// Fisherman's Wharf
-CLLocationCoordinate2D coordinate;
-coordinate.latitude = 37.810317;
-coordinate.longitude = -122.418167;
+SMGeoPoint *location = [SMGeoPoint geoPointWithLatitude:lat longitude:lon];
 
-SMGeoPoint *geoPoint = [SMGeoPoint geoPointWithCoordinate:coordinate];
-SMPredicate *predicate = [SMPredicate predicateWhere:@"geopoint" isWithin:3.5 milesOfGeoPoint:geoPoint];
-[fetchRequest setPredicate:predicate];
+SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
 
-// Execute fetch request
-[self.managedObjectContext executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
-    
-    // Once you've made a fetch request, make sure to unarchive the NSData
+[query where:@"location" isWithin:5 milesOfGeoPoint:location];
 
-    NSManagedObject *object = [results objectAtIndex:0];
-    NSData *data = [object objectForKey:@"location"];
-    SMGeoPoint *geoPoint = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-
+[[[SMClient defaultClient] datastore] performQuery:query onSuccess:^(NSArray *results) {
+  // Successful query
 } onFailure:^(NSError *error) {
-        // Error
+  // Handle error
 }];
+
 ```
-
-The `SMPredicate` class provides method to query based on range in miles or kilometers, as well as bounds by SW and NE corners, or even just near a provided point.
-
-All <code>SMPredicate</code> methods to query based on an instance of <code>SMGeoPoint</code> have an equivalent method to query based on an instance of <code>CLLocationCoordinate2D</code>.
-
-<p class="alert">Fetching from the cache using <code>SMPredicate</code> is not supported, and will return an empty array of results. Similarly, when a fetch is performed from the network (StackMob), any results are not cached.</br></br>Fetched Results Controllers that use fetch requests with conditions around geolocation is not supported. Use refresh controls instead.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMPredicate.html" target="_blank">SMPredicate Class Reference</a></li>
-      </ul>
-    </div>
-    <div class="span6">
-      <strong>Resources</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/querying-geolocation-tutorial" target="_blank">Querying Geolocation Tutorial</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMQuery.html" target="_blank">SMQuery Class Reference</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!--- Geo-Location through DS API -->
-
-### Datastore Geolocation API
-
-If you are using the datastore API directly for persistence, check out the Geolocation section for info on how to save and read geopoint data.
-
-<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Geolocation" target="_blank">Datastore API Guide: Geolocation Section</a>
 
 <!---
   ///////////////////
@@ -1231,15 +1365,13 @@ Files and images in the form binary data works by linking StackMob to your perso
 
 ### Add a Binary Schema Field
 
-Follow the <a href="https://developer.stackmob.com/module/s3#AddaBinaryField" target="_blank">Adding a Binary Field To Schemas</a> tutorial to get the S3 module and a Binary field in your schema set up.
+Follow the <a href="https://developer.stackmob.com/tutorials/dashboard/Adding-a-Binary-Field-to-Schemas" target="_blank">Adding a Binary Field To Schemas</a> tutorial to get the S3 module and a Binary field in your schema set up.
 
 ### Saving Binary Data
 
-To save Binary data to StackMob, first create an attribute in your entity of type `String`. This attribute should map to a field on StackMob of type `Binary`.
+You will use the `SMBinaryDataConversion` class to convert instances of `NSData` into strings ready to be saved to StackMob.
 
-Next, you will use the `SMBinaryDataConversion` class to convert instances of `NSData` into strings ready to be saved to StackMob.
-
-`SMBinaryDataConversion` offers a class method `stringForBinaryData:name:contentType:` to decode binary data into a string. This is then used to send to StackMob as the value for a field with type `Binary`. The contents of the string will be parsed and the content will be stored on S3. StackMob will then store the URL as the value. A call to `refreshObject:mergeChanges:` on the managed object context will update the in-memory value to the URL in the persistent store.
+`SMBinaryDataConversion` offers a class method `stringForBinaryData:name:contentType:` to decode binary data into a string. This is then used to send to StackMob as the value for a field with type `Binary`. The contents of the string will be parsed and the content will be stored on S3. StackMob will then store the URL as the value.
 
 Here's an example of converting a picture stored in the app's bundle:
 
@@ -1251,20 +1383,17 @@ NSData *theData = [NSData dataWithContentsOfFile:pathToImageFile];
 NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:@"whateverNameYouWant" contentType:@"image/jpg"];
 ```
 
-Now set the string value to your managed object, save the managed object context, and refresh your in-memory copy of the object to grab the url pointing to your data:
+Now create a dictionary that includes the `picData` string as the value for your Binary field key, and create/update your object. Here we create a new `comment` object with our image:
 
 ```obj-c
-[newManagedObject setValue:picData forKey:@"pic"];
+NSDictionary *objectToCreate = [NSDictionary dictionaryWithObjectsAndKeys:picData, @"photo", nil];
 
-NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
-[context saveOnSuccess:^{
-  [context refreshObject:newManagedObject mergeChanges:YES];
-} onFailure:^(NSError *error) {
-  // Error
+[[[SMClient defaultClient] dataStore] createObject:objectToCreate inSchema:@"comment" onSuccess:^(NSDictionary *object, NSString *schema) {
+  // [object objectForKey:@"photo"] will contain the S3 URL where the image is stored in string form.
+} onFailure:^(NSError *theError, NSDictionary *object, NSString *schema) {
+  // Handle error
 }];
 ```
-
-`[newManagedObject valueForKey:@"pic"]` now returns the S3 URL for the binary data.
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -1272,12 +1401,6 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
       <strong>API References</strong>
       <ul>
         <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMBinaryDataConversion.html" target="_blank">SMBinaryDataConversion Class Reference</a></li>
-      </ul>
-    </div>
-    <div class="span6">
-      <strong>Resources</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/upload-files-to-s3-tutorial" target="_blank">Upload Files to S3 Tutorial</a></li>
       </ul>
     </div>
   </div>
@@ -1288,44 +1411,10 @@ NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] cont
 Once you have saved an object to StackMob containing a field with binary data, the value will then contain a string representation of the S3 URL. You will most likely convert this string into an instance of `NSURL`, and in turn use that URL to get and set data to a variable. For example, suppose we have saved an image in our attribute `photo`, and now want to set an image for our UI. After reading the object we would convert the string URL to an image like this:
 
 ```obj-c
-NSURL *imageURL = [NSURL URLWithString:[object valueForKey:@"photo"]]; 
+NSURL *imageURL = [NSURL URLWithString:[object objectForKey:@"photo"]]; 
 NSData *imageData = [NSData dataWithContentsOfURL:imageURL]; 
 UIImage *image = [UIImage imageWithData:imageData];
 ```
-
-### Working Offline
-
-When you save an object with binary data while the device is offline, the value of the attribute will contain a data representation, ready to be saved to StackMob. In order to properly read it at that point, the data must be extracted from the string and decoded.
-
-In order to check if the attribute value is a URL or not, use the `stringContainsURL:` method. To convert the string value back to data, use the `dataForString:` method:
-
-```obj-c
-NSString *picString = [newManagedObject valueForKey:@"pic"];
-if ([SMBinaryDataConversion stringContainsURL:picString]) {
-  NSURL *urlForPic = [NSURL URLForString:picString];
-  // Set image from URL
-} else {
-  UIImage *image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
-  // Set image directly
-}
-```
-
-<div class="alert alert-info">
-  <div class="row-fluid">
-    <div class="span6">
-      <strong>API References</strong>
-      <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMBinaryDataConversion.html" target="_blank">SMBinaryDataConversion Class Reference</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-### Datastore File Storage API
-
-If you are using the datastore API directly for persistence, check out the File Storage section for info on how to save and read binary data.
-
-<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#FileStorage" target="_blank">Datastore API Guide: File Storage Section</a>
 
 <!---
   ///////////////////
@@ -1335,7 +1424,7 @@ If you are using the datastore API directly for persistence, check out the File 
 
 ## Network Reachability
 
-The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for changing your cache policy or syncing with the server (See <a href="#CachingandOfflineSync">Caching and Offline Sync</a>).
+The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for optimizing your application to only send requests when the device is online.
 
 <!--- SMNetworkReachability -->
 
@@ -1425,20 +1514,6 @@ Often times you may want to change the cache policy, or initiate a sync with the
       ...
     } else {
       ...
-    }
-
-}];
-```
-
-Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
-
-```obj-c
-[self.client.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^(SMNetworkStatus status){
-    
-    if (status == SMNetworkStatusReachable) {
-      return SMCachePolicyTryNetworkOnly;
-    } else {
-      return SMCachePolicyTryCacheOnly;
     }
 
 }];
