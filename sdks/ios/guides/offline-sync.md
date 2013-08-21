@@ -378,7 +378,7 @@ The following are utility properties/methods to assist in your offline sync impl
 
 ## Best Practices
 
-While caching and syncing works out of the box with the iOS SDK, it is important to think about what data you are caching, when you are caching it, and when in your app you are initiating the syncing process. Every app is unique and will have different use cases for when it should be caching and syncing. By thinking through a solid caching and syncing strategy, you will produce a more performant and error prone app.
+While caching and syncing works out of the box with the iOS SDK, it is important to think about what data you are caching, when you are caching it, and when in your app you are initiating the syncing process. Every app is unique and will have different use cases which determine the best time for caching and syncing. By thinking through a solid caching and syncing strategy, you will produce a more performant and error prone app.
 
 Many of the the features are customizable to fit your app's needs, and we encourage you to try out different combinations of methods to find the right balance of caching and syncing for as smooth of a user experience as possible. Here are some best practices for specific scenarios we often see:
 
@@ -390,12 +390,12 @@ Consider this scenario:
 
 Your app launches and the device is online. Your initial view is connected to a view controller which loads a table view with data. You have also defined a network status change block to sync with the server if the network is reachable. 
 
-If you were to do a little debugging, you would find that the order of operations which occurs is:
+If you were to do a little debugging, you would find that the order these processes happen in is:
 
-* Load initial view, which causes the initial view controller to fetch data. If you didn't define a specific cache policy when you initialized your core data store, then it uses the default which fetches from StackMob (network).
-* All initial proccessing is complete, and the network status change block can now be executed on the main thread, which initiates a sync with the server.
+* Load initial view, which causes the initial view controller to fetch data. If you didn't define a specific cache policy when you initialized your core data store, it uses the default which fetches from StackMob (network).
+* All initial processing is complete, and the network status change block can now be executed on the main thread, which initiates a sync with the server.
 
-Now here's the conflict: When you fetched from the network, it replaced any objects in the cache which matched the fetch with the updated ones from the network. This potentially erased any objects that needed to be synced. From the developer's perspective it appears that changes to objects modified offline between app launches are lost.
+Now here's the conflict: When you fetched from the network, it replaced any objects in the cache which matched the fetch with the updated ones from the network. This potentially erased objects that needed to be synced. From the developer's perspective it appears that changes to those objects are lost.
 
 But this is not the case! We just need to re-order our operations to allow the sync to complete before we allow our table view to fetch from the network.
 
@@ -444,11 +444,11 @@ Here's an example of an `application:didFinishLaunchingWithOptions:` method whic
 
 ### Preparing for Offline
 
-Consider a database model which has a clear hierarchy: Users have posts, posts have comments, comments have likes, and so on and so forth. Your app views probably have a similar hierarchy: Your first view shows all the posts for a user, and when you click on a post you are shown all the comments for that post, and if you expand the comment details you can see all the likes, etc for that comment. The bottom line is that unless all that object data is cached prior to the device going offline, it won't be available when the user goes to specific views. The deeper the content lies in the heirarchy, the more likely it won't have been previously fetched.
+Consider a database model which has a tree-like hierarchy: Users have posts, posts have comments, comments have likes, and so on and so forth. Your app views probably have a similar hierarchy: Your first view shows all the posts for a user, and when you click on a post the comments for that post are shown, and if you expand the comment details you can see all the likes, etc. The bottom line is that unless all that object data is cached prior to the device going offline, it won't be available when the user goes to specific views. The deeper the content lies in the hierarchy, the more likely it won't have been previously fetched.
 
-Remeber that content using Core Data is loaded incrementally. When you fetch a user object, the cache will know that there are posts related to that user, but won't have any of the actual data. It's not until the app specifically calls for that data that the post objects are fetched from the server.
+Remember that content using Core Data is loaded incrementally. When you fetch a user object, the cache will know that there are posts related to that user, but won't have any of the actual data. It's not until the app specifically calls for that data that the post objects are fetched from the server.
 
-This section is really just food for thought - the best practice here is to fully test your app both online and offline. Was your app designed to work out of the box offline, or do you anticipate that a user will use the app offline after many of the views have already been visited. In that case, you may find that all the content is cached and there are no issues. If you notice data is missing when the app runs offline, tt's less likely that syncing didn't work and more likely that the data hadn't been fetched. You may need to add a few lines of code to pre-fetch some important pieces of data for anticipated offline viewing.
+This section is really just food for thought - the best practice here is to fully test your app both online and offline. Was your app designed to work out of the box offline, or do you anticipate that a user will use most of the app online before they ever lose network connection? In that case, you may find that all the content is cached and there are no issues with missing content offline. If you notice data is missing, it's less likely that syncing didn't work and more likely that the data hadn't been fetched when the device was online. You may need to add a few lines of code to pre-fetch some important pieces of data for anticipated offline viewing.
 
 Alternatively, some apps notify their users when the device is offline, and that not all content is available in that state.
 
@@ -457,17 +457,17 @@ Alternatively, some apps notify their users when the device is offline, and that
 
 ### Debugging Failed Syncs
 
-One important use for defining sync failure callabcks is for debugging purposes.
+One important use for defining sync failure callbacks is for debugging purposes.
 
-When you are building your app, logging failed synced objects will give you insight as to changes you may need to make so syncs don't fail when your app goes live.
+When you are building your app, logging failed synced objects will give you insight as to changes you may need to make so syncs don't fail when your app is in production.
 
 If you consistently see certain objects not being synced, there may be a clear answer depending on the error.
 
 Here are some common (fixable) sync errors:
 
-* 400 (SMErrorBadRequest) - The occurs most often when you have defined a new field or relationship in your mananged object model, and no value is assigned before the object is synced. This happens because sync requests send entire objects, including null for any fields or relationships that have not been set. When StackMob sees null for a field you have not created yet on the server, it will throw a 400 because it does not know what type to infer the field as. <b>Solution:</b> Quickly go to the StackMob dashboard and create the field/relationship in your schema.
+* 400 (SMErrorBadRequest) - The occurs most often when you have defined a new field or relationship in your managed object model, and your code doesn't set a value for that field before the object is synced. This happens because sync requests send entire objects, including <i>null</i> for any fields or relationships that have not been set. When StackMob sees <i>null</i> for a field you have not created yet on the server, it will return a 400 because it does not know what type to infer the field as. <b>Solution:</b> Quickly go to the StackMob dashboard and manually create the field/relationship in your schema.
 
-* 401 (SMErrorUnauthorized) - You do not have permission to sync whatever object if failing. For example, you may not be logged in when the sync initiates, and this will cause 401s if you have permissions on your schemas. <b>Solution:</b> Make adjustments to your code to ensure that your user is logged in before the app initiates a sync.
+* 401 (SMErrorUnauthorized) - You do not have permission to sync whatever object if failing. For example, you may not be logged in when the sync initiates, and this will cause a 401 to be returned if you have permissions on the corresponding schema. <b>Solution:</b> Make adjustments to your code to ensure that your user is logged in, etc. before the app initiates a sync.
 
 If you run into any 500 responses (SMErrorInternalServerError), you should reach out to the StackMob team.
 
