@@ -22,14 +22,14 @@ Here are download links for the above files.
 
 Whitelist the StackMob API servers so that your PhoneGap app can make calls to your REST API.  Below are the settings for iOS and Android for convenience.
 
-Visit <a href="http://docs.phonegap.com/en/1.8.1/guide_whitelist_index.md.html#Domain%20Whitelist%20Guide" target="_blank">PhoneGap's docs on how to allow External Hosts</a>
+Visit <a href="http://docs.phonegap.com/en/1.9.0/guide_whitelist_index.md.html" target="_blank">PhoneGap's docs on how to allow External Hosts</a>
 
 ## iOS PhoneGap
 
 Look for `Cordova.plist` or `PhoneGap.plist` in the `Supporting Files` folder.  Add the following:
 
 ```javascript
-api.mob1.stackmob.com
+api.stackmob.com
 *.stackmobapp.com
 ```  
 
@@ -45,7 +45,7 @@ Look for `cordova.xml` or `PhoneGap.xml` in the `/res/xml` folder.  Add the foll
 	Domains are assumed blocked unless set otherwise
 	 -->
   <access origin="stackmobapp.com" subdomains="true"/>
-  <access origin="api.mob1.stackmob.com" subdomains="true"/>
+  <access origin="api.stackmob.com" subdomains="true"/>
   ....
 </cordova>
 ```
