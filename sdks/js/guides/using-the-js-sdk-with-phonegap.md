@@ -6,13 +6,13 @@ There are two things you'll need to do.
 
 # 1 of 2. Include JS Dependencies
 
-To use the StackMob JS SDK with PhoneGap, simply include the StackMob JS SDK and its dependencies along with the rest of your project.  Assuming you have saved local copies of the files below, add them to your PhoneGap app's `<head>` tags.  You can find the current SDK versions on the <a href="https://developer.stackmob.com/js-sdk/configure" target="_blank">StackMob JS SDK Configure page</a>.
+To use the StackMob JS SDK with PhoneGap, simply include the StackMob JS SDK and its dependencies along with the rest of your project.  Assuming you have saved local copies of the files below, add them to your PhoneGap app's `<head>` tags.  You can find the current SDK versions on the <a href="https://developer.stackmob.com/js-sdk/configure" target="_blank">StackMob JS SDK Configure page</a> under "Using your own existing projects".
 
 ```xml
 <head>
-	<!-- StackMob dependencies -->
 	<script type="text/javascript" src="jquery.min.js"></script>
-	<script type="text/javascript" src="stackmob-js-0.9.2-bundled-min.js"></script>
+	<!-- Replace with the latest StackMob JS SDK version. -->
+	<script type="text/javascript" src="stackmob-js-x.y.z-bundled-min.js"></script>
 </head>
 ```
 
