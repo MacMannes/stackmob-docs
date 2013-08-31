@@ -205,6 +205,8 @@ Creating classes for each one of your entities provides a lot of convenience aro
 
 ### Initialize a Core Data Store
 
+You will interact with the Core Data persistence layer by obtaining an instance of `SMCoreDataStore` via your `SMClient` object.
+
 A Core Data store instance gives you everything you need to work with StackMob's Core Data integration. With your `SMCoreDataStore` object you can retrieve a managed object context configured with a `SMIncrementalStore` as its persistent store to allow communication to StackMob from Core Data.  
 
 You can create an `SMCoreDataStore` instance like so:
@@ -687,6 +689,109 @@ Press **Add Relationship** and you'll get:
 **Save the schema** and that's it - you have a relationship.
 
 When you work with Core Data, you'll want to make sure you define inverse relationships as well, so in this case you'll also add a relationship to the `todo` schema pointing back to the `user` schema.
+
+<!---
+  ///////////////////
+  USER AUTHENTICATION
+  //////////////////
+-->
+
+## User Authentication
+
+It won't be uncommon for your app to be built around the concept of having users. They'll need to sign up and login to use your service, and depending on their role may have access to certain data not available to others. Luckily for you, StackMob has you covered.
+
+Authentication with StackMob was built based on the Oauth 2.0 protocol.
+
+<p class="alert">This section only covers the parts of User Authentication that deal with Core Data, namely creating a user object and retrieving a user managed object. Refer to the <a href="https://developer.stackmob.com/ios-sdk/developer-guide#UserAuthentication" target="_blank">User Authentication section of the Developer Guide</a> for all other topics.</p>
+
+
+<!--- Creating User Object -->
+
+### Creating a User Object
+
+In Core Data, you'll first create an entity which maps to your user schema on StackMob. It's most likely called `user`, so your entity will be called `User`.
+
+<p class="alert">Do not create an attribute for the password field. It would not be safe to have passwords floating around in Core Data. The <code>SMUserManagedObject</code> class provides helper methods to safely set a password for a user object.</p> 
+
+After creating a managed object subclass for the entity, you'll change the inherited class from `NSManagedObject` to `SMUserManagedObject`. This class provides methods to properly initialize a user object by linking to the `SMClient` instance. It also provides methods to set the user's password during creation.
+
+In your entity subclass implementation file, we recommend creating a custom init method which calls the `SMUserManagedObject` `initWithEntityName:insertIntoManagedObjectContext` method. We have overridden this method to store a reference to `[SMClient defaultClient]`. This ensures that the SDK knows the primary key, etc of the user schema. Your init method might look something like:
+
+```obj-c
+- (id)initNewUserInContext:(NSManagedObjectContext *)context {
+
+    self = [super initWithEntityName:@"User" insertIntoManagedObjectContext:context];
+     
+    if (self) {
+        // assign local variables, etc.
+    }
+     
+    return self;
+}
+```
+
+You'll then create new user objects by creating managed object instances of your entity subclass:
+
+```obj-c
+NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
+User *newUser = [[User alloc] initNewUserInContext:context];
+[newUser setUsername:@"Bob"];
+[newUser setPassword:@"vkfjakvjvjnfosg"];
+[newUser setAge:[NSNumber numberWithInt:34]];
+
+[context saveOnSuccess:^{
+  // Saved the user object
+} onFailure:^(NSError *error){
+  // Error
+}];
+```
+
+The above example assumes an entity `User` with attributes `username` and `age`. The `setPassword` method is provided by the `SMUserManagedObject` class to securely set a password for your user which is persisted to StackMob but never saved locally on the device. 
+
+<div class="alert alert-info">
+  <div class="row-fluid">
+    <div class="span6">
+      <strong>API References</strong>
+      <ul>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMUserManagedObject.html" target="_blank">SMUserManagedObject Class Reference</a></li>
+      </ul>
+    </div>
+    <div class="span6">
+      <strong>Resources</strong>
+      <ul>
+        <li><a href="https://developer.stackmob.com/ios-sdk/create-user-object-tutorial" target="_blank">Create a User Object Tutorial</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!--- Edit User object -->
+
+
+### Retrieve User Managed Object
+
+The next time the user logs in to your app, you may need to have a copy of the user object around to make updates. To do this, simply create a fetch request and specify a predicate such that the only result should be your logged in user:
+
+```obj-c
+// Pull username from login screen text field, for example
+NSString *username = self.textField.text;
+
+NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
+[userFetch setPredicate:[NSPredicate predicateWithFormat:@"username == %@", username]];
+
+[self.managedObjectContext executeFetchRequest:userFetch onSuccess:^(NSArray *results){
+  if ([results count] != 1) { 
+    // There should only be one result 
+  };
+
+  User *currentUser = (User *)[results objectAtIndex:0];
+  // Edit user object or store ID to pass around
+
+}];
+```
+
+<p class="alert">Managed Objects are not thread safe. Pass object IDs between threads and blocks.</p>
 
 <!---
     ///////////////////

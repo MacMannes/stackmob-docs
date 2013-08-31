@@ -3,37 +3,48 @@ iOS Developer Guide
 
 ## Overview
 
-The iOS SDK is comprised of a tree-like structure of classes, each responsible for specific core features.
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/developer_guide/ios_sdk_architecture.png" />
 
-At the very top of the tree is SMClient. When initializing an instance of SMClient, you provide key pieces of information about your StackMob app, including your public key, API version number, and optionally other non-default values, such as the user object schema name or password field. Those values are then used to initialize an internal user session and datastore component.
+The architecture of the iOS SDK can be broken into a few key parts:
 
-You will use methods of SMClient to authenticate with the StackMob servers, using a StackMob user object username and password, or possibly Facebook or Twitter credentials.
-
+<b>Persistence:</b>
+<p></p>
 The iOS SDK provides two routes for persistence: 
 
 The "Datastore API" offers simple asynchronous wrapper methods for each of the core operations: creating, reading, updating, and deleting. It also provides methods for performing queries, atomic increments/decrements, and related object manipulation, just to name a few.
 
-You can interact with the Datastore persistence layer by obtaining an instance of SMDataStore via your SMClient object.
-
 For developers who want a more powerful, complex persistence solution, complete with a caching and offline system, we have built a Core Data layer that sits on top of the Datastore API. Core Data, Apple's Persistence framework, allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications.
-
-You can interact with the Core Data persistence layer by obtaining an instance of SMCoreDataStore via your SMClient object.
 
 Beneath each of the persistence classes there are additional helper classes used for specialized features like file storage, geolocation, and custom code.
 
-The push notification system is encapsulated in the SMPushClient class. In conjunction with the SMPushToken class, you can broadcast push notifications to other devices using your StackMob public and private key. SMPushClient works similarly to SMClient, but is dedicated entirely to push functionality.
+<b>How do I know if I should use Core Data or the Datastore API directly for persistence?</b>
 
-Here is a diagram showing the architecture of the iOS SDK:
+Which route you use for persistence depends mainly on your app's data model. ADD MORE
 
-(INSERT ARCHITECTURE DIAGRAM)
+#### User Management #####
+<p></p>
 
+The user management piece of the SDK includes all the classes and methods used for creating user objects and creating and maintaining user sessions. authenticating with StackMob is done via a username/password, Facebook, or Twitter credentials. Password management is also available. 
 
-How do I know if I should use Core Data for persistence or the Datastore API directly?
+<b>Push</b>
+<p></p>
 
-(ANSWER ME)
+Push is considered a separate piece of the SDK because it uses OAuth1, requiring a public and private key. Thus, it uses its own stack of classes for authentication and general session maintenance. Using the push methods you can register a device token with the StackMob server, broadcast messages as well as push to specific devices.
 
-The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data persistence layer can be found in the (INSERT LINK) Core Data Integration Guide.
+<b>Custom Code</b>
+<p></p>
+Custom code is a powerful feature offered by StackMob which allows users to upload custom server side code which is then callable by a unique rest endpoint. You'll create a custom code request using the `SMCustomCodeRequest` class, then pass the instance to a parameter of the Datastore API `performCustomCodeRequest:` method.
 
+<br/>
+<br/>
+At the foundation level, all methods which cause requests to StackMob are first translated into the proper REST format. They then pass through an authentication layer which is responsible for signing the request if needed, and the request is sent to StackMob. The response from the server is then translated into the correct format for the calling method's callback or return value.
+
+<br/>
+<br/>
+<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration for persistence can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
+
+<br/>
+<br/>
 In each section of this guide you may see colored boxes which are meant to highlight important information:
 
 <p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
@@ -88,7 +99,9 @@ You should only instantiate one instance of `SMClient`. You can use `[SMClient d
   </div>
 </div>
 
-### Retrieve a Datastore Instance
+### Start Persisting Data
+
+You will interact with the Datastore persistence layer by obtaining an instance of `SMDataStore` from your `SMClient` object.
 
 The easiest way to get a datastore instance is through the default client, starting your calls with the following:
 
@@ -102,6 +115,8 @@ Alternatively you can initialize a separate `SMDataStore` instance from the clie
 SMClient *client = ...;
 SMDataStore *myDataStore = [client dataStore];
 ```
+
+<p class="alert">If you are looking for the Core Data integration for persistence, head over to the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a>.</p>
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -124,6 +139,8 @@ SMDataStore *myDataStore = [client dataStore];
 ## Datastore
 
 The following sections include everything you need to know about creating, reading, updating and deleting objects. All methods are asynchronous and allow you to provide a success and failure block, which will be performed on the main thread by default. All methods have alternative version which include parameters for request options and/or success and failure callback queues. Refer to the Resources sections for links to all available method signatures.
+
+<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration for persistence can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
 
 
 <!--- INSERT OBJECT -->
@@ -801,6 +818,8 @@ It won't be uncommon for your app to be built around the concept of having users
 
 Authentication with StackMob was built based on the Oauth 2.0 protocol.
 
+<p class="alert">For the parts of User Authentication that deal with Core Data, namely creating a user object and retrieving a user managed object, refer to the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide#UserAuthentication" target="_blank">User Authentication section of the Core Data Integration Guide</a>.</p>
+
 <!--- The User Schema -->
 
 ### The User Schema
@@ -842,57 +861,31 @@ Alternatively, you can set all the properties at once using `initWithAPIVersion:
 
 ### Creating a User Object
 
-In Core Data, you'll first create an entity which maps to your user schema on StackMob. It's most likely called `user`, so your entity will be called `User`.
+Creating a user is no different than creating any other object. You'll create a dictionary and include at least the username and password fields and values, and pass the dictionary to the `SMDataStore createObject:` method.
 
-<p class="alert">Do not create an attribute for the password field. It would not be safe to have passwords floating around in Core Data. The <code>SMUserManagedObject</code> class provides helper methods to safely set a password for a user object.</p> 
+For password protection, we recommend sending the request over HTTPS. To do so, create an instance of `SMRequestOptions` with HTTPS set to `YES`, then pass the instance to the overloaded create method. 
 
-After creating a managed object subclass for the entity, you'll change the inherited class from `NSManagedObject` to `SMUserManagedObject`. This class provides methods to properly initialize a user object by linking to the `SMClient` instance. It also provides methods to set the user's password during creation.
-
-In your entity subclass implementation file, we recommend creating a custom init method which calls the `SMUserManagedObject` `initWithEntityName:insertIntoManagedObjectContext` method. We have overridden this method to store a reference to `[SMClient defaultClient]`. This ensures that the SDK knows the primary key, etc of the user schema. Your init method might look something like:
+Here's an example of creating a user object:
 
 ```obj-c
-- (id)initNewUserInContext:(NSManagedObjectContext *)context {
+// In many cases you will pull the username and password from a text field
+NSDictionary *newUser = [NSDictionary dictionaryWithObjectsAndKeys:self.usernameField.text, @"username", self.passwordField.text, @"password"];
+SMRequestOptions *requestOptions = [SMRequestOptions optionsWithHTTPS];
 
-    self = [super initWithEntityName:@"User" insertIntoManagedObjectContext:context];
-     
-    if (self) {
-        // assign local variables, etc.
-    }
-     
-    return self;
+[[SMClient defaultClient] dataStore] createObject:newUser inSchema:@"user" options:requestOptions onSuccess:^(NSDictionary* object, NSString *schema) {
+  // object contains full user object dictionary
+} onFailure:^(NSError *error) {
+  // Handle error
 }
 ```
-
-You'll then create new user objects by creating managed object instances of your entity subclass:
-
-```obj-c
-NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
-User *newUser = [[User alloc] initNewUserInContext:context];
-[newUser setUsername:@"Bob"];
-[newUser setPassword:@"vkfjakvjvjnfosg"];
-[newUser setAge:[NSNumber numberWithInt:34]];
-
-[context saveOnSuccess:^{
-	// Saved the user object
-} onFailure:^(NSError *error){
-	// Error
-}];
-```
-
-The above example assumes an entity `User` with attributes `username` and `age`. The `setPassword` method is provided by the `SMUserManagedObject` class to securely set a password for your user which is persisted to StackMob but never saved locally on the device. 
 
 <div class="alert alert-info">
   <div class="row-fluid">
     <div class="span6">
       <strong>API References</strong>
       <ul>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMUserManagedObject.html" target="_blank">SMUserManagedObject Class Reference</a></li>
-      </ul>
-    </div>
-    <div class="span6">
-      <strong>Resources</strong>
-      <ul>
-        <li><a href="https://developer.stackmob.com/ios-sdk/create-user-object-tutorial" target="_blank">Create a User Object Tutorial</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#//api/name/createObject:inSchema:options:onSuccess:onFailure:" target="_blank">SMDataStore: createObject:inSchema:options:onSuccess:onFailure:</a></li>
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/optionsWithHTTPS" target="_blank">SMRequestOptions: optionsWithHTTPS
       </ul>
     </div>
   </div>
@@ -928,34 +921,6 @@ Logging into StackMob using the standard username/password pattern is done throu
     </div>
   </div>
 </div>
-
-
-<!--- Edit User object -->
-
-
-### Retrieve User Managed Object
-
-The next time the user logs in to your app, you may need to have a copy of the user object around to make updates. To do this, simply create a fetch request and specify a predicate such that the only result should be your logged in user:
-
-```obj-c
-// Pull username from login screen text field, for example
-NSString *username = self.textField.text;
-
-NSFetchRequest *userFetch = [[NSFetchRequest alloc] initWithEntityName:@"User"];
-[userFetch setPredicate:[NSPredicate predicateWithFormat:@"username == %@", username]];
-
-[self.managedObjectContext executeFetchRequest:userFetch onSuccess:^(NSArray *results){
-	if ([results count] != 1) { 
-    // There should only be one result 
-  };
-
-	User *currentUser = (User *)[results objectAtIndex:0];
-	// Edit user object or store ID to pass around
-
-}];
-```
-
-<p class="alert">Managed Objects are not thread safe. Pass object IDs between threads and blocks.</p>
 
 <!--- Get logged in user -->
 
