@@ -1284,7 +1284,7 @@ Let's take an expanded example and get a file from the local filesystem with the
     <html>
     <head>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
      
     <script type="text/javascript">
     /* <![CDATA[ */
