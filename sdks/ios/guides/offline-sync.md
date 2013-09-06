@@ -411,7 +411,7 @@ Here's an example of an `application:didFinishLaunchingWithOptions:` method whic
         
     self.client = [[SMClient alloc] initWithAPIVersion:@"0" publicKey:@"YOUR_PUBLIC_KEY"];
     self.coreDataStore = [self.client coreDataStoreWithManagedObjectModel:self.managedObjectModel];
-    self.coreDataStore.cachePolicy = SMCachePolicyTryCacheOnly;
+    [self.coreDataStore setCachePolicy:SMCachePolicyTryCacheOnly];
     
     __block SMCoreDataStore *blockCoreDataStore = self.coreDataStore;
     
@@ -423,6 +423,7 @@ Here's an example of an `application:didFinishLaunchingWithOptions:` method whic
         }
         else {
             // Handle offline mode
+            [blockCoreDataStore setCachePolicy:SMCachePolicyTryCacheOnly];
         }
     }];
     

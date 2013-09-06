@@ -1302,7 +1302,7 @@ In order to check if the attribute value is a URL or not, use the `stringContain
 ```obj-c
 NSString *picString = [newManagedObject valueForKey:@"pic"];
 if ([SMBinaryDataConversion stringContainsURL:picString]) {
-  NSURL *urlForPic = [NSURL URLForString:picString];
+  NSURL *urlForPic = [NSURL URLWithString:picString];
   // Set image from URL
 } else {
   UIImage *image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
