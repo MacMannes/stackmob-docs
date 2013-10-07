@@ -441,7 +441,8 @@ Each type of method (asynchronous/synchronous save/fetch) has an overloaded meth
 Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to set and will override the default for the duration of the request:</br></br>
 &nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)
 &nbsp;&nbsp;&bull;&nbsp;&nbsp;cacheResults property (for saves/fetches)
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;cachePolicy property (for fetches only)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;fetchPolicy property (for fetches only)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;savePolicy property (for saves only)
 </br></br>
 Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
 </p>
@@ -1430,15 +1431,15 @@ Often times you may want to change the cache policy, or initiate a sync with the
 }];
 ```
 
-Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
+Alternatively you can use the `setNetworkStatusChangeBlockWithFetchPolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
 
 ```obj-c
-[self.client.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^(SMNetworkStatus status){
+[self.client.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^(SMNetworkStatus status){
     
     if (status == SMNetworkStatusReachable) {
-      return SMCachePolicyTryNetworkOnly;
+      return SMFetchPolicyNetworkOnly;
     } else {
-      return SMCachePolicyTryCacheOnly;
+      return SMFetchPolicyCacheOnly;
     }
 
 }];
