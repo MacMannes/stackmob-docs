@@ -225,14 +225,14 @@ If you wish to have this process initiated automatically whenever the device goe
 ```obj-c,6
 // You'll need a block declared core data store instance
 __block SMCoreDataStore *blockCoreDataStore = self.appDelegate.coreDataStore;
-[client.session.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^SMCachePolicy(SMNetworkStatus status) {
+[client.session.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^SMFetchPolicy(SMNetworkStatus status) {
         
         if (status == SMNetworkStatusReachable) {
           // Initiate sync
           [blockCoreDataStore syncWithServer];
-            return SMCachePolicyTryNetworkElseCache;
+            return SMFetchPolicyTryNetworkElseCache;
         } else {
-            return SMCachePolicyTryCacheOnly;
+            return SMFetchPolicyCacheOnly;
         }
 }];
 ```
@@ -444,7 +444,7 @@ Here's an example of an `application:didFinishLaunchingWithOptions:` method whic
         
     self.client = [[SMClient alloc] initWithAPIVersion:@"0" publicKey:@"YOUR_PUBLIC_KEY"];
     self.coreDataStore = [self.client coreDataStoreWithManagedObjectModel:self.managedObjectModel];
-    [self.coreDataStore setCachePolicy:SMCachePolicyTryCacheOnly];
+    [self.coreDataStore setFetchPolicy:SMFetchPolicyCacheOnly];
     
     __block SMCoreDataStore *blockCoreDataStore = self.coreDataStore;
     
@@ -456,14 +456,14 @@ Here's an example of an `application:didFinishLaunchingWithOptions:` method whic
         }
         else {
             // Handle offline mode
-            [blockCoreDataStore setCachePolicy:SMCachePolicyTryCacheOnly];
+            [blockCoreDataStore setFetchPolicy:SMFetchPolicyCacheOnly];
         }
     }];
     
     [self.coreDataStore setSyncCompletionCallback:^(NSArray *objects){
         
         // Our syncing is complete, so change the policy to fetch from the network
-        [blockCoreDataStore setCachePolicy:SMCachePolicyTryNetworkElseCache];
+        [blockCoreDataStore setFetchPolicy:SMFetchPolicyTryNetworkElseCache];
 
         // Notify other views that they should reload their data from the network
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FinishedSync" object:nil];
