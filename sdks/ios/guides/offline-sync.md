@@ -135,7 +135,7 @@ Check out the **Manually Purging the Cache** section of the <a href="http://stac
 
 ### Per Request Fetch Policy
 
-Suppose you want to direct all of your fetches to the local cache, except during application launch, where you will make a few network calls to fetch down the latest server data. You can choose a specific cache policy for a save or fetch options with the `fetchPolicy` property of `SMRequestOptions`.
+Suppose you want to direct all of your fetches to the local cache, except during application launch, where you will make a few network calls to fetch down the latest server data. You can choose a specific fetch policy with the `fetchPolicy` property of `SMRequestOptions`.
 
 Lets fetch all Todo objects since out last app launch:
 
@@ -146,7 +146,7 @@ NSFetchRequest *updatedTodos = [[NSFetchRequest alloc] initWithEntityName:@"Todo
 [updatedTodos setPredicate:[NSPredicate predicateWithFormat:@"lastmoddate > %@", lastAppLaunch]];
 
 SMRequestOptions *options = [SMRequestOptions options];
-options.fetchPolicy = SMFetcholicyNetworkOnly;
+options.fetchPolicy = SMFetchPolicyNetworkOnly;
 
 // We can pass nil for the callback queues to default to the main thread.
 [self.managedObjectContext executeFetchRequest:updatedTodos returnManagedObjectIDs:NO successCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^(NSArray *results) {
@@ -178,15 +178,37 @@ During a save operation, when the network is not reachable, all operations are c
 
 ### Choosing a Save Policy for Saves
 
-**Not:** `SMSavePolicy` was introduced in version 2.2.0.
-
 There are 3 policies to choose from, with type `SMSavePolicy`, which determine the location and order in which data is saved for a particular operation:
 
 * `SMSavePolicyNetworkThenCache` – **This is the default policy.** Saves are attempted on the server, and upon success the object data from the responses is cached. This policy is great for ensuring that data is saved immediately to the server, and auto-generated dates, etc. from StackMob end up cached locally for future use.
 
-* `SMSavePolicyNetworkOnly` – Saves are attempted on the server, and upon success the response object data is not cached. This might be used strategically for performance reasons, but it is important to remember that you may end up with stale data in the cache.
+* `SMSavePolicyNetworkOnly` – Saves are attempted on the server, and upon success the response object data is not cached. This might be used strategically for performance reasons, but it is important to remember that if those objects have been previously cached you may end up with stale data.
 
 * `SMSavePolicyCacheOnly` – Saves are attempted on the cache, and objects are marked as "dirty". The next time `syncWithServer` is called all the dirty objects will be processed and synced with StackMob. This is a useful policy for an application trying to perform a majority of its operations locally, with the intention of performing batch network requests during planned syncs. This policy will provide the best performance in terms of quick saves, with the understanding that syncing will take longer and should ideally take place during inactive times of an app's lifecycle.
+
+This feature is available since v2.2.0.
+
+### Per Request Save Policy
+
+Suppose you want to direct all of your saves containing user specific data to the local cache, with the plan to occasionally sync. However, you have some data that is shared between users, so you want those saves to go directly to StackMob. You can choose a specific save policy for a save or fetch options with the `savePolicy` property of `SMRequestOptions`.
+
+Lets save directly to the network, caching any data in the response afterwards:
+
+```obj-c
+// ... assuming we created or modified a few objects
+
+SMRequestOptions *options = [SMRequestOptions options];
+options.savePolicy = SMSavePolicyNetworkThenCache;
+
+// We can pass nil for the callback queues to default to the main thread.
+[self.managedObjectContext saveWithSuccessCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^() {
+  // Update UI, etc
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+This feature is available since v2.2.0.
 
 <!---
   ##########

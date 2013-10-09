@@ -2583,13 +2583,13 @@ As we improve the SDK, sometimes that means we need to deprecate methods or prop
 ### v2.2.0
 
 * <b>(SMCoreDataStore)</b> <i>cachePolicy</i> property
-  * Use <i>fetchPolicy</i>
+    * Use <i>fetchPolicy</i>
 * <b>(SMRequestOptions)</b> <i>cachePolicy</i> property
-  * Use <i>fetchPolicy</i>
+    * Use <i>fetchPolicy</i>
 * <b>(SMNetworkReachability)</b> <i>setNetworkStatusChangeBlockWithCachePolicyReturn:</i>
-  * Use <i>setNetworkStatusChangeBlockWithFetchPolicyReturn:</i>
+    * Use <i>setNetworkStatusChangeBlockWithFetchPolicyReturn:</i>
 * <b>(SMClient)</b> <i>apiHost</i> property
-  * Use the <i>getHttpHost</i> and <i>getHttpsHost</i> methods of the <i>session</i> property
+    * Use the <i>getHttpHost</i> and <i>getHttpsHost</i> methods of the <i>session</i> property
 
 ### v2.0.0
 
