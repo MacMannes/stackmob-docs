@@ -21,7 +21,7 @@ Note: This bundled version includes JSON2, Underscore, BackBoneJS, and the Stack
 <html>
   <head>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 
     <script type="text/javascript">
     /* <![CDATA[ */
@@ -43,14 +43,14 @@ Note: This bundled version includes JSON2, Underscore, BackBoneJS, and the Stack
 
 ```html,1-2
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 ```
 
 **Sencha**  
 
 ```html,1-2
 <script type="text/javascript" src="http://cdn.sencha.com/ext-4.1.1-commercial/ext-all.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 ```
 
 Using the method above, everything you need (except for jQuery, Sencha, or Zepto) is bundled into one JS resource for 
@@ -66,7 +66,7 @@ string `bundled` missing from the stackmob resource.
 <script type="text/javascript" src="http://static.stackmob.com/js/json2-min.js"></script>
 <script type="text/javascript" src="http://static.stackmob.com/js/underscore-1.4.4-min.js"></script>
 <script type="text/javascript" src="http://static.stackmob.com/js/backbone-1.0.0-min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-min.js"></script>
+  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-min.js"></script>
 
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -251,7 +251,7 @@ e.g. If you write a Java/Scala method named `getloggedinuser` and upload it to S
 <html>
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -1037,7 +1037,7 @@ This example utilizes File and FileReader objects, available via HTML5 - but an 
 <html>
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -1691,7 +1691,7 @@ Create a StackMob user instance and associate it with the user's Facebook accoun
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -1782,7 +1782,7 @@ If you already have a StackMob user saved, use this to link that existing user w
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -1946,7 +1946,7 @@ Login a StackMob user with their Facebook account (using their Facebook Access t
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
 
 <script type="text/javascript">
 /* <![CDATA[ */

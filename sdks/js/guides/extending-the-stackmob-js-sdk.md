@@ -56,7 +56,7 @@ console.log("A login error has occurred! " + StackMob.LOGIN_ERROR);
 
 Let's assume you want to overwrite existing behavior of the JS SDK.  Let's take an example.
 
-Let's assume you want to always fetch expanded objects (related objects) when you call `fetch`.  Here are the two methods as they exist in StackMob JS SDK v0.9.1:
+Let's assume you want to always fetch expanded objects (related objects) when you call `fetch`.  Here are the two methods:
 
 **fetch**
 

@@ -78,37 +78,39 @@ After successfully performing a fetch from the StackMob database, an equivalent 
 
 There are a few scenarios where filling faults will require a network call. One is when trying to access values of related objects which themselves have not been cached. If one of these situations arise and there is no network connection Core Data may throw the “Core Data could not fulfill a fault” exception. The SDK is set up to catch this exception in most cases and error out smoothly.
 
-<!--- CHOOSING CACHE POLICY -->
+<!--- CHOOSING FETCH POLICY -->
 
-### Choosing a Cache Policy for Fetches
+### Choosing a Fetch Policy for Fetches
 
-There are 4 policies to choose from, with type `SMCachePolicy`, which determine the location and order in which data is fetched:
+**Not:** `SMCachePolicy` was deprecated in version 2.2.0. This document reflects the updated names, primarily replacing `cache` with `fetch`.
 
-* `SMCachePolicyTryNetworkOnly` – **This is the default policy.** Fetches are attempted on the server, and if an error occurs because of no network connection the fetch fails. This may be useful in situations where a developer wants all information from the server, which may be constantly changing, and does not have the need to support offline usage.
+There are 4 policies to choose from, with type `SMFetchPolicy`, which determine the location and order in which data is fetched:
 
-* `SMCachePolicyTryNetworkElseCache` – Fetches are attempted on the server, and if an error occurs because of no network connection, the fetch is performed on the cache. This is often used when developers are looking to pull the most recent changes from the server as much as possible, but want to have a cache in place to use when offline.
+* `SMFetchPolicyNetworkOnly` – **This is the default policy.** Fetches are attempted on the server, and if an error occurs because of no network connection the fetch fails. This may be useful in situations where a developer wants all information from the server, which may be constantly changing, and does not have the need to support offline usage.
 
-* `SMCachePolicyTryCacheOnly` – Fetches are attempted on the cache. If there are no results an empty array is returned. This may be useful when an application wants to start with a network only policy, pull down all the information they need, and switch to a cache only policy to avoid any network calls during the duration of the application.
+* `SMFetchPolicyTryNetworkElseCache` – Fetches are attempted on the server, and if an error occurs because of no network connection, the fetch is performed on the cache. This is often used when developers are looking to pull the most recent changes from the server as much as possible, but want to have a cache in place to use when offline.
 
-* `SMCachePolicyTryCacheElseNetwork` – Fetches are attempted on the cache, and if the cache yields no results (empty array), the fetch is attempted on the network. This is useful for applications which want to reduce the total amount of network calls and rely on their cache more than the server. 
+* `SMFetchPolicyCacheOnly` – Fetches are attempted on the cache. If there are no results an empty array is returned. This may be useful when an application wants to start with a network only policy, pull down all the information they need, and switch to a cache only policy to avoid any network calls during the duration of the application.
 
-<!--- CHANGING CACHE POLICY -->
+* `SMFetchPolicyTryCacheElseNetwork` – Fetches are attempted on the cache, and if the cache yields no results (empty array), the fetch is attempted on the network. This is useful for applications which want to reduce the total amount of network calls and rely on their cache more than the server. 
 
-### Changing the Caching Policy
+<!--- CHANGING FETCH POLICY -->
 
-You can change the caching policy for your `SMCoreDataStore` instance at any time by setting its `cachePolicy` property.
+### Changing the Fetching Policy
 
-You can use the `SMNetworkReachability setNetworkStatusChangeBlockWithCachePolicyReturn:` method to change the cache policy based on the current network status. An `SMNetworkReachability` instance is already initialized through the user session, under the `networkMonitor` property. 
+You can change the fetching policy for your `SMCoreDataStore` instance at any time by setting its `fetchPolicy` property.
+
+You can use the `SMNetworkReachability setNetworkStatusChangeBlockWithFetchPolicyReturn:` method to change the fetch policy based on the current network status. An `SMNetworkReachability` instance is already initialized through the user session, under the `networkMonitor` property. 
 
 To set a network status change block, define the following after you initialize your SMClient and SMCoreDataStore instance:
 
 ```obj-c
-[client.session.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^SMCachePolicy(SMNetworkStatus status) {
+[client.session.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^SMFetchPolicy(SMNetworkStatus status) {
         // Customize this block to fit your application's needs
         if (status == SMNetworkStatusReachable) {
-            return SMCachePolicyTryNetworkElseCache;
+            return SMCFetchPolicyNetworkElseCache;
         } else {
-            return SMCachePolicyTryCacheOnly;
+            return SMFetchPolicyCacheOnly;
         }
 }];
 ```
@@ -129,11 +131,11 @@ At any time you can purge the cache manually of:
 
 Check out the **Manually Purging the Cache** section of the <a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMCoreDataStore.html" target="_blank">SMCoreDataStore Class Reference</a> for all the methods.
 
-<!--- PER REQUEST CACHE POLICY -->
+<!--- PER REQUEST FETCH POLICY -->
 
-### Per Request Cache Policy
+### Per Request Fetch Policy
 
-Suppose you want to direct all of your fetches to the local cache, except during application launch, where you will make a few network calls to fetch down the latest server data. You can choose a specific cache policy for a save or fetch options with the `cachePolicy` property of `SMRequestOptions`.
+Suppose you want to direct all of your fetches to the local cache, except during application launch, where you will make a few network calls to fetch down the latest server data. You can choose a specific fetch policy with the `fetchPolicy` property of `SMRequestOptions`.
 
 Lets fetch all Todo objects since out last app launch:
 
@@ -144,7 +146,7 @@ NSFetchRequest *updatedTodos = [[NSFetchRequest alloc] initWithEntityName:@"Todo
 [updatedTodos setPredicate:[NSPredicate predicateWithFormat:@"lastmoddate > %@", lastAppLaunch]];
 
 SMRequestOptions *options = [SMRequestOptions options];
-options.cachePolicy = SMCachePolicyTryNetworkOnly;
+options.fetchPolicy = SMFetchPolicyNetworkOnly;
 
 // We can pass nil for the callback queues to default to the main thread.
 [self.managedObjectContext executeFetchRequest:updatedTodos returnManagedObjectIDs:NO successCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^(NSArray *results) {
@@ -160,9 +162,6 @@ For method signature and specifics see the `SMRequestOptions` class reference: <
 
 This feature is available since v2.1.0.
 
-<p class="alert">In v2.1.0, there is a known issue with using the optionsWithCachePolicy: class method to set a cache policy. Use the 2-step process shown above.</p>
-
-
 <!---
   ##########
   WRITING TO THE CACHE
@@ -171,11 +170,45 @@ This feature is available since v2.1.0.
 
 ## Writing to the Cache
 
-With the cache system enabled, writing to the cache takes place automatically in the following fashion:
+With the cache system enabled, writing to the cache takes place by default in the following fashion:
 
 During a save operation, when the network is reachable, all objects are first sent to StackMob. Upon successful insert/update/delete, the operation is then replicated on the cache.
 
 During a save operation, when the network is not reachable, all operations are completed on the cache. Each object is marked as "dirty" until the network connection has been restored and the "sync with server" process is initiated.
+
+### Choosing a Save Policy for Saves
+
+There are 3 policies to choose from, with type `SMSavePolicy`, which determine the location and order in which data is saved for a particular operation:
+
+* `SMSavePolicyNetworkThenCache` – **This is the default policy.** Saves are attempted on the server, and upon success the object data from the responses is cached. This policy is great for ensuring that data is saved immediately to the server, and auto-generated dates, etc. from StackMob end up cached locally for future use.
+
+* `SMSavePolicyNetworkOnly` – Saves are attempted on the server, and upon success the response object data is not cached. This might be used strategically for performance reasons, but it is important to remember that if those objects have been previously cached you may end up with stale data.
+
+* `SMSavePolicyCacheOnly` – Saves are attempted on the cache, and objects are marked as "dirty". The next time `syncWithServer` is called all the dirty objects will be processed and synced with StackMob. This is a useful policy for an application trying to perform a majority of its operations locally, with the intention of performing batch network requests during planned syncs. This policy will provide the best performance in terms of quick saves, with the understanding that syncing will take longer and should ideally take place during inactive times of an app's lifecycle.
+
+This feature is available since v2.2.0.
+
+### Per Request Save Policy
+
+Suppose you want to direct all of your saves containing user specific data to the local cache, with the plan to occasionally sync. However, you have some data that is shared between users, so you want those saves to go directly to StackMob. You can choose a specific save policy for a save or fetch options with the `savePolicy` property of `SMRequestOptions`.
+
+Lets save directly to the network, caching any data in the response afterwards:
+
+```obj-c
+// ... assuming we created or modified a few objects
+
+SMRequestOptions *options = [SMRequestOptions options];
+options.savePolicy = SMSavePolicyNetworkThenCache;
+
+// We can pass nil for the callback queues to default to the main thread.
+[self.managedObjectContext saveWithSuccessCallbackQueue:nil failureCallbackQueue:nil options:options onSuccess:^() {
+  // Update UI, etc
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
+
+This feature is available since v2.2.0.
 
 <!---
   ##########
@@ -192,14 +225,14 @@ If you wish to have this process initiated automatically whenever the device goe
 ```obj-c,6
 // You'll need a block declared core data store instance
 __block SMCoreDataStore *blockCoreDataStore = self.appDelegate.coreDataStore;
-[client.session.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^SMCachePolicy(SMNetworkStatus status) {
+[client.session.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^SMFetchPolicy(SMNetworkStatus status) {
         
         if (status == SMNetworkStatusReachable) {
           // Initiate sync
           [blockCoreDataStore syncWithServer];
-            return SMCachePolicyTryNetworkElseCache;
+            return SMFetchPolicyTryNetworkElseCache;
         } else {
-            return SMCachePolicyTryCacheOnly;
+            return SMFetchPolicyCacheOnly;
         }
 }];
 ```
@@ -411,7 +444,7 @@ Here's an example of an `application:didFinishLaunchingWithOptions:` method whic
         
     self.client = [[SMClient alloc] initWithAPIVersion:@"0" publicKey:@"YOUR_PUBLIC_KEY"];
     self.coreDataStore = [self.client coreDataStoreWithManagedObjectModel:self.managedObjectModel];
-    self.coreDataStore.cachePolicy = SMCachePolicyTryCacheOnly;
+    [self.coreDataStore setFetchPolicy:SMFetchPolicyCacheOnly];
     
     __block SMCoreDataStore *blockCoreDataStore = self.coreDataStore;
     
@@ -423,13 +456,14 @@ Here's an example of an `application:didFinishLaunchingWithOptions:` method whic
         }
         else {
             // Handle offline mode
+            [blockCoreDataStore setFetchPolicy:SMFetchPolicyCacheOnly];
         }
     }];
     
     [self.coreDataStore setSyncCompletionCallback:^(NSArray *objects){
         
         // Our syncing is complete, so change the policy to fetch from the network
-        [blockCoreDataStore setCachePolicy:SMCachePolicyTryNetworkElseCache];
+        [blockCoreDataStore setFetchPolicy:SMFetchPolicyTryNetworkElseCache];
 
         // Notify other views that they should reload their data from the network
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FinishedSync" object:nil];

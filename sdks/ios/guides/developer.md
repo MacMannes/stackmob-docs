@@ -566,7 +566,6 @@ If we would have set expand depth `2`, we would have also got full objects for a
 
 <!-- Append Existing object -->
 
-
 ### Append Existing Objects
 
 You can append objects to an array without needing to update the entire object at once. This goes for fields of type `Array` as well as one-to-many relationships.
@@ -1380,7 +1379,6 @@ NSURL *imageURL = [NSURL URLWithString:[object objectForKey:@"photo"]];
 NSData *imageData = [NSData dataWithContentsOfURL:imageURL]; 
 UIImage *image = [UIImage imageWithData:imageData];
 ```
-
 <!---
   ///////////////////
   NETWORK REACHABILITY
@@ -1479,6 +1477,20 @@ Often times you may want to change the cache policy, or initiate a sync with the
       ...
     } else {
       ...
+    }
+
+}];
+```
+
+Alternatively you can use the `setNetworkStatusChangeBlockWithFetchPolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
+
+```obj-c
+[self.client.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^(SMNetworkStatus status){
+    
+    if (status == SMNetworkStatusReachable) {
+      return SMFetchPolicyNetworkOnly;
+    } else {
+      return SMFetchPolicyCacheOnly;
     }
 
 }];
@@ -2618,6 +2630,17 @@ The iOS SDK gives developers access to two global variables that will enable add
 ## SDK Deprecations
 
 As we improve the SDK, sometimes that means we need to deprecate methods or properties.
+
+### v2.2.0
+
+* <b>(SMCoreDataStore)</b> <i>cachePolicy</i> property
+    * Use <i>fetchPolicy</i>
+* <b>(SMRequestOptions)</b> <i>cachePolicy</i> property
+    * Use <i>fetchPolicy</i>
+* <b>(SMNetworkReachability)</b> <i>setNetworkStatusChangeBlockWithCachePolicyReturn:</i>
+    * Use <i>setNetworkStatusChangeBlockWithFetchPolicyReturn:</i>
+* <b>(SMClient)</b> <i>apiHost</i> property
+    * Use the <i>getHttpHost</i> and <i>getHttpsHost</i> methods of the <i>session</i> property
 
 ### v2.0.0
 

@@ -407,6 +407,18 @@ NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRe
   </div>
 </div>
 
+#### Per Request?
+
+<p class="alert">
+Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to set and will override the default for the duration of the request:</br></br>
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;cacheResults property (for saves/fetches)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;fetchPolicy property (for fetches only)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;savePolicy property (for saves only)
+</br></br>
+Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
+</p>
+
 <!--- UPDATE OBJECT -->
 
 ### Updating an Object

@@ -11,10 +11,12 @@ When you first signup with StackMob, you're taken to your Development environmen
 
 Your Development REST API is located at:
 
+```xml
     http://api.stackmob.com/
 
     With request header:
-    Accept: application/vnd.stackmob+json; version=0      
+    Accept: application/vnd.stackmob+json; version=0
+```
 
 Note the 0, for API Version 0 - development
 
@@ -26,10 +28,12 @@ Your Production environment serves your public facing traffic.  It's a completel
 
 Your Production REST API, after you deploy it, is located at:
 
+```xml
     http://api.stackmob.com/
 
     With request header:
     Accept: application/vnd.stackmob+json; version=1
+```
 
 You should be passing your [Production public key](https://dashboard.stackmob.com/settings) with your REST API request.
 
@@ -39,12 +43,14 @@ Upgrading your app and backend could be a challenging endeavor given that you ca
 
 StackMob provides the ability for you to run multiple Production API versions.  If you had three separate API versions running at the same time, you'd have Production REST API endpoints such as:
 
+```xml
     http://api.stackmob.com/
     
     With request headers:
     Accept: application/vnd.stackmob+json; version=1  //Hits API Version 1
     Accept: application/vnd.stackmob+json; version=2  //Hits API Version 2
     Accept: application/vnd.stackmob+json; version=3  //Hits API Version 3
+```
 
 Each one of those REST API versions could be concurrently running with a different set of schemas and custom code.  They would all be sharing the same data source.  This allows you to upgrade your backend and potentially change the interface while giving you the flexibility you need to make decisions on how to support backwards compatibility with your users.  For example, did you refactor a major server-side component in Custom Code and want to safely section off new users to use that logic?  Deploy that logic to Version 2 of your API and rollout a version of your mobile client to use that API.  Meanwhile, users with your original app can still hit Version 1 of your API.
 

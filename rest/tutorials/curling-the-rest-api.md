@@ -43,7 +43,7 @@ Assuming you now have a `message` object created, let's proxy an API call via th
 We'll create a new `message` object via a POST call to StackMob. Let's go to the command prompt and type in the example below. Replace the subdomain and app name with your <a href="https://dashboard.stackmob.com/settings">subdomain and app name</a>.
 
 ```
-    > curl -svx localhost:8001 -H "Accept: application/vnd.stackmob+json; version=0" -H "Content-Type: application/json" -X POST -d  "{\"content\":\"Hello World\"}"  http://api.[YOUR APPNAME].stackmob.com/message
+    > curl -svx localhost:8001 -H "Accept: application/vnd.stackmob+json; version=0" -H "Content-Type: application/json" -X POST -d  "{\"content\":\"Hello World\"}"  http://api.stackmob.com/message
 ```
 
 Formatted, your JSON response should look something like:
@@ -66,7 +66,7 @@ Note: If you don't set a `message_id` in the JSON object when creating an object
 To show that it's persisted, let's retrieve the object now via a GET request.
 
 ```
-    > curl -sx localhost:8001 http://[YOUR APPNAME].mob1.stackmob.com/api/0/[YOUR APPNAME]/message/200d1ede917e43fda9319630ffd3e57a
+    > curl -sx localhost:8001 http://api.stackmob.com/message/200d1ede917e43fda9319630ffd3e57a
 ```
 
 This makes a request to the REST API saying you want an object instance of `message` with `message_id` of message1, which we specified. The result should look like:
@@ -83,7 +83,7 @@ This makes a request to the REST API saying you want an object instance of `mess
 To get *all* objects of type `message`, simply leave off the id parameter.
 
 ```
-    > curl -sx localhost:8001 http://[YOUR SUBDOMAIN].mob1.stackmob.com/api/0/[YOUR APPNAME]/message
+    > curl -sx localhost:8001 http://api.stackmob.com/message
 ```
 
 The result will look similar, but notice it's now in an array with one item (since so far we've only created one instance).
@@ -104,7 +104,7 @@ The result will look similar, but notice it's now in an array with one item (sin
 Now that we know we have the object saved in the datastore, let's update it with a PUT request.
 
 ```
-    > curl -sx localhost:8001 -H "Accept: application/vnd.stackmob+json; version=0" -H "Content-Type: application/json" -X PUT -d  "{\"content\":\"Hello Bodie\"}"  http://api.[YOUR SUBDOMAIN].stackmob.com/message/200d1ede917e43fda9319630ffd3e57a
+    > curl -sx localhost:8001 -H "Accept: application/vnd.stackmob+json; version=0" -H "Content-Type: application/json" -X PUT -d  "{\"content\":\"Hello Bodie\"}"  http://api.stackmob.com/message/200d1ede917e43fda9319630ffd3e57a
 ```
 
 The response should look like:
@@ -123,7 +123,7 @@ The response should look like:
 Now that we've said our proper goodbye's, let's delete message1 from the datastore.
 
 ```
-    > curl -sx localhost:8001  -X DELETE http://[YOUR APPNAME].mob1.stackmob.com/api/0/[YOUR APPNAME]/message/200d1ede917e43fda9319630ffd3e57a
+    > curl -sx localhost:8001  -X DELETE http://api.stackmob.com/message/200d1ede917e43fda9319630ffd3e57a
 ```
 
 This produces:

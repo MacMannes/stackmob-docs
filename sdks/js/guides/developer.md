@@ -1267,14 +1267,13 @@ A file is represented as a `Binary` file type field on your schema.  To save the
 * the file name
 * the file type (image/png)
 
-The code:
+In your object model, declare the binary field:
 
 ```js
-var base64Content = //the file, base64 encoded as a string
-var fileName = //
-var fileType = theFile.type;
-
-user.setBinaryFile('profilepic', fileName, fileType, base64Content);
+var Todo = StackMob.Model.extend({
+  schemaName: 'todo',
+  binaryFields: ['photo'] //assuming your field name is "photo"
+});
 ```
 
 Let's take an expanded example and get a file from the local filesystem with the HTML5 FileReader API:
@@ -1284,14 +1283,14 @@ Let's take an expanded example and get a file from the local filesystem with the
     <html>
     <head>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.1-bundled-min.js"></script>
+    <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
      
     <script type="text/javascript">
     /* <![CDATA[ */
         StackMob.init({
-            publicKey: 'your_public_key',
-        apiVersion: 0
-      });
+          publicKey: 'your_public_key',
+          apiVersion: 0
+        });
     /* ]]> */
     </script>
      
@@ -1308,7 +1307,8 @@ Let's take an expanded example and get a file from the local filesystem with the
     <script type="text/javascript">
       //Define your Todo class once on the page.
       var Todo = StackMob.Model.extend({
-        schemaName: 'todo'
+        schemaName: 'todo',
+        binaryFields: ['photo']
       });
      
       var todoInstance = new Todo();

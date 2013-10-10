@@ -97,6 +97,22 @@ Request Body:
 ]
 ```
 
+Response shown in JSON notation for illustration.
+
+```javascript
+/*
+ * The order of the ids will match the order of the objects POSTed
+ */
+{
+	"succeeded":
+		[
+			"50756f8900c644c097861d7c72256869",
+			"553112063b134f359921d2988694d9f2"
+		],
+	"failed":[]
+}
+```
+
 ## GET - Read Objects
 
 Read your objects from the datastore.
