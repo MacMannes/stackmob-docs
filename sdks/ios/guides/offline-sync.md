@@ -1,4 +1,4 @@
-iOS SDK Caching and Offline Sync
+iOS SDK Caching and Offline Sync Guide
 ====================
 
 <!---
@@ -10,7 +10,7 @@ iOS SDK Caching and Offline Sync
 
 ## Overview
 
-The offline sync feature enables developers to build apps that can function seamlessly without network connectivity. When the network connection is restored to the device, developers can sync locally changed data with their StackMob database. With the ability to define your own merge policies, error callbacks and fetch cache policies, StackMob offers developers the ability to build powerful, feature rich apps that aren't limited by a device's network connection.
+The caching and offline sync features enable developers to build apps that can function seamlessly without network connectivity. When the network connection is restored to the device, developers can sync locally changed data with their StackMob database. With the ability to define your own merge policies, error callbacks and fetch cache policies, StackMob offers developers the ability to build powerful, feature rich apps that aren't limited by a device's network connection.
 
 In this guide we will discuss how the cache works, options the developer has to customize the cache behavior, and the process of syncing your local objects with the server.
 
@@ -65,6 +65,8 @@ Now you're ready to use the caching and offline sync systems.
 ## Turning On/Off the Cache
 
 **The cache is turned off by default.** To turn on the cache, include `SM_CACHE_ENABLED = YES;` before you initialize the StackMob client and core data store.
+
+<p class="alert">We recommend turning the cache on, even if you don't plan on explicitly using it. All default cache settings direct saves and fetches to the network, but when faulted objects need to pull their values into memory, the cache provides a place to pull from without the need for additional network calls.</p>
 
 <!---
   ##########

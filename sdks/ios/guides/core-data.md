@@ -1,7 +1,23 @@
-StackMob and Core Data Integration
+StackMob and Core Data Integration Guide
 =====================================
 
-Core Data provides a powerful and robust object graph management system that otherwise would be a nightmare to implement. Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
+## Overview
+
+Core Data provides a powerful and robust object graph management system that otherwise would be a nightmare to implement. Although it may have a reputation for being complex, the basics are easy to grasp and understand.
+
+The iOS SDK offers a persistence layer tightly integrated with Core Data, allowing developers to use native Core Data code to make requests to StackMob's remote database. We've even taken it a step further by adding asynchronous save and fetch methods, caching and offline syncing systems, and more.
+
+<br/>
+<br/>
+<b>The contents of this guide use the Core Data integration for persistence. We understand that using Core Data for persistence might be too extensive for some applications. All equivalent operations using the Datastore API, a simple wrapper on the REST API, can be found in the <a href="https://developer.stackmob.com/ios-sdk/developer-guide" target="_blank">Developer Guide</a></b>.
+
+<br/>
+<br/>
+In each section of this guide you may see colored boxes which are meant to highlight important information:
+
+<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
+
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
 
 ## The Basics
 
@@ -13,117 +29,6 @@ The three main pieces of Core Data are instances of:
 * <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSPersistentStoreCoordinator_Class/NSPersistentStoreCoordinator.html" target="_blank">NSPersistentStoreCoordinator</a> - Coordinates between the managed object context and the actual database, in this case StackMob.
 * <a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/CoreDataFramework/Classes/NSManagedObjectModel_Class/Reference/Reference.html" target="_blank">NSManagedObjectModel</a> - References a file where you defined your object graph.
 
-## Coding Practices
-
-The following are coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data.  This allows StackMob to seamlessly translate to and from the language that Core Data speaks.
-
-### Table Mapping
-
-This is a table of how Core Data, StackMob and regular databases map to each other:
-<table class="table table-bordered table-pretty-header">
-	<tr align="center">
-		<th>Core Data</th>
-		<th>StackMob</th>
-		<th>Database</th>
-	</tr>
-	<tr>
-		<td>Entity</td>
-		<td>Schema</td>
-		<td>Table</td>
-	</tr>
-	<tr>
-		<td>Attribute</td>
-		<td>Field</td>
-		<td>Column</td>
-	</tr>
-	<tr>
-		<td>Relationship</td>
-		<td>Relationship</td>
-		<td>Reference Column</td>
-	</tr>
-</table>
-
-### Naming Conventions
-
-#### Entity Names
-
-Core Data entities are encouraged to start with a capital letter and will translate to all lowercase on StackMob. Example: **Superpower** entity on Core Data translates to **superpower** schema on StackMob.
-
-#### Property Names
-
-Core Data attribute and relationship names are encouraged to be in camelCase, but can also be in StackMob form, all lowercase with optional underscores. Acceptable formats are therefore **yearBorn**, **year_born**, or **yearborn**. All camelCased names will be converted to and from their equivalent form on StackMob, i.e. the property yearBorn will appear as year\_born on StackMob.
-
-#### StackMob Schema Primary Keys
-
-All StackMob schemas have a primary key field that is always **schemaName\_id**, unless the schema is a user object, in which case it defaults to "username" but can be changed manually by setting the `userPrimaryKeyField` property in your `SMClient` instance.
-
-### Best Practices
-
-#### Entity Primary Keys
-
-Following the section above on primary keys, each Core Data entity must include an attribute of type string that maps to the primary key field on StackMob. Acceptable formats are <b><i>schemaName</i>Id</b> or <b><i>schemaName</i>_id</b>. 
-
-If the managed object subclass for the Entity inherits from `SMUserManagedObject`, meaning it is intended to define user objects, you may use either of the above formats or whatever lowercase string with optional underscores matches the primary key field on StackMob. 
-
-For example: entity **Soda** should have attribute **sodaId** or **soda_id**, whereas your **User** entity primary key field defaults to **@"username"**.
-
-#### Assign IDs
-
-When inserting new objects into your managed object context, you must assign an id value to the attribute which maps to the StackMob primary key field BEFORE you make save the context. 90% of the time you can get away with assigning ids like this:
-
-
-```obj-c
-// assuming your instance is called newManagedObject
-[newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
-
-// now you can save your context
-```
-
-
-The other 10% of the time is when you want to assign your own ids that aren't unique strings based on a UUID algorithm. A great example of this is user objects, where you would probably assign the user's name to the primary key field.  In that case, your code might look more like this:
-
-
-```obj-c
-// assuming your instance is called newManagedObject
-[newManagedObject setValue:@"bob" forKey:[newManagedObject primaryKeyField]];
-
-// now you can save your context
-```
-
-#### Use NSManagedObjectContext+Concurrency Category
-
-The <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency category</a> is where all the StackMob async and sync versions of the <i>save:</i>, <i>executeFetchRequest:error:</i>, and <i>countForFetchRequest:error:</i> can be found. They should be only methods you use to perform save and fetch operations.
-
-
-#### NSManagedObject Subclasses
-
-Creating an NSManagedObject subclass for each of your entities is highly recommended for convenience. You can add an init method to each subclass and include the ID assignment line from above - then you don't have to remember to do it each time you create a new object!
-
-#### SMUserManagedObject Subclasses
-
-After creating an NSManagedObject subclass for an entity that maps to a user object on StackMob, change the inherited class to SMUserManagedObject.  This class will give you a method to securely set a password for the user object, without directly setting any attributes in Core Data.  It is important to make sure you initialize an SMUserManagedObject instance properly.
-
-#### Create Before Relate
-
-Before saving updated objects and depending on the merge policy, Core Data will grab persistent values from the server to compare against.  Problems arise when a relationship is updated with an object that hasn't been saved on the server yet.  To play it safe, try to create and save objects before relating them to one another. 
-
-#### Working With NSDate Attributes
-
-As of v1.4.0, NSDate attribute values are serialized to the StackMob server as integers in ms.  Declare the fields on StackMob as Integer.  By keeping consistency with the way the auto-generated **createddate** and **lastmoddate** fields are stored (ms), NSDate attributes will be deserialized correctly.
-
-If you want to check if one date is equal to another, use the **timeIntervalSinceDate:** method.  Dates being equal to the second is equivalent to the time interval being less than 1.  Methods like <b>isEqualToDate:</b> track sub-second differences between dates, which are not present in the serialized integers.  Here's an example of how to check if two dates are equal:
-
-
-```obj-c
-NSDate *date1 = [object1 valueForKey:@"date"];
-NSDate *date2 = [object2 valueForKey:@"date"];
-if ([date1 timeIntervalSinceDate:date2] < 1) {
-	// The dates are equal.
-}
-```
-
-Feel free to try other ways of comparing dates to find the method that works best for your app's needs.
-
 <!---
     ///////////////////
     SETUP
@@ -131,21 +36,6 @@ Feel free to try other ways of comparing dates to find the method that works bes
 -->
 
 ## Setup
-
-<!--- USING CORE DATA -->
-
-### Using Core Data
-
-Core Data provides a powerful and robust object graph management system that otherwise would be a nightmare to implement.  Although it may have a reputation for being pretty complex, the basics are easy to grasp and understand.
-
-We've created a separate guide on using StackMob with Core Data, which contains everything from Core Data basics to Coding Practices to Specifications on what is supported by the StackMob integration.
-
-<p class="alert">Since a lot of your interactions with StackMob will be through Core Data, please be sure to read through the guide.</p>
-
-<a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">StackMob and Core Data Guide</a>
-
-<p></p><p></p>
-<p class="alert">We understand that using Core Data for persistence might be too extensive for some applications. For those who prefer a simple wrapper on top of the REST API, we provide the full <a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide" target="_blank">Datastore API</a> as well.</p>
 
 <!--- DEF MOM -->
 
@@ -259,6 +149,121 @@ If you want to do your own context creation, use the `persistentStoreCoordinator
   </div>
 </div>
 
+## Coding Practices
+
+The following are coding practices to adhere to as well as general things to keep in mind when using StackMob with Core Data.  This allows StackMob to seamlessly translate to and from the language that Core Data speaks.
+
+### Table Mapping
+
+This is a table of how Core Data, StackMob and regular databases map to each other:
+<table class="table table-bordered table-pretty-header">
+	<tr align="center">
+		<th>Core Data</th>
+		<th>StackMob</th>
+		<th>Database</th>
+	</tr>
+	<tr>
+		<td>Entity</td>
+		<td>Schema</td>
+		<td>Table</td>
+	</tr>
+	<tr>
+		<td>Attribute</td>
+		<td>Field</td>
+		<td>Column</td>
+	</tr>
+	<tr>
+		<td>Relationship</td>
+		<td>Relationship</td>
+		<td>Reference Column</td>
+	</tr>
+</table>
+
+### Naming Conventions
+
+#### Entity Names
+
+Core Data entities are encouraged to start with a capital letter and will translate to all lowercase on StackMob. Example: **Superpower** entity on Core Data translates to **superpower** schema on StackMob.
+
+#### Property Names
+
+Core Data attribute and relationship names are encouraged to be in camelCase, but can also be in StackMob form, all lowercase with optional underscores. Acceptable formats are therefore **yearBorn**, **year_born**, or **yearborn**. All camelCased names will be converted to and from their equivalent form on StackMob, i.e. the property yearBorn will appear as year\_born on StackMob.
+
+#### StackMob Schema Primary Keys
+
+All StackMob schemas have a primary key field that is always **schemaName\_id**, unless the schema is a user object, in which case it defaults to "username" but can be changed manually by setting the `userPrimaryKeyField` property in your `SMClient` instance.
+
+### Best Practices
+
+#### Entity Primary Keys
+
+Following the section above on primary keys, each Core Data entity must include an attribute of type string that maps to the primary key field on StackMob. Acceptable formats are <b><i>schemaName</i>Id</b> or <b><i>schemaName</i>_id</b>. 
+
+If the managed object subclass for the Entity inherits from `SMUserManagedObject`, meaning it is intended to define user objects, you may use either of the above formats or whatever lowercase string with optional underscores matches the primary key field on StackMob. 
+
+For example: entity **Soda** should have attribute **sodaId** or **soda_id**, whereas your **User** entity primary key field defaults to **@"username"**.
+
+#### Assign IDs
+
+When inserting new objects into your managed object context, you must assign an id value to the attribute which maps to the StackMob primary key field BEFORE you make save the context. 90% of the time you can get away with assigning ids like this:
+
+
+```obj-c
+// assuming your instance is called newManagedObject
+[newManagedObject setValue:[newManagedObject assignObjectId] forKey:[newManagedObject primaryKeyField]];
+
+// now you can save your context
+```
+
+
+The other 10% of the time is when you want to assign your own ids that aren't unique strings based on a UUID algorithm. A great example of this is user objects, where you would probably assign the user's name to the primary key field.  In that case, your code might look more like this:
+
+
+```obj-c
+// assuming your instance is called newManagedObject
+[newManagedObject setValue:@"bob" forKey:[newManagedObject primaryKeyField]];
+
+// now you can save your context
+```
+
+#### Use NSManagedObjectContext+Concurrency Category
+
+The <a href="http://stackmob.github.io/stackmob-ios-sdk/Categories/NSManagedObjectContext+Concurrency.html" target="_blank">NSManagedObjectContext+Concurrency category</a> is where all the StackMob async and sync versions of the <i>save:</i>, <i>executeFetchRequest:error:</i>, and <i>countForFetchRequest:error:</i> can be found. They should be only methods you use to perform save and fetch operations.
+
+
+#### NSManagedObject Subclasses
+
+Creating an NSManagedObject subclass for each of your entities is highly recommended for convenience. You can add an init method to each subclass and include the ID assignment line from above - then you don't have to remember to do it each time you create a new object!
+
+#### SMUserManagedObject Subclasses
+
+After creating an NSManagedObject subclass for an entity that maps to a user object on StackMob, change the inherited class to SMUserManagedObject.  This class will give you a method to securely set a password for the user object, without directly setting any attributes in Core Data.  It is important to make sure you initialize an SMUserManagedObject instance properly.
+
+#### Define Relationship Inverses
+
+Although it is not strictly required, defining inverse relationships will allow Core Data to maintain referential integrity, handle delete rules. We have seen developers run into issues before that were easily solvable by ensuring all relationships have inverses. 
+
+#### Create Before Relate
+
+Before saving updated objects and depending on the merge policy, Core Data will grab persistent values from the server to compare against.  Problems arise when a relationship is updated with an object that hasn't been saved on the server yet.  To play it safe, try to create and save objects before relating them to one another. 
+
+#### Working With NSDate Attributes
+
+As of v1.4.0, NSDate attribute values are serialized to the StackMob server as integers in ms.  Declare the fields on StackMob as Integer.  By keeping consistency with the way the auto-generated **createddate** and **lastmoddate** fields are stored (ms), NSDate attributes will be deserialized correctly.
+
+If you want to check if one date is equal to another, use the **timeIntervalSinceDate:** method.  Dates being equal to the second is equivalent to the time interval being less than 1.  Methods like <b>isEqualToDate:</b> track sub-second differences between dates, which are not present in the serialized integers.  Here's an example of how to check if two dates are equal:
+
+
+```obj-c
+NSDate *date1 = [object1 valueForKey:@"date"];
+NSDate *date2 = [object2 valueForKey:@"date"];
+if ([date1 timeIntervalSinceDate:date2] < 1) {
+	// The dates are equal.
+}
+```
+
+Feel free to try other ways of comparing dates to find the method that works best for your app's needs.
+
 <!---
     ///////////////////
     DATASTORE
@@ -267,7 +272,7 @@ If you want to do your own context creation, use the `persistentStoreCoordinator
 
 ## Datastore
 
-The following sections include everything you need to know about creating, reading, updating and deleting objects. When you use Core Data you'll perform your write operations on your managed object context, kind of like a scratch pad, and persist the changes by performing a save operation.
+The following sections include everything you need to know about creating, reading, updating and deleting objects. When you use Core Data you'll perform write operations on a managed object context, sort of like an in-memory scratch pad, and persist the changes by performing a save operation.
 
 <!--- INSERT OBJECT -->
 
@@ -278,12 +283,12 @@ Typically you will create an `NSManagedObject` subclass for each of your Core Da
 ```obj-c
 Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
 
-// Assumes Todo has attributes title and todoId
+// Assumes Todo has a title attribute and an attribute which maps to the primary key on StackMob.
+[newManagedObject assignObjectId];
 [newTodo setTitle:@"Take out the trash"];
-[newTodo setTodoId:[newManagedObject assignObjectId]];
 ```
 
-The `assignObjectId` method is provided by the SDK to assign an arbitrary ID to the attribute which maps to the primary key field on StackMob. Object IDs must be assigned to a managed object before it is persisted. This keeps Core Data IDs and StackMob objects in sync. You are free to assign your own IDs if you wish, `assignObjectId` is simply a convenience method which masks a random UUID generation algorithm.
+The `assignObjectId` method is provided by the SDK to assign an arbitrary ID to the attribute which maps to the primary key field on StackMob. Object IDs must be assigned to managed objects before they are persisted. This keeps Core Data IDs and StackMob objects in sync. You are free to assign your own IDs if you wish, `assignObjectId` is simply a convenience method which masks a random UUID generation algorithm.
 
 <b>Without Subclasses</b>
 
@@ -407,23 +412,23 @@ NSArray *results = [self.managedObjectContext executeFetchRequestAndWait:fetchRe
   </div>
 </div>
 
-#### Per Request?
-
-<p class="alert">
-Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to set and will override the default for the duration of the request:</br></br>
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;cacheResults property (for saves/fetches)
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;fetchPolicy property (for fetches only)
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;savePolicy property (for saves only)
-</br></br>
-Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
-</p>
-
 <!--- UPDATE OBJECT -->
 
 ### Updating an Object
 
 After fetching an existing managed object, update it by simply changing the object's values. The updated values are not persisted until the managed object context is saved.
+
+```obj-c
+NSManagedObject *todoObject = [fetchRequestResults lastObject];
+
+[todoObject setValue:@"New Title" forKey:@"title"];
+
+[self.managedObjectContext saveOnSuccess:^{
+  // Object updated
+} onFailure:^(NSError *error) {
+  // Handle error
+}];
+```
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -440,7 +445,7 @@ After fetching an existing managed object, update it by simply changing the obje
 
 ### Deleting an Object
 
-Delete an object by simply calling the managed object context `deleteObject` method and passing the manage object you wish to delete. The delete will not be finalized until you save the managed object context.
+Delete an object by simply calling the managed object context `deleteObject:` method and passing the manage object you wish to delete. The delete will not be finalized until you save the managed object context.
 
 ```obj-c
 [self.managedObjectContext deleteObject:aManagedObject];
@@ -525,8 +530,9 @@ Each type of method (asynchronous/synchronous save/fetch) has an overloaded meth
 <p class="alert">
 Not all options provided by the SMRequestOptions class are taken into account during save/fetch requests. The following options are currently safe to set and will override the default for the duration of the request:</br></br>
 &nbsp;&nbsp;&bull;&nbsp;&nbsp;isSecure property (HTTPS)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;savePolicy property (for saves only)
+&nbsp;&nbsp;&bull;&nbsp;&nbsp;fetchPolicy property (for fetches only)
 &nbsp;&nbsp;&bull;&nbsp;&nbsp;cacheResults property (for saves/fetches)
-&nbsp;&nbsp;&bull;&nbsp;&nbsp;cachePolicy property (for fetches only)
 </br></br>
 Customizing other options can result in unexpected requests, which can lead to save/fetch failures.
 </p>
@@ -607,14 +613,6 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"todo"];
     </div>
   </div>
 </div>
-
-<!--- Lower Level Query API -->
-
-### Datastore Query API
-
-The Core Data fetch requests implementation is built on top of the datastore query API. You are free to use the datastore query API directly, which is highly recommended if you are using the datastore API for persistence as well.
-
-<a href="https://developer.stackmob.com/ios-sdk/datastore-api-guide#Queries" target="_blank">Datastore API Guide: Queries Section</a>
 
 
 <!---
@@ -930,7 +928,7 @@ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:location];
 [SMGeoPoint getGeoPointForCurrentLocationOnSuccess:^(SMGeoPoint *geoPoint) {
      
   Todo *todo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:self.managedObjectContext];
-  todo.todoId = [todo assignObjectId];
+  [todo assignObjectId];
   todo.title = @"My Location";
 
   todo.location = [NSKeyedArchiver archivedDataWithRootObject:geoPoint];
@@ -1228,7 +1226,7 @@ if ([[[notification userInfo] objectForKey:SMCurrentNetworkStatusKey] intValue] 
  
 ### Status Changes Blocks 
 
-Often times you may want to change the cache policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
+Often times you may want to change the fetch policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
 
 ```obj-c
 [self.client.networkMonitor setNetworkStatusChangeBlock:^(SMNetworkStatus status){
@@ -1242,15 +1240,15 @@ Often times you may want to change the cache policy, or initiate a sync with the
 }];
 ```
 
-Alternatively you can use the `setNetworkStatusChangeBlockWithCachePolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
+Alternatively you can use the `setNetworkStatusChangeBlockWithFetchPolicyReturn:` method, which requires you to return a fetch policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
 
 ```obj-c
-[self.client.networkMonitor setNetworkStatusChangeBlockWithCachePolicyReturn:^(SMNetworkStatus status){
+[self.client.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^(SMNetworkStatus status){
     
     if (status == SMNetworkStatusReachable) {
-      return SMCachePolicyTryNetworkOnly;
+      return SMFetchPolicyNetworkOnly;
     } else {
-      return SMCachePolicyTryCacheOnly;
+      return SMFetchPolicyCacheOnly;
     }
 
 }];
@@ -1279,6 +1277,36 @@ Included with version 2.0.0+ of the SDK is a sync system built in to the Core Da
 
 Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Caching and Offline Sync Guide</a> for all information.
 
+## Error Handling
+
+When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occurred.
+
+<p class="alert">This section only covers Core Data specific errors. Refer to the <a href="https://developer.stackmob.com/ios-sdk/developer-guide#ErrorHandling" target="_blank">Error Handling section of the Developer Guide</a> for all error information.</p>
+
+### Core Data Save Failure Errors
+
+When a Core Data save fails because objects could not be inserted/updated/deleted on StackMob, the error returned is formatted in the following way:
+
+<ul>
+  <li>The error code will be -108, <b>SMErrorCoreDataSave</b></li>
+  <li>The error userInfo property may contain any of the following keys, which are constants you can reference, depending on what the save request consisted of: <b>SMInsertedObjectFailures</b>, <b>SMUpdatedObjectFailures</b>, <b>SMDeletedObjectFailures</b>.</li>
+  <li>If any of those keys exist, its value will be an NSArray instance of NSDictionary instances, one dictionary for each failed object.</li>
+  <li>Each dictionary will include 2 key constants: <b>SMFailedManagedObjectID</b>, whose value is an NSManagedObjectID instance of the managed object that was not saved properly, and <b>SMFailedManagedObjectError</b>, whose value is an NSError instance of what caused the object to not get saved properly.</li>
+</ul>
+
+Here's an example of an error returned when trying to save a user object with primary key "Jack" when a user named "Jack" already exists on the server:
+
+```bash
+Error Domain=SMError Code=-108 "The operation couldn't be completed. (SMError error -108.)" UserInfo=0xc99d030 {
+  SMInsertedObjectFailures=(
+    {
+      SMFailedManagedObjectError = "Error Domain=HTTP Code=409 \"The operation couldn\U2019t be completed. 
+          (HTTP error 409.)\" UserInfo=0x8661680 {error=Duplicate key for schema user: \"jack\"}";
+      SMFailedManagedObjectID = "0xc9a0210 <x-coredata://FDCF65C5-02D3-45E9-BA03-793E1A125FCE-12897-00000C7A7DD73EAA/User/pjack>";
+    }
+  )
+}
+```
 
 <!---
     ///////////////////

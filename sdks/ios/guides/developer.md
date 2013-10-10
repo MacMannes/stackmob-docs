@@ -7,41 +7,42 @@ iOS Developer Guide
 
 The architecture of the iOS SDK can be broken into a few key parts:
 
-<b>Persistence:</b>
+### Persistence ###
 <p></p>
-The iOS SDK provides two routes for persistence: 
+The iOS SDK provides two APIs to use for persistence: 
 
-The "Datastore API" offers simple asynchronous wrapper methods for each of the core operations: creating, reading, updating, and deleting. It also provides methods for performing queries, atomic increments/decrements, and related object manipulation, just to name a few.
+The "Datastore API" offers simple asynchronous, callback-based methods as a wrapper for each of the core operations: creating, reading, updating, and deleting. It also provides methods for other types of data persistence, such as performing queries, atomic increments/decrements, and related object manipulation.
 
-For developers who want a more powerful, complex persistence solution, complete with a caching and offline system, we have built a Core Data layer that sits on top of the Datastore API. Core Data, Apple's Persistence framework, allows us to place a familiar wrapper around StackMob REST calls and Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications.
+For developers who want a more powerful and complex persistence solution, complete with a caching and offline sync system, we have built a "Core Data Integration"  that sits on top of the Datastore API. Core Data, Apple's Persistence framework, allows us to place a familiar wrapper around StackMob REST calls and the Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications.
 
-Beneath each of the persistence classes there are additional helper classes used for specialized features like file storage, geolocation, and custom code.
+Regardless of which persistence API you go with, there are independent helper classes used for specialized features such as file storage, geolocation, and custom code.
 
+<p></p>
 <b>How do I know if I should use Core Data or the Datastore API directly for persistence?</b>
 
 Which route you use for persistence depends mainly on your app's data model. ADD MORE
 
-#### User Management #####
+### User Management ####
 <p></p>
 
-The user management piece of the SDK includes all the classes and methods used for creating user objects and creating and maintaining user sessions. authenticating with StackMob is done via a username/password, Facebook, or Twitter credentials. Password management is also available. 
+The user management piece of the SDK includes all the classes and methods used for creating user objects and creating and maintaining user sessions. Authenticating with StackMob is done via a username/password, Facebook, or Twitter credentials. Password management i.e. reset and forgot password APIs are also available. 
 
-<b>Push</b>
+### Push ###
 <p></p>
 
-Push is considered a separate piece of the SDK because it uses OAuth1, requiring a public and private key. Thus, it uses its own stack of classes for authentication and general session maintenance. Using the push methods you can register a device token with the StackMob server, broadcast messages as well as push to specific devices.
+Push is considered a separate piece of the SDK because it uses OAuth1, requiring a public and private key. Thus, it uses its own stack of classes for authentication and general session maintenance. Using the push methods you can register/unregister a device token with the StackMob server, broadcast messages as well as push messages to specific devices.
 
-<b>Custom Code</b>
+### Custom Code ###
 <p></p>
-Custom code is a powerful feature offered by StackMob which allows users to upload custom server side code which is then callable by a unique rest endpoint. You'll create a custom code request using the `SMCustomCodeRequest` class, then pass the instance to a parameter of the Datastore API `performCustomCodeRequest:` method.
+Custom code is a powerful feature offered by StackMob which allows users to upload custom server side code. This code can then be called by directing the request to a unique endpoint. You'll create a custom code request using the `SMCustomCodeRequest` class, then pass the instance to a parameter of the Datastore API `performCustomCodeRequest:` method.
 
 <br/>
 <br/>
-At the foundation level, all methods which cause requests to StackMob are first translated into the proper REST format. They then pass through an authentication layer which is responsible for signing the request if needed, and the request is sent to StackMob. The response from the server is then translated into the correct format for the calling method's callback or return value.
+At the lowest level, all methods which make requests to StackMob are first translated into their proper REST format. They are sent through an authentication layer which is responsible for signing the request if needed, and the request is sent off to StackMob. The response from the server is then translated into the correct format for the calling method's callback or return value.
 
 <br/>
 <br/>
-<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration for persistence can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
+<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
 
 <br/>
 <br/>
@@ -106,7 +107,13 @@ You will interact with the Datastore persistence layer by obtaining an instance 
 The easiest way to get a datastore instance is through the default client, starting your calls with the following:
 
 ```obj-c
-[[SMClient defaultClient] dataStore] someDataStoreMethod...];
+[[SMClient defaultClient] dataStore]
+```
+
+so a call to create an object would look like this:
+
+```obj-c
+[[[SMClient defaultClient] dataStore] createObject:...];
 ```
 
 Alternatively you can initialize a separate `SMDataStore` instance from the client:
@@ -138,9 +145,9 @@ SMDataStore *myDataStore = [client dataStore];
 
 ## Datastore
 
-The following sections include everything you need to know about creating, reading, updating and deleting objects. All methods are asynchronous and allow you to provide a success and failure block, which will be performed on the main thread by default. All methods have alternative version which include parameters for request options and/or success and failure callback queues. Refer to the Resources sections for links to all available method signatures.
+The following sections include everything you need to know about creating, reading, updating and deleting objects. All methods are asynchronous and allow you to provide a success and failure block, which will be performed on the main thread by default. All methods have additional versions which include parameters for request options and/or success and failure callback queues. Refer to the <b>blue boxes</b> for links to available method signatures.
 
-<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration for persistence can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
+<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
 
 
 <!--- INSERT OBJECT -->
@@ -269,7 +276,7 @@ NSDictionary *updatedTodo = [NSDictionary dictionaryWithObjectsAndKeys:@"updated
 
 ### Update a Counter Atomically
 
-If you have a field of `Integer` type, you can atomically increment it, meaning increment the value without worrying about it being incremented at the same time by another request.
+If you have a field of `Integer` type, you can atomically increment it, meaning increment the value without worrying about it being overwritten at the same time by another request.
 
 Suppose you had an existing todo object with a `priority` field. You can increment the field by any value (here by 1) like so:
 
@@ -298,7 +305,7 @@ Suppose you had an existing todo object with a `priority` field. You can increme
 
 To delete an existing object, simply pass its primary key to the `deleteObjectId:inSchema:onSuccess:onFailure:` method.
 
-Lets delete our existing todo object from the Stackmob database:
+Lets delete our existing todo object from the StackMob database:
 
 ```obj-c
 [[[SMClient defaultClient] dataStore] deleteObjectId:@"1234" inSchema:@"todo" onSuccess:^(NSString* objectId, NSString *schema) {
@@ -328,7 +335,7 @@ Each type of method (create, read, update, etc) has an overloaded method declara
 For example, provide a `SMRequestOptions` instance with the `isSecure` property set to YES if you wanted a specific create request to run over SSL.
 
 <p class="alert">
-Caching options provided by the SMRequestOptions class are not taken into account during datastore API requests.
+Caching options provided by the SMRequestOptions class are not taken into account during Datastore API requests.
 </p>
 
 <div class="alert alert-info">
@@ -352,7 +359,7 @@ Caching options provided by the SMRequestOptions class are not taken into accoun
 
 ## Queries
 
-To perform queries using the datastore API, you'll first instantiate an instance of `SMQuery`:
+To perform queries using the Datastore API, you'll first instantiate an instance of `SMQuery`:
 
 ```obj-c
 SMQuery *newQuery = [[SMQuery alloc] initWithSchema:@"todo"];
@@ -398,9 +405,9 @@ Read through the `SMQuery` class reference, listed below, for all conditions you
 
 ## Relationships
 
-Our REST API offers many endpoints to make it super easy to create and append related objects, append existing object atomically, and update multiple related objects in one request, to name a few.
+StackMob's REST API provides endpoints which make it super easy to create and append related objects, append existing object atomically, and update multiple related objects in one request, to name a few.
 
-<p class="alert">You do not need inverse relationships if you are solely using the datastore API. Core Data requires inverse relationships, and the iOS SDK in conjunction with Core Data manages these relationships, especially when it comes to delete rule propogation.</p>
+<p class="alert">You do not need inverse relationships if you are solely using the Datastore API. Core Data requires inverse relationships, and the iOS SDK in conjunction with Core Data manages these relationships, especially when dealing with delete rule propagation.</p>
 
 <!--- RELATE OBJECTS -->
 
@@ -813,7 +820,7 @@ When you work with Core Data, you'll want to make sure you define inverse relati
 
 ## User Authentication
 
-It won't be uncommon for your app to be built around the concept of having users. They'll need to sign up and login to use your service, and depending on their role may have access to certain data not available to others. Luckily for you, StackMob has you covered.
+It won't be uncommon for your app to be built around the concept of having users. They'll need to sign up and login to use your service, and depending on their role may have access to certain data not available to others. Luckily for you, StackMob has this covered.
 
 Authentication with StackMob was built based on the Oauth 2.0 protocol.
 
@@ -827,7 +834,6 @@ When you create an application on StackMob, a **user** schema is automatically g
  
 When you initialize an `SMClient` with `initWithAPIVersion:publicKey:`, the following property defaults are set:
 
-* apiHost = @"api.stackmob.com";
 * userSchema = @"user";
 * userPrimaryKeyField = @"username";
 * userPasswordField = @"password";
@@ -841,7 +847,7 @@ self.client.userSchema = @"teacher";
 [self.client setUserPrimaryKeyField:@"email"];
 ```
 
-Alternatively, you can set all the properties at once using `initWithAPIVersion:apiHost:publicKey:userSchema:userPrimaryKeyField:userPasswordField:`.
+Alternatively, you can set all the properties at once using `initWithAPIVersion:apiHost:publicKey:userSchema:userPrimaryKeyField:userPasswordField:`. This will set the http and https host to the `apiHost` value.
 
 <p class="alert">Don't forget to check the <b>Create as a User Object</b> box when <a href="https://developer.stackmob.com/api/schemas/create" target="_blank">creating a new schema</a> for user objects.</p>
 
@@ -860,7 +866,7 @@ Alternatively, you can set all the properties at once using `initWithAPIVersion:
 
 ### Creating a User Object
 
-Creating a user is no different than creating any other object. You'll create a dictionary and include at least the username and password fields and values, and pass the dictionary to the `SMDataStore createObject:` method.
+Creating a user is no different than creating any other object. You'll create a dictionary and include at least the username and password fields and values, then pass the dictionary to the `SMDataStore createObject:` method.
 
 For password protection, we recommend sending the request over HTTPS. To do so, create an instance of `SMRequestOptions` with HTTPS set to `YES`, then pass the instance to the overloaded create method. 
 
@@ -884,7 +890,7 @@ SMRequestOptions *requestOptions = [SMRequestOptions optionsWithHTTPS];
       <strong>API References</strong>
       <ul>
         <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMDataStore.html#//api/name/createObject:inSchema:options:onSuccess:onFailure:" target="_blank">SMDataStore: createObject:inSchema:options:onSuccess:onFailure:</a></li>
-        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/optionsWithHTTPS" target="_blank">SMRequestOptions: optionsWithHTTPS
+        <li><a href="http://stackmob.github.io/stackmob-ios-sdk/Classes/SMRequestOptions.html#//api/name/optionsWithHTTPS" target="_blank">SMRequestOptions: optionsWithHTTPS</a></li>
       </ul>
     </div>
   </div>
@@ -925,7 +931,7 @@ Logging into StackMob using the standard username/password pattern is done throu
 
 ### Retrieve Logged In User Info
 
-At any point in time you can send a request to StackMob to receive a dictionary representation for the currently logged in user:
+At any point in time you can send a request to StackMob to receive a dictionary representation of the currently logged in user:
 
 ```obj-c
 [[SMClient defaultClient] getLoggedInUserOnSuccess:^(NSDictionary *result){
@@ -951,7 +957,7 @@ At any point in time you can send a request to StackMob to receive a dictionary 
 
 ### Check Status
 
-To see whether your user is logged in, use the `SMClient` `isLoggedIn` and `isLoggedOut` methods.
+To see whether a user is logged in, use the `SMClient` `isLoggedIn` and `isLoggedOut` methods.
 
 <p class="alert">These methods are from the point of the view of the client-side SDK. If the current user session has actually expired and the client has a valid refresh token it will return <code>YES</code> to <code>isLoggedIn</code> because the next request will trigger an <a href="#AutomaticLoginRefresh">automatic refresh of the current user session</a>. To check whether a user is logged from the point of view of the server, use <code>getLoggedInUserOnSuccess:onFailure:</code></p>
 
@@ -985,8 +991,11 @@ Here's something important to note: If a user logs in on one device, then logs i
 
 ```obj-c
 [[SMClient defaultClient] setTokenRefreshFailureBlock:^(NSError *error, SMFailureBlock originalFailureBlock){
+
 	// You are given the refresh error as well as the failure callback from the original request if you choose to call it.
-	// We recommend logging in again by presenting a temporary login screen to the user, then picking up where they left off in the UI
+	// We recommend logging in again by presenting a temporary login screen to the user, then picking up where they left off in the UI.
+  // Optionally, you can store the username and password in the app's keychain and use it to refresh the login without any user interaction.
+
 }];
 ```
 
@@ -1323,7 +1332,7 @@ SMQuery *query = [[SMQuery alloc] initWithSchema:@"people"];
 
 ## File Storage
 
-Files and images in the form binary data works by linking StackMob to your personal Amazon S3 account. You'll then declare a Binary type field in your schema and all files, images, etc. that you save will actually be stored in your S3 library, and the value of the field will be the URL that points to that data.
+Files and images in the form of binary data are saved on StackMob by linking to your personal Amazon S3 account. You'll then declare a Binary type field in your schema and all files, images, etc. that you save will actually be stored in your S3 library, and the value of the field will be the URL that points to that data.
 
 <!--- Add schema field -->
 
@@ -1387,7 +1396,7 @@ UIImage *image = [UIImage imageWithData:imageData];
 
 ## Network Reachability
 
-The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for optimizing your application to only send requests when the device is online.
+The iOS SDK provides an interface for determining the current status of the device's network connection. This comes in handy when you want to perform specific operations based on whether the device is online or offline. The interface allows you to execute a block of code whenever the network status changes, which is perfect for optimizing your application to only send requests over the network when the device is online.
 
 <!--- SMNetworkReachability -->
 
@@ -1409,7 +1418,7 @@ To manually check the current network status, use the `currentNetworkStatus` met
 SMNetworkStatus currentStatus = [self.client.networkMonitor currentNetworkStatus];
 ```
 
-This method will return an `SMNetworkStatus`, defined as:
+This method will return an instance of `SMNetworkStatus`, defined as:
 
 ```obj-c
 typedef enum {
@@ -1468,7 +1477,7 @@ if ([[[notification userInfo] objectForKey:SMCurrentNetworkStatusKey] intValue] 
  
 ### Status Changes Blocks 
 
-Often times you may want to change the cache policy, or initiate a sync with the server depending on the status of the network. You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
+You can set a block that will be executed every time the network status changes with the `setNetworkStatusChangeBlock:` method:
 
 ```obj-c
 [self.client.networkMonitor setNetworkStatusChangeBlock:^(SMNetworkStatus status){
@@ -1477,20 +1486,6 @@ Often times you may want to change the cache policy, or initiate a sync with the
       ...
     } else {
       ...
-    }
-
-}];
-```
-
-Alternatively you can use the `setNetworkStatusChangeBlockWithFetchPolicyReturn:` method, which requires you to return a cache policy to set. Here's an example which sets points fetches to either the cache or the network based on the current network status:
-
-```obj-c
-[self.client.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^(SMNetworkStatus status){
-    
-    if (status == SMNetworkStatusReachable) {
-      return SMFetchPolicyNetworkOnly;
-    } else {
-      return SMFetchPolicyCacheOnly;
     }
 
 }];
@@ -1515,9 +1510,11 @@ Alternatively you can use the `setNetworkStatusChangeBlockWithFetchPolicyReturn:
 
 ## Caching and Offline Sync
 
-Included with version 2.0.0+ of the SDK is a sync system built in to the Core Data Integration to allow for local saving and fetching of objects when a device is offline. When back online, modified data will be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc. 
+Included with version 2.0.0+ of the SDK is a sync system built in to the <b>Core Data Integration</b> to allow for local saving and fetching of objects when a device is offline. When back online, modified data can be synced with the server. Many settings are available to the developer around cache and merge policies, conflict resolution, etc.
 
-Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Caching and Offline Sync Guide</a> for all information.
+<p class="alert">Caching and Offline Sync are only available when using the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration</a> for persistence.</p> 
+
+To learn more about how caching and syncing work in the SDK, see the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-guide" target="_blank">Caching and Offline Sync Guide</a>.
 
 <!---
 	///////////////////
@@ -1527,7 +1524,7 @@ Read through the <a href="https://developer.stackmob.com/ios-sdk/offline-sync-gu
 
 ## Social Integration
 
-StackMob provides integrations with Facebook and Twitter to allow users to login to StackMob using preexisting credentials, as well as features interfaces to post status updates. 
+StackMob provides integrations with Facebook and Twitter to allow users to login to StackMob using pre-existing credentials, interfaces to post status updates, and more. 
 
 <!--- Facebook -->
 
@@ -1566,7 +1563,7 @@ Assuming you have opened a Facebook session and have initiated a custom method f
 }];
 ```
 
-<p class="alert">By wrapping the login call in the `requestForMe` block, we can assign the Facebook user's username as the primary key of the StackMob user object. This is completely optional, and if nil is passed to the <code>usernameForCreate</code> parameter the Facebook user's ID is used.</p> 
+<p class="alert">By wrapping the login call in the <code>requestForMe</code> block, we can assign the Facebook user's username as the primary key of the StackMob user object. This is completely optional, and if nil is passed to the <code>usernameForCreate</code> parameter the Facebook user's ID is used.</p> 
 
 This login method will create a StackMob user object and link them to the provided Facebook token if one does not already exist.
 
@@ -1721,9 +1718,9 @@ Next you will declare an `SMTwitterCredentials` property, either in your App Del
 @property (nonatomic, strong) SMTwitterCredentials *twitterCredentials;
 ```
 
-To properly initialize the property you'll need your Twitter App Consumer key and secret. In order to get your app keys, you will need a Twitter app. For instructions, see the <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial#CreateTwitterApp" target="_blank">Create Twitter App</a> section of the Twitter Ingegration Tutorial.
+To properly initialize the property you'll need your Twitter App Consumer key and secret. In order to get your app keys, you will need a Twitter app. For instructions, see the <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial#CreateTwitterApp" target="_blank">Create Twitter App</a> section of the Twitter Integration Tutorial.
 
-Once you have your keys, you'll also need to add your keys to the StackMob Twitter Module. For instructions, see the <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial#AddKeysToTwitterModule" target="_blank">Add Keys To Twitter Module</a> section of the Twitter Ingegration Tutorial.
+Once you have your keys, you'll also need to add your keys to the StackMob Twitter Module. For instructions, see the <a href="https://developer.stackmob.com/ios-sdk/integrating-with-twitter-tutorial#AddKeysToTwitterModule" target="_blank">Add Keys To Twitter Module</a> section of the Twitter Integration Tutorial.
 
 When you are all set, initialize your `SMTwitterCredentials` property:
 
@@ -1916,7 +1913,7 @@ Sometimes you may want to get the logged in user's Twitter info, either for UI p
 
 ## Custom Code
 
-With the Custom Code module, StackMob lets you write code that runs and executes on the server. Sending batch push messages? Running some jobs? Write it in Custom Code and call it from the SDK or anything that can hit a REST API. You can define custom JSON responses so that your server can also notify the client of the result.
+With the Custom Code module, StackMob lets you write and upload code that can be executed securely on the server. This is done by creating a unique endpoint to allow you to make requests to from your app. Sending batch push messages? Running some jobs? Write it in Custom Code and call it from the SDK or anything that can hit a REST API. You can define custom JSON responses so that your server can also notify the client of the result.
 
 <!--- Write Custom Code -->
 
@@ -2042,7 +2039,7 @@ ccRequest.responseContentType = @"image/jpeg";
 
 ### Custom Retry Blocks
 
-If you make a custom code request has hasn't been executed recently, the server needs a few seconds to activate your environment. The request will return a 503 response code with a header specifying when to retry. <b>The iOS SDK reads this header and retries the request automatically.</b> As the developer you have the option to specify a retry block, so in the case of a 503 response, the SDK will call your retry block instead of automatically retrying the request.
+If you make a custom code request has hasn't been executed recently, the server needs a few seconds to activate your environment. The request will return a 503 response code with a header specifying when to retry. <b>The iOS SDK reads this header and retries the request automatically.</b> As the developer you have the option to specify a retry block, so in the case of a 503 response, the SDK will execute your retry block instead of automatically retrying the request.
 
 The first step is to define an instance of `SMRequestOptions` that you'll pass to your `performCustomCodeRequest:` method. Next you'll define a service unavailable retry block:
 
@@ -2092,7 +2089,7 @@ StackMob integrates with Apple's APNS service for push notifications on iOS. Bef
 
 ### The Push Module
 
-The first step in getting push notifications working is to set up the Push Module for you StackMob application.
+The first step in getting push notifications working is to set up the Push Module for your StackMob application.
 
 The <a href="https://developer.stackmob.com/ios-sdk/push-guide" target="_blank">iOS Push Notifications Guide</a> will walk you through the steps of setting up Apple Push certs and uploading them to the Push Module settings.
 
@@ -2165,7 +2162,7 @@ Inside `didRegisterForRemoteNotificationsWithDeviceToken:`, register the device 
 
 <p class="alert">The <code>withUser:</code> parameter takes an arbitrary string to associate with the token. Typically this should be a username so that in the future you can push to devices using usernames rather than token strings.</p>
 
-Once your token is registered with StackMob, you can begin sending pushes to that device!
+Once the token is registered with StackMob, you can begin sending pushes to that device!
 
 <div class="alert alert-info">
   <div class="row-fluid">
@@ -2393,7 +2390,7 @@ While the Push API comes built into the Core SDK, a separate Push SDK is availab
 
 ## Deploy
 
-You're done developing your app! You've been working in the StackMob development environment, and you now want to get everything into the production environment. StackMob lets you easily do that with our Deploy UI.
+You're done developing your app! You've been working in the StackMob development environment, and you now want to get everything into the production environment. StackMob lets you do that easily with our Deploy UI.
 
 
 ### API
@@ -2433,31 +2430,6 @@ If you're using StackMob's HTML5 hosting service, you'll also need to <a href="h
 ## Error Handling
 
 When errors occur at the SDK level, specific error codes are returned to indicate the type of error that occurred.
-
-### Core Data Save Failure Errors
-
-When a Core Data save fails because objects could not be inserted/updated/deleted on StackMob, the error returned is formatted in the following way:
-
-<ul>
-  <li>The error code will be -108, <b>SMErrorCoreDataSave</b></li>
-  <li>The error userInfo property may contain any of the following keys, which are constants you can reference, depending on what the save request consisted of: <b>SMInsertedObjectFailures</b>, <b>SMUpdatedObjectFailures</b>, <b>SMDeletedObjectFailures</b>.</li>
-  <li>If any of those keys exist, its value will be an NSArray instance of NSDictionary instances, one dictionary for each failed object.</li>
-  <li>Each dictionary will include 2 key constants: <b>SMFailedManagedObjectID</b>, whose value is an NSManagedObjectID instance of the managed object that was not saved properly, and <b>SMFailedManagedObjectError</b>, whose value is an NSError instance of what caused the object to not get saved properly.</li>
-</ul>
-
-Here's an example of an error returned when trying to save a user object with primary key "Jack" when a user named "Jack" already exists on the server:
-
-```bash
-Error Domain=SMError Code=-108 "The operation couldn't be completed. (SMError error -108.)" UserInfo=0xc99d030 {
-  SMInsertedObjectFailures=(
-    {
-      SMFailedManagedObjectError = "Error Domain=HTTP Code=409 \"The operation couldn\U2019t be completed. 
-          (HTTP error 409.)\" UserInfo=0x8661680 {error=Duplicate key for schema user: \"jack\"}";
-      SMFailedManagedObjectID = "0xc9a0210 <x-coredata://FDCF65C5-02D3-45E9-BA03-793E1A125FCE-12897-00000C7A7DD73EAA/User/pjack>";
-    }
-  )
-}
-```
 
 ### StackMob Specific Errors
 
@@ -2618,8 +2590,8 @@ The following is a list of string constants used for the domains of errors and n
 
 The iOS SDK gives developers access to two global variables that will enable additional logging statements when using the Core Data integration:
 
-* **SM_CORE_DATA_DEBUG** - In your AppDelegate's `application:DidFinishLaunchingWithOptions:` method, include the line `SM_CORE_DATA_DEBUG = YES;` to turn on log statements from `SMIncrementalStore`. This will provide information about the Datastore calls to StackMob happening behind the scenes during Core Data saves and fetches. The default is `NO`.
-* **SM_MAX_LOG_LENGTH** - Used to control how many characters are printed when logging objects. The default is **10,000**, which is plenty, so you will almost never have to set this.  The only time you will see the string representation of an object truncated is when you have an Attribute of type String that maps to a field of type Binary on StackMob, because you are sending a string containing the binary of the image, etc. String representations of objects that have been truncated end with MAX\_LOG\_LENGTH\_REACHED.
+* **SM\_CORE\_DATA\_DEBUG** - In your AppDelegate's `application:DidFinishLaunchingWithOptions:` method, include the line `SM_CORE_DATA_DEBUG = YES;` to turn on log statements from `SMIncrementalStore`. This will provide information about the Datastore calls to StackMob happening behind the scenes during Core Data saves and fetches. The default is `NO`.
+* **SM\_MAX\_LOG\_LENGTH** - Used to control how many characters are printed when logging objects. The default is **10,000**, which is plenty, so you will almost never have to set this.  The only time you will see the string representation of an object truncated is when you have an Attribute of type String that maps to a field of type Binary on StackMob, because you are sending a string containing the binary of the image, etc. String representations of objects that have been truncated end with MAX\_LOG\_LENGTH\_REACHED.
 
 <!---
   ///////////////////
