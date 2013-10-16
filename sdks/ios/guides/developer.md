@@ -17,10 +17,108 @@ For developers who want a more powerful and complex persistence solution, comple
 
 Regardless of which persistence API you go with, there are independent helper classes used for specialized features such as file storage, geolocation, and custom code.
 
-<p></p>
-<b>How do I know if I should use Core Data or the Datastore API directly for persistence?</b>
+<br/><br/>
+<b>Should I use the Datastore API or the Core Data API for persistence?</b>
+<br/><br/>
 
-Which route you use for persistence depends mainly on your app's data model. ADD MORE
+If you aren't familiar with Core Data and don't need offline caching and syncing, the Datastore API is an easier way to get started. Many of the methods in the Datastore API map directly to StackMob's API functionality, and is extremely straightforward and simple to use. It is great for apps that can afford to use the network often to stay up to date with constantly changing server data.
+
+The Core Data integration is a powerful wrapper on a majority of the Datastore API which also handles offline caching, syncing, and referential integrity between relationships. Apps with complex data models that include multiple relationships should consider using Core Data. Apps where offline usage is essential should also consider using Core Data. Core Data is also great for designing an app that will primarily save and fetch data locally, occasionally syncing with the server to create back-ups.
+
+The following table displays the persistence features offered by the StackMob iOS SDK, and whether each is supported by the Datastore API, Core Data Integration, or both:
+
+<table class="table table-bordered table-pretty-header">
+    <tr align="center">
+        <th>Feature</th>
+        <th>Datastore API</th>
+        <th>Core Data Integration</th>
+    </tr>
+    <tr>
+        <td>CRUD (Create, Read, Update, Delete)</td>
+        <td>*</td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Conditional Queries</td>
+        <td>*</td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Relationships</td>
+        <td>*</td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Saving/Reading Geolocation</td>
+        <td>*</td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Saving/Reading Binary Data</td>
+        <td>*</td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Referential Integrity</td>
+        <td></td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Local Data Caching</td>
+        <td></td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Local Saving/Reading</td>
+        <td></td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Server Syncing</td>
+        <td></td>
+        <td>*</td>
+    </tr>
+    <tr>
+        <td>Create and Append Object (single request)</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Fetch with Expand (single request)</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Append Existing Objects (single request)</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Delete With Cascade (single request)</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Batch Create (single request)</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Upsert with Nested Objects</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Fetch With Expand (single request)</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Update a Counter Atomically</td>
+        <td>*</td>
+        <td></td>
+    </tr>
+</table>
 
 ### User Management ####
 <p></p>
