@@ -29,7 +29,7 @@ The following table displays the persistence features offered by the StackMob iO
 
 <table class="table table-bordered table-pretty-header">
     <tr align="center">
-        <th>Feature</th>
+        <th>Persistence Feature</th>
         <th>Datastore API</th>
         <th>Core Data Integration</th>
     </tr>
@@ -89,7 +89,7 @@ The following table displays the persistence features offered by the StackMob iO
         <td></td>
     </tr>
     <tr>
-        <td>Append Existing Objects (single request)</td>
+        <td>Append Existing Values to an Array (single request)</td>
         <td>*</td>
         <td></td>
     </tr>
