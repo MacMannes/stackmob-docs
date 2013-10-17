@@ -3,8 +3,17 @@ iOS Developer Guide
 
 ## Overview
 
-<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/developer_guide/ios_sdk_architecture.png" />
+<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
 
+<br/>
+In each section of this guide you may see colored boxes which are meant to highlight important information:
+
+<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
+
+<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
+
+<br />
+<br/>
 The architecture of the iOS SDK can be broken into a few key parts:
 
 ### Persistence ###
@@ -138,17 +147,11 @@ Custom code is a powerful feature offered by StackMob which allows users to uplo
 <br/>
 At the lowest level, all methods which make requests to StackMob are first translated into their proper REST format. They are sent through an authentication layer which is responsible for signing the request if needed, and the request is sent off to StackMob. The response from the server is then translated into the correct format for the calling method's callback or return value.
 
-<br/>
-<br/>
-<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
+### SDK Architecture Diagram ###
 
-<br/>
-<br/>
-In each section of this guide you may see colored boxes which are meant to highlight important information:
+Here is a full diagram of the iOS SDK, showing how the sections above fit together:
 
-<p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
-
-<p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/developer_guide/ios_sdk_architecture.png" />
 
 <!---
 	///////////////////
@@ -162,11 +165,9 @@ In each section of this guide you may see colored boxes which are meant to highl
 
 ### Download and Configure
 
-First things first, download the SDK files and configure them into your Xcode project.
+First things first, <a href="https://dashboard.stackmob.com/sdks/ios/config" target="_blank">download the SDK files and configure them into your Xcode project</a>.
 
 Come back to this page when you're finished.
-
-<a href="https://dashboard.stackmob.com/sdks/ios/config" target="_blank">Download and Configure the iOS SDK.</a>
 
 
 <!--- INITIALIZE -->

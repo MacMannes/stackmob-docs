@@ -195,13 +195,21 @@ All StackMob schemas have a primary key field that is always **schemaName\_id**,
 
 ### Best Practices
 
-#### Entity Primary Keys
+#### Include Entity Primary Keys
 
 Following the section above on primary keys, each Core Data entity must include an attribute of type string that maps to the primary key field on StackMob. Acceptable formats are <b><i>schemaName</i>Id</b> or <b><i>schemaName</i>_id</b>. 
 
 If the managed object subclass for the Entity inherits from `SMUserManagedObject`, meaning it is intended to define user objects, you may use either of the above formats or whatever lowercase string with optional underscores matches the primary key field on StackMob. 
 
 For example: entity **Soda** should have attribute **sodaId** or **soda_id**, whereas your **User** entity primary key field defaults to **@"username"**.
+
+#### Index Primary Keys
+
+<p class="alert">Indexing primary keys increases performance only when using the cache.</p>
+
+You can get a performance boost from the cache if you index the attributes that map to StackMob schema primary key fields. This is because the Core Data integration fetches objects from the cache using predicates on those fields. You can set an attribute as Indexed by clicking on it in the data model, then clicking the **Indexed** box in the **Data Model Inspector**.
+
+<img src="https://s3.amazonaws.com/static.stackmob.com/images/ios/coredata/indexedAttribute.png" />
 
 #### Assign IDs
 
