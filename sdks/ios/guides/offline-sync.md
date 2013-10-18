@@ -413,7 +413,7 @@ The following are utility properties/methods to assist in your offline sync impl
 
 ## Best Practices
 
-While caching and syncing works out of the box with the iOS SDK, it is important to think about what data you are caching, when you are caching it, and when in your app you are initiating the syncing process. Every app is unique and will have different use cases which determine the best time for caching and syncing. By thinking through a solid caching and syncing strategy, you will produce a more performant and error prone app.
+While caching and syncing works out of the box with the iOS SDK, it is important to think about what data you are caching, when you are caching it, and when in your app you are initiating the syncing process. Every app is unique and will have different use cases which determine the best time for caching and syncing. By thinking through a solid caching and syncing strategy, you will produce a more performant and less error prone app.
 
 Many of the the features are customizable to fit your app's needs, and we encourage you to try out different combinations of methods to find the right balance of caching and syncing for as smooth of a user experience as possible. Here are some best practices for specific scenarios we often see:
 
