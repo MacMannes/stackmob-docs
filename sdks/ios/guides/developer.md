@@ -3,9 +3,6 @@ iOS Developer Guide
 
 ## Overview
 
-<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
-
-<br/>
 In each section of this guide you may see colored boxes which are meant to highlight important information:
 
 <p class="alert">Gold boxes call out warnings, gotchas, and information we don't want you to miss.</p>
@@ -25,6 +22,8 @@ The "Datastore API" offers simple asynchronous, callback-based methods as a wrap
 For developers who want a more powerful and complex persistence solution, complete with a caching and offline sync system, we have built a "Core Data Integration"  that sits on top of the Datastore API. Core Data, Apple's Persistence framework, allows us to place a familiar wrapper around StackMob REST calls and the Datastore API. iOS developers can leverage their existing knowledge of Core Data to quickly integrate StackMob into their applications.
 
 Regardless of which persistence API you go with, there are independent helper classes used for specialized features such as file storage, geolocation, and custom code.
+
+<b>The contents of this guide use the Datastore API functions for persistence. All equivalent operations using the Core Data integration can be found in the <a href="https://developer.stackmob.com/ios-sdk/core-data-guide" target="_blank">Core Data Integration Guide</a></b>.
 
 <br/><br/>
 <b>Should I use the Datastore API or the Core Data API for persistence?</b>
