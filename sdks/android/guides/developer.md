@@ -31,14 +31,14 @@ Initialize the SDK with your public key.
 
 <p><b>Android SDK</b></p>
 
-```java,6,7
+```java,6,7|dynamic
 public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         StackMobAndroid.init(getApplicationContext(), 0, 
-        	"YOUR PUBLIC KEY");
+        	"YOUR_PUBLIC_KEY");
     }
 }
 ```
@@ -57,22 +57,22 @@ The Java SDK runs in OAuth 1.0 mode or OAuth 2.0 mode.  Read <a href="https://de
 
 <p><b>Initialize the SDK for OAuth 2.0</b></p>
 
-```java
+```java|dynamic
 import com.stackmob.sdk.api.StackMob
 Integer apiVersion = 0;
 
-StackMob client = new StackMob(apiVersion, "YOUR PUBLIC KEY");
+StackMob client = new StackMob(apiVersion, "YOUR_PUBLIC_KEY");
 ```
 
 <p><b>Initialize the SDK for OAuth 1.0</b></p>
 
-```java
+```java|dynamic
 import com.stackmob.sdk.api.StackMob
 Integer apiVersion = 0;
 
 // set the api secret to null if you use oauth version 2
 StackMob client = new StackMob(StackMob.OAuthVersion.ONE, 
-    apiVersion, "YOUR PUBLIC KEY", "YOUR PRIVATE KEY"); 
+    apiVersion, "YOUR_PUBLIC_KEY", "YOUR_PRIVATE_KEY"); 
 ```
 
 <a href="https://developer.stackmob.com/java-sdk/configure">Setup and Configure the Java SDK <i class="icon-chevron-right"></i></a>

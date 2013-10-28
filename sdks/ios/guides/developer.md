@@ -177,7 +177,7 @@ Wherever you plan to use StackMob, add `#import "StackMob.h"` to the header file
 
 Define a property of type `SMClient`, most likely in your `AppDelegate` file where you define other application wide properties, and initialize it like this:
 
-```obj-c
+```obj-c|dynamic
 self.client = [[SMClient alloc] initWithAPIVersion:@"YOUR_API_VERSION" publicKey:@"YOUR_PUBLIC_KEY"];
 ```
 
@@ -2197,7 +2197,7 @@ The <a href="https://developer.stackmob.com/ios-sdk/push-guide" target="_blank">
 
 The StackMob push notification API is accessed through an instance of `SMPushClient`:
 
-```obj-c
+```obj-c|dynamic
 SMPushClient *pushClient = [[SMPushClient alloc] initWithAPIVersion:@"0" publicKey:@"YOUR_PUBLIC_KEY" privateKey:@"YOUR_PRIVATE_KEY"];
 ```
 

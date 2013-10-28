@@ -27,9 +27,9 @@ Include <a href="https://developer.stackmob.com/js-sdk/api-docs#a-general_setup"
 
 <a href="https://dashboard.stackmob.com/settings" rel="nofollow" target="_blank">Find your public key on your app dashboard</a> to initialize the <abbr title="StackMob JavaScript SDK">JavaScript SDK</abbr>.
 
-```js
+```js|dynamic
 StackMob.init({
-  publicKey: "YOUR PUBLIC KEY",
+  publicKey: "YOUR_PUBLIC_KEY",
   apiVersion: 0
 });
 ```
