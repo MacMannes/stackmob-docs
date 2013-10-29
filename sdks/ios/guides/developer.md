@@ -9,9 +9,13 @@ In each section of this guide you may see colored boxes which are meant to highl
 
 <p class="alert alert-info">Blue boxes contain links to sections in the full API reference, as well as full working projects for you to download and in-depth tutorials for you to read through.</p>
 
-<br />
 <br/>
 The architecture of the iOS SDK can be broken into a few key parts:
+
+&bull;  <a href="#Persistence">Persistence</a><br/>
+&bull;  <a href="#UserManagement">User Management</a><br/>
+&bull;  <a href="#Push">Push</a><br/>
+&bull;  <a href="#CustomCode">Custom Code</a><br/>
 
 ### Persistence ###
 <p></p>
