@@ -1,7 +1,7 @@
 StackMob-Docs
 =============
 
-This is the home of StackMob's public facing docs.  Feel free to contribute by forking this repo, making changes, then submitting a pull request.  Thanks!
+This is the home of <a href="https://developer.stackmob.com">StackMob's public facing docs</a>.  Feel free to contribute by forking this repo, making changes, then submitting a pull request.  Thanks!
 
 # Contributing to StackMob Docs
 
